@@ -1,5 +1,5 @@
-import Piece from "./piece";
-import { HexCoordinate } from "./types";
+import Piece from "../pieces/piece";
+import { HexCoordinate } from "../types";
 
 export default class Hex {
   id: string;

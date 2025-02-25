@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import GameRenderer from "./game/render";
 
 export default function Home() {
   return (
@@ -17,9 +16,7 @@ export default function Home() {
           Button 3
         </button>
       </div>
-      <div className="w-1/2 flex justify-center items-center">
-        {GameRenderer()}
-      </div>
+      <div className="w-1/2 flex justify-center items-center"></div>
     </div>
   );
 }
