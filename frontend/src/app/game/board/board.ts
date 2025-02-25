@@ -1,5 +1,5 @@
 import Hex from "./hex";
-import { HexCoordinate } from "./types";
+import { HexCoordinate } from "../types";
 
 class Board {
   tiles: Map<string, Hex> = new Map();
