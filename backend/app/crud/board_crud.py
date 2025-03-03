@@ -1,15 +1,19 @@
-from app.database import get_db_connection
+from app.database import get_db_connection, initialize_db
 
 def create_board(board: dict):
+    initialize_db()
     # Stores the given board in the database
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute
-    board_id = cursor.lastrowid() # return the id of the newly inserted item incase we need it
+    cursor.execute(
+        "INSERT INTO boards (arrangement, difficulty) VALUES (?, ?)",
+        (board['arrangement'], board['difficulty'])
+    )
+    conn.commit()
     conn.close()
-    return board_id
+    return
 
-def get_board(difficulty: int):
+def fetch_board(difficulty: int):
     # Retrieves a random board of the given difficulty
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -28,3 +32,11 @@ def get_board(difficulty: int):
 
     conn.close()
     return None  # No boards found at any difficulty level
+
+def get_all_boards():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM boards")
+    boards = cursor.fetchall()
+    conn.close()
+    return boards
