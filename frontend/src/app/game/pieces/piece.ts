@@ -7,8 +7,9 @@ export default abstract class Piece {
   range: number;
   speed: number;
   item_id?: string;
+  allied: boolean;
 
-  constructor() {
+  constructor(_allied: boolean) {
     this.id = "00";
     this.cost = 1;
     this.max_health = 1;
@@ -17,6 +18,7 @@ export default abstract class Piece {
     this.range = 1;
     this.speed = 1;
     this.item_id = undefined;
+    this.allied = _allied;
   }
 
   public abstract attack(): number;
