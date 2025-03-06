@@ -1,7 +1,7 @@
 import Hex from "./hex";
 import { HexCoordinate } from "../types";
 
-class Board {
+export default class Board {
   tiles: Map<string, Hex> = new Map();
   size: number;
 
@@ -63,6 +63,3 @@ class Board {
     });
   }
 }
-
-const board = new Board(3);
-board.printBoard();
