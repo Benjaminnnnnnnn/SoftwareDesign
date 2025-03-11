@@ -49,6 +49,7 @@ def test_register_user():
     response = client.post("/user/register/", json=test_user)
     assert response.status_code == 200
     assert (response.json() is True) or (response.json() is False)
+    # The response returns false if the username attempted to register already exists in the database
 
 # Test for checking if a user exists
 def test_check_user():
