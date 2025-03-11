@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
 import { Board, Hex } from "../game/board"; // Import your Board class
+import lilypadImage from '../../../public/render_images/lilypad_v2.png';
 
 const HexGrid = () => {
   const appRef = useRef<PIXI.Application | null>(null); // Explicitly type appRef
@@ -21,15 +22,18 @@ const HexGrid = () => {
       backgroundColor: 0x6d86ad,
       view: canvasRef.current,
     });
+
     const board = new Board(3);
     const hexRadius = 70;
     const hexHeight = Math.sqrt(3) * hexRadius;
     const hexWidth = 2 * hexRadius;
+
     const axialToPixel = (q: number, r: number) => {
       const x = hexWidth * (q + r / 2);
       const y = hexHeight * r;
       return { x, y };
     };
+
     const createHexagon = (x: number, y: number, radius: number, tile: any) => {
       const hexagon = new PIXI.Graphics();
       hexagon.lineStyle(2, 0x000000); // Border color
@@ -50,7 +54,23 @@ const HexGrid = () => {
         console.log(`Hexagon clicked: ${tile.id}`);
         hexagon.tint = 0xff0000; // Change color on click
       });
-      
+
+      // Load the lilypad image and add it as a sprite to the hexagon
+      const img = new Image();
+      img.src = lilypadImage.src;
+      img.onload = () => { // dont render until image is loaded
+        const texture = PIXI.Texture.from(img);
+        const sprite = new PIXI.Sprite(texture);
+
+        // Center the sprite within the hexagon
+        sprite.anchor.set(0.5); 
+        sprite.x = x;
+        sprite.y = y;
+        sprite.width = radius * 1.5;
+        sprite.height = radius * 1.5;
+
+        hexagon.addChild(sprite);
+      };
       return hexagon;
     };
 
