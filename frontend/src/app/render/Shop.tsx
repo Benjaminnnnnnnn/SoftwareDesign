@@ -1,11 +1,13 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import { randomInt } from "crypto";
 
 // Image imports
-import dummyImage from "../game/pieces/images/dummy.png";
-import warriorImage from "../game/pieces/images/warrior.png";
-import archerImage from "../game/pieces/images/archer.png";
+import dummyImage from "../../../public/gameObjectImages/dummy.png";
+import warriorImage from "../../../public/gameObjectImages/warrior.png";
+import archerImage from "../../../public/gameObjectImages/archer.png";
+import butterflyImage from "../../../public/gameObjectImages/butterfly.png";
+import caterpillarImage from "../../../public/gameObjectImages/caterpillar.png";
+import gunImage from "../../../public/gameObjectImages/gun.png";
 
 enum units {
   DUMMY = "000",
@@ -17,6 +19,7 @@ enum items {
   DUMMY = "000",
   BUTTERFLY = "001",
   CATERPILLAR = "002",
+  GUN = "003",
 }
 
 const unitImages = {
@@ -25,16 +28,19 @@ const unitImages = {
   [units.ARCHER]: archerImage,
 };
 
-const Square = ({ unit }: { unit: units }) => (
-  <div className="square">
-    <img src={unitImages[unit].src} alt={unit} />
-  </div>
-);
+const itemImages = {
+  [items.DUMMY]: dummyImage,
+  [items.BUTTERFLY]: butterflyImage,
+  [items.CATERPILLAR]: caterpillarImage,
+  [items.GUN]: gunImage,
+};
 
 const Shop = () => {
+  // instantiate values
   const unitArray = Object.values(units);
   const itemArray = Object.values(items);
   const [refresh, updateRefresh] = useState(0);
+  const [selectedSquare, updateSelectedSquare] = useState(-1);
 
   const [unitsList, updateUnitsList] = useState([
     units.DUMMY,
@@ -45,10 +51,38 @@ const Shop = () => {
 
   const [shopItems, updateShopItems] = useState([items.DUMMY, items.DUMMY]);
 
+  // click handler for the refresh button
   const clickRefresh = () => {
     updateRefresh(refresh + 1);
   };
 
+  const UnitSquare = ({ index }: { index: number }) => {
+    const squareClick = () => {
+      updateSelectedSquare(index);
+    };
+    return (
+      <div className={`square ${selectedSquare === index ? "selected" : ""}`}>
+        {selectedSquare === index ? (
+          <h1>Test</h1>
+        ) : (
+          <button onClick={squareClick}>
+            <img
+              src={unitImages[unitsList[index]].src}
+              alt={unitsList[index]}
+            />
+          </button>
+        )}
+      </div>
+    );
+  };
+
+  const ItemSquare = ({ item }: { item: items }) => (
+    <div className="square">
+      <img src={itemImages[item].src} alt={item} />
+    </div>
+  );
+
+  // When the value of refresh changes this code runs since this useEffect() is dependant on refresh
   useEffect(() => {
     const newUnitList = [];
     for (let i = 0; i < unitsList.length; i++) {
@@ -70,17 +104,17 @@ const Shop = () => {
     <div>
       <div className="grid-container">
         <div className="grid-row">
-          <Square unit={unitsList[0]} />
-          <Square unit={unitsList[1]} />
+          <UnitSquare index={0} />
+          <UnitSquare index={1} />
         </div>
         <div className="grid-row">
-          <Square unit={unitsList[2]} />
-          <Square unit={unitsList[3]} />
+          <UnitSquare index={2} />
+          <UnitSquare index={3} />
         </div>
-        {/* <div className="grid-row">
-          <Square unit={unitsList[4]} />
-          <Square unit={unitsList[5]} />
-        </div> */}
+        <div className="grid-row">
+          <ItemSquare item={shopItems[0]} />
+          <ItemSquare item={shopItems[1]} />
+        </div>
         <button className="button" onClick={clickRefresh}>
           Refresh
         </button>
