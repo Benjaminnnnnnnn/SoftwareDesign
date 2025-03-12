@@ -1,3 +1,5 @@
+import * as PIXI from "pixi.js";
+
 export default abstract class Piece {
   id: string;
   cost: number;
@@ -30,4 +32,6 @@ export default abstract class Piece {
   }
 
   public abstract applyItemModifier(): number;
+
+  public abstract getSprite(): Promise<PIXI.Sprite | null>;
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
 import { Board, Hex } from "../game/board"; // Import your Board class
-import lilypadImage from '../../../public/render_images/lilypad_v2.png';
+import lilypadImage from '../../../public/render_images/lilypad.png';
 
 const HexGrid = () => {
   const appRef = useRef<PIXI.Application | null>(null); // Explicitly type appRef
@@ -36,8 +36,8 @@ const HexGrid = () => {
 
     const createHexagon = (x: number, y: number, radius: number, tile: any) => {
       const hexagon = new PIXI.Graphics();
-      hexagon.lineStyle(2, 0x000000); // Border color
-      hexagon.beginFill(0x7db07b); // Fill color
+      hexagon.lineStyle(2, 0x6d86ad); // Blend in with background
+      hexagon.beginFill(0x6d86ad); 
       for (let i = 0; i < 6; i++) {
         const angle = (Math.PI / 3) * i - Math.PI/6;
         const px = x + radius * Math.cos(angle);
@@ -58,16 +58,15 @@ const HexGrid = () => {
       // Load the lilypad image and add it as a sprite to the hexagon
       const img = new Image();
       img.src = lilypadImage.src;
-      img.onload = () => { // dont render until image is loaded
+      img.onload = () => { // don't render until image is loaded
         const texture = PIXI.Texture.from(img);
         const sprite = new PIXI.Sprite(texture);
 
-        // Center the sprite within the hexagon
-        sprite.anchor.set(0.5); 
+        sprite.anchor.set(0.5);
         sprite.x = x;
         sprite.y = y;
-        sprite.width = radius * 1.5;
-        sprite.height = radius * 1.5;
+        sprite.width = radius * 1.8;
+        sprite.height = radius * 1.8;
 
         hexagon.addChild(sprite);
       };
@@ -78,8 +77,27 @@ const HexGrid = () => {
     board.tiles.forEach((tile: Hex) => {
       const { x, y } = axialToPixel(tile.coord.q, tile.coord.r);
       const hexagon = createHexagon(x + 400, y + 325, hexRadius, tile); // Center the grid
+
+      // Render each hexagon
       if (appRef.current) {
         appRef.current.stage.addChild(hexagon);
+      }
+
+      // If the hexagon/tile has a piece, render the piece on the hexagon
+      if (tile.piece) {
+        tile.piece.getSprite().then((sprite: PIXI.Sprite | null) => {
+          if (sprite) {
+            sprite.x = x + 400; 
+            sprite.y = y + 325;
+            if (appRef.current) {
+              appRef.current.stage.addChild(sprite);
+            }
+          } else {
+            console.error("Failed to create sprite for piece on tile:", tile.id);
+          }
+        }).catch((error) => {
+          console.error("Error while rendering piece on tile:", error);
+        });
       }
     });
 
