@@ -37,8 +37,9 @@ const itemImages = {
 
 const Shop = () => {
   // instantiate values
-  const unitArray = Object.values(units);
-  const itemArray = Object.values(items);
+  const unitArray = Object.values(units).slice(1);
+  const itemArray = Object.values(items).slice(1);
+  const [currency, updateCurrency] = useState(10);
   const [refresh, updateRefresh] = useState(0);
   const [selectedSquare, updateSelectedSquare] = useState(-1);
 
@@ -53,25 +54,23 @@ const Shop = () => {
 
   // click handler for the refresh button
   const clickRefresh = () => {
-    updateRefresh(refresh + 1);
+    if (currency >= 1) {
+      updateRefresh(refresh + 1);
+      updateCurrency(currency - 1);
+    }
   };
 
   const UnitSquare = ({ index }: { index: number }) => {
     const squareClick = () => {
       updateSelectedSquare(index);
     };
+    const buyUnit = () => {};
+    // ugly but this is a conditional button where is reders a different thing depending on the state, this is with the { x ? y : z}
     return (
       <div className={`square ${selectedSquare === index ? "selected" : ""}`}>
-        {selectedSquare === index ? (
-          <h1>Test</h1>
-        ) : (
-          <button onClick={squareClick}>
-            <img
-              src={unitImages[unitsList[index]].src}
-              alt={unitsList[index]}
-            />
-          </button>
-        )}
+        <button onClick={squareClick}>
+          <img src={unitImages[unitsList[index]].src} alt={unitsList[index]} />
+        </button>
       </div>
     );
   };
@@ -100,8 +99,17 @@ const Shop = () => {
     updateShopItems(newItemList);
   }, [refresh]);
 
+  const buyObject = () => {
+    if (currency >= 3) {
+      unitsList[selectedSquare] = units.DUMMY;
+      updateCurrency(currency - 3);
+    }
+  };
   return (
     <div>
+      <div>
+        <h1> {currency} </h1>
+      </div>
       <div className="grid-container">
         <div className="grid-row">
           <UnitSquare index={0} />
@@ -114,6 +122,12 @@ const Shop = () => {
         <div className="grid-row">
           <ItemSquare item={shopItems[0]} />
           <ItemSquare item={shopItems[1]} />
+        </div>
+        <div className="infoBox">
+          <button className="button" onClick={buyObject}>
+            {" "}
+            {selectedSquare}{" "}
+          </button>
         </div>
         <button className="button" onClick={clickRefresh}>
           Refresh

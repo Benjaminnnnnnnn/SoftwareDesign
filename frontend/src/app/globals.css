@@ -76,6 +76,12 @@ canvas {
     outline: 2px solid red;
 }
 
+.infoBox {
+    display: flex;
+    width: 25vw;
+    background-color: antiquewhite;
+}
+
 .button {
     display: inline-block;
     padding: 10px 20px;
