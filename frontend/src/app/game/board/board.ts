@@ -6,7 +6,7 @@ export default class Board {
   size: number; // The size (radius) of the hexagonal board.
 
   constructor(size: number = 3) {
-    this.size = size; 
+    this.size = size;
     this.generateBoard();
   }
   // Generate hexagonal tiles and populate the board.
@@ -43,7 +43,7 @@ export default class Board {
       });
     });
   }
-    // Print a text-based representation of the board.
+  // Print a text-based representation of the board.
   public printBoard() {
     const sortedTiles = Array.from(this.tiles.values()).sort(
       (a, b) => a.coord.r - b.coord.r || a.coord.q - b.coord.q,
@@ -64,7 +64,3 @@ export default class Board {
     });
   }
 }
-
-
-const b = new Board(3);
-b.printBoard();

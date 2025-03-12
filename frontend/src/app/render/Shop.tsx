@@ -8,52 +8,42 @@ import archerImage from "../../../public/gameObjectImages/archer.png";
 import butterflyImage from "../../../public/gameObjectImages/butterfly.png";
 import caterpillarImage from "../../../public/gameObjectImages/caterpillar.png";
 import gunImage from "../../../public/gameObjectImages/gun.png";
+import { StaticImageData } from "next/image";
 
-enum units {
-  DUMMY = "000",
-  WARRIOR = "001",
-  ARCHER = "002",
-}
-
-enum items {
-  DUMMY = "000",
-  BUTTERFLY = "001",
-  CATERPILLAR = "002",
-  GUN = "003",
-}
-
-const unitImages = {
-  [units.DUMMY]: dummyImage,
-  [units.WARRIOR]: warriorImage,
-  [units.ARCHER]: archerImage,
+const gameObjects: Record<string, string> = {
+  BLANK: "x000",
+  WARRIOR: "u001",
+  ARCHER: "u002",
+  BUTTERFLY: "i001",
+  CATERPILLAR: "i002",
+  GUN: "i003",
 };
 
-const itemImages = {
-  [items.DUMMY]: dummyImage,
-  [items.BUTTERFLY]: butterflyImage,
-  [items.CATERPILLAR]: caterpillarImage,
-  [items.GUN]: gunImage,
+const images: Record<string, StaticImageData> = {
+  x000: dummyImage,
+  u001: warriorImage,
+  u002: archerImage,
+  i001: butterflyImage,
+  i002: caterpillarImage,
+  i003: gunImage,
 };
 
 const Shop = () => {
   // instantiate values
-  const unitArray = Object.values(units).slice(1);
-  const itemArray = Object.values(items).slice(1);
+  const unitArray = Object.values(gameObjects).filter((obj) => {
+    return obj[0] === "u";
+  });
+  const itemArray = Object.values(gameObjects).filter((obj) => {
+    return obj[0] === "i";
+  });
   const [currency, updateCurrency] = useState(10);
   const [refresh, updateRefresh] = useState(0);
   const [selectedSquare, updateSelectedSquare] = useState(-1);
 
-  const [unitsList, updateUnitsList] = useState([
-    units.DUMMY,
-    units.DUMMY,
-    units.DUMMY,
-    units.DUMMY,
-  ]);
+  const [objList, updateObjList] = useState(Array(6).fill("x000"));
 
-  const [shopItems, updateShopItems] = useState([items.DUMMY, items.DUMMY]);
-
-  const [objList, updateObjList] = useState([units.DUMMY, items.DUMMY]);
   const [frozenArray, updateFrozenArray] = useState(Array(6).fill(false));
+
   // click handler for the refresh button
   const clickRefresh = () => {
     if (currency >= 1) {
@@ -72,7 +62,7 @@ const Shop = () => {
     updateFrozenArray(newFrozenArray);
   };
 
-  const UnitSquare = ({ index }: { index: number }) => {
+  const Square = ({ index }: { index: number }) => {
     const squareClick = () => {
       updateSelectedSquare(index);
     };
@@ -83,46 +73,49 @@ const Shop = () => {
       : selectedSquare === index
         ? "selected"
         : "";
-
+    console.log(objList);
     return (
       <div className={`square ${squareClass}`}>
         <button onClick={squareClick}>
-          <img src={unitImages[unitsList[index]].src} alt={unitsList[index]} />
+          <img src={images[objList[index]].src} alt={objList[index]} />
         </button>
       </div>
     );
   };
 
-  const ItemSquare = ({ item }: { item: items }) => (
-    <div className="square">
-      <img src={itemImages[item].src} alt={item} />
-    </div>
-  );
-
   // When the value of refresh changes this code runs since this useEffect() is dependant on refresh
   useEffect(() => {
-    const newUnitList = [];
-    for (let i = 0; i < unitsList.length; i++) {
-      const rand = Math.floor(Math.random() * unitArray.length);
-      const chosenUnit: units = unitArray[rand];
-      newUnitList.push(chosenUnit);
+    const newObjList = [];
+    let chosenObject: string = gameObjects["BLANK"];
+    for (let i = 0; i < 4; i++) {
+      if (frozenArray[i]) {
+        chosenObject = objList[i];
+      } else {
+        const rand = Math.floor(Math.random() * unitArray.length);
+        chosenObject = unitArray[rand];
+      }
+      newObjList.push(chosenObject);
     }
-    updateUnitsList(newUnitList);
-    const newItemList = [];
-    for (let j = 0; j < shopItems.length; j++) {
-      const rand = Math.floor(Math.random() * itemArray.length);
-      const chosenItem: items = itemArray[rand];
-      newItemList.push(chosenItem);
+    for (let j = 4; j < 6; j++) {
+      if (frozenArray[j]) {
+        chosenObject = objList[j];
+      } else {
+        const rand = Math.floor(Math.random() * itemArray.length);
+        chosenObject = itemArray[rand];
+      }
+      newObjList.push(chosenObject);
     }
-    updateShopItems(newItemList);
+    updateObjList(newObjList);
   }, [refresh]);
 
+  // buys an object if the user can afford it, if it is purchased empty the shop space
   const buyObject = () => {
     if (currency >= 3) {
-      unitsList[selectedSquare] = units.DUMMY;
+      objList[selectedSquare] = gameObjects["BLANK"];
       updateCurrency(currency - 3);
     }
   };
+
   return (
     <div>
       <div>
@@ -130,16 +123,16 @@ const Shop = () => {
       </div>
       <div className="grid-container">
         <div className="grid-row">
-          <UnitSquare index={0} />
-          <UnitSquare index={1} />
+          <Square index={0} />
+          <Square index={1} />
         </div>
         <div className="grid-row">
-          <UnitSquare index={2} />
-          <UnitSquare index={3} />
+          <Square index={2} />
+          <Square index={3} />
         </div>
         <div className="grid-row">
-          <ItemSquare item={shopItems[0]} />
-          <ItemSquare item={shopItems[1]} />
+          <Square index={4} />
+          <Square index={5} />
         </div>
         <div className="infoBox">
           <button className="button" onClick={freezeObject}>
