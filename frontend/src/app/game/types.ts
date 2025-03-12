@@ -4,3 +4,9 @@ export enum States {
   Battle,
   Network,
 }
+export type state = {
+  current_user: string;
+  current_board: string;
+  game_state: string;
+  currency: number;
+};

@@ -1,5 +1,13 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../context/context";
+import {
+  setCurrentUser,
+  setCurrentBoard,
+  setGameState,
+  setCurrency,
+} from "../context/gameSlice";
 
 // Image imports
 import dummyImage from "../../../public/gameObjectImages/dummy.png";
@@ -29,6 +37,9 @@ const images: Record<string, StaticImageData> = {
 };
 
 const Shop = () => {
+  // Store loading :)
+  const game = useSelector((state: RootState) => state.game);
+  const dispatch = useDispatch();
   // instantiate values
   const unitArray = Object.values(gameObjects).filter((obj) => {
     return obj[0] === "u";
@@ -36,7 +47,7 @@ const Shop = () => {
   const itemArray = Object.values(gameObjects).filter((obj) => {
     return obj[0] === "i";
   });
-  const [currency, updateCurrency] = useState(10);
+
   const [refresh, updateRefresh] = useState(0);
   const [selectedSquare, updateSelectedSquare] = useState(-1);
 
@@ -46,9 +57,10 @@ const Shop = () => {
 
   // click handler for the refresh button
   const clickRefresh = () => {
-    if (currency >= 1) {
+    console.log(game.currency);
+    if (game.currency >= 1) {
       updateRefresh(refresh + 1);
-      updateCurrency(currency - 1);
+      dispatch(setCurrency(game.currency - 1));
     }
   };
 
@@ -110,16 +122,18 @@ const Shop = () => {
 
   // buys an object if the user can afford it, if it is purchased empty the shop space
   const buyObject = () => {
-    if (currency >= 3) {
+    if (game.currency >= 3) {
+      dispatch(setCurrency(game.currency - 3));
+      dispatch(setCurrentBoard(game.current_board + objList[selectedSquare]));
       objList[selectedSquare] = gameObjects["BLANK"];
-      updateCurrency(currency - 3);
     }
   };
 
   return (
     <div>
       <div>
-        <h1> {currency} </h1>
+        <h1> {game.currency} </h1>
+        <h1> {game.current_board} </h1>
       </div>
       <div className="grid-container">
         <div className="grid-row">
