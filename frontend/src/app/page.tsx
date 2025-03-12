@@ -1,18 +1,23 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { store } from "./context/context";
 import HexGrid from "./render/BoardRenderer";
 import Shop from "./render/Shop";
 
 export default function Home() {
   return (
-    <div className="screen-container">
-      <div className="shop-container">
-        <Shop />
+    <Provider store={store}>
+      <div className="screen-container">
+        <div className="shop-container">
+          <Shop />
+        </div>
+        <div className="board-container">
+          <HexGrid />
+        </div>
       </div>
-      <div className="board-container">
-        <HexGrid />
-      </div>
-    </div>
+    </Provider>
   );
 }
