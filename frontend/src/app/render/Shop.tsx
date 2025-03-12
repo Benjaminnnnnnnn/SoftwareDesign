@@ -52,6 +52,8 @@ const Shop = () => {
 
   const [shopItems, updateShopItems] = useState([items.DUMMY, items.DUMMY]);
 
+  const [objList, updateObjList] = useState([units.DUMMY, items.DUMMY]);
+  const [frozenArray, updateFrozenArray] = useState(Array(6).fill(false));
   // click handler for the refresh button
   const clickRefresh = () => {
     if (currency >= 1) {
@@ -60,14 +62,30 @@ const Shop = () => {
     }
   };
 
+  const freezeObject = () => {
+    // Create a new array with the updated value
+    const newFrozenArray = frozenArray.map((value, index) =>
+      index === selectedSquare ? !value : value,
+    );
+
+    // Update the state with the new array
+    updateFrozenArray(newFrozenArray);
+  };
+
   const UnitSquare = ({ index }: { index: number }) => {
     const squareClick = () => {
       updateSelectedSquare(index);
     };
-    const buyUnit = () => {};
-    // ugly but this is a conditional button where is reders a different thing depending on the state, this is with the { x ? y : z}
+
+    // Determine the class based on the state
+    const squareClass = frozenArray[index]
+      ? "frozen"
+      : selectedSquare === index
+        ? "selected"
+        : "";
+
     return (
-      <div className={`square ${selectedSquare === index ? "selected" : ""}`}>
+      <div className={`square ${squareClass}`}>
         <button onClick={squareClick}>
           <img src={unitImages[unitsList[index]].src} alt={unitsList[index]} />
         </button>
@@ -124,6 +142,9 @@ const Shop = () => {
           <ItemSquare item={shopItems[1]} />
         </div>
         <div className="infoBox">
+          <button className="button" onClick={freezeObject}>
+            Freeze
+          </button>
           <button className="button" onClick={buyObject}>
             {" "}
             {selectedSquare}{" "}

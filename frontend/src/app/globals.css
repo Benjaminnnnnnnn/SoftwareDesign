@@ -76,6 +76,10 @@ canvas {
     outline: 2px solid red;
 }
 
+.square.frozen {
+    outline: 2px solid blue;
+}
+
 .infoBox {
     display: flex;
     width: 25vw;
