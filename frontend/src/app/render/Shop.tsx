@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../context/context";
 import {
   setCurrentUser,
-  setCurrentBoard,
   setGameState,
   setCurrency,
+  setCurrentBoardString,
 } from "../context/gameSlice";
 
 // Image imports
@@ -17,6 +17,7 @@ import butterflyImage from "../../../public/gameObjectImages/butterfly.png";
 import caterpillarImage from "../../../public/gameObjectImages/caterpillar.png";
 import gunImage from "../../../public/gameObjectImages/gun.png";
 import { StaticImageData } from "next/image";
+import { uploadBoard } from "../requests/requests";
 
 const gameObjects: Record<string, string> = {
   BLANK: "x000",
@@ -123,16 +124,23 @@ const Shop = () => {
   const buyObject = () => {
     if (game.currency >= 3) {
       dispatch(setCurrency(game.currency - 3));
-      dispatch(setCurrentBoard(game.current_board + objList[selectedSquare]));
+      dispatch(
+        setCurrentBoardString(game.current_boardstr + objList[selectedSquare]),
+      );
       objList[selectedSquare] = gameObjects["BLANK"];
     }
+  };
+
+  const handleEndShopPhase = () => {
+    uploadBoard(game.current_boardstr, 1);
+    dispatch(setGameState("BATTLE"));
   };
 
   return (
     <div>
       <div>
         <h1> {game.currency} </h1>
-        <h1> {game.current_board} </h1>
+        <h1> {game.current_boardstr} </h1>
       </div>
       <div className="grid-container">
         <div className="grid-row">
@@ -158,6 +166,9 @@ const Shop = () => {
         </div>
         <button className="button" onClick={clickRefresh}>
           Refresh
+        </button>
+        <button className="button" onClick={handleEndShopPhase}>
+          FIGHT
         </button>
       </div>
     </div>

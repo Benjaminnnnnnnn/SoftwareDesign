@@ -8,6 +8,8 @@ import HexGrid from "./render/BoardRenderer";
 import Shop from "./render/Shop";
 
 export default function Home() {
+  // Pulls all relevent data from the data base about a user's current game state.
+  function setup() {}
   return (
     <Provider store={store}>
       <div className="screen-container">
