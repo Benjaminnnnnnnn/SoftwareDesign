@@ -85,7 +85,6 @@ const Shop = () => {
       : selectedSquare === index
         ? "selected"
         : "";
-    console.log(objList);
     return (
       <div className={`square ${squareClass}`}>
         <button onClick={squareClick}>
