@@ -8,6 +8,7 @@ import {
   setGameState,
   setCurrency,
 } from "../context/gameSlice";
+import { testcall, uploadBoard } from "../requests/requests";
 
 // Image imports
 import dummyImage from "../../../public/gameObjectImages/dummy.png";
@@ -72,6 +73,12 @@ const Shop = () => {
 
     // Update the state with the new array
     updateFrozenArray(newFrozenArray);
+  };
+
+  const handleEndShopPhase = () => {
+    dispatch(setGameState("BATTLE"));
+    testcall();
+    uploadBoard(game.current_board, 1);
   };
 
   const Square = ({ index }: { index: number }) => {
@@ -159,6 +166,9 @@ const Shop = () => {
         </div>
         <button className="button" onClick={clickRefresh}>
           Refresh
+        </button>
+        <button className="button" onClick={handleEndShopPhase}>
+          FIGHT
         </button>
       </div>
     </div>

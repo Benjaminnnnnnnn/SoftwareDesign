@@ -5,6 +5,8 @@ import { state } from "../game/types";
 const initialState: state = {
   current_user: "",
   current_board: "",
+  current_stage: 0,
+  enemy_board: "",
   game_state: "",
   currency: 10,
 };

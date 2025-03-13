@@ -4,20 +4,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { store } from "./context/context";
-import HexGrid from "./render/BoardRenderer";
-import Shop from "./render/Shop";
+import { BrowserRouter } from "react-router-dom";
+import App from "./render/App";
 
 export default function Home() {
+  console.log("page");
   return (
     <Provider store={store}>
-      <div className="screen-container">
-        <div className="shop-container">
-          <Shop />
-        </div>
-        <div className="board-container">
-          <HexGrid />
-        </div>
-      </div>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </Provider>
   );
 }
