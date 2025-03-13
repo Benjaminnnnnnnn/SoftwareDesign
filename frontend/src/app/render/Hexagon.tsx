@@ -1,0 +1,70 @@
+import * as PIXI from "pixi.js";
+import lilypadImage from '../../../public/render_images/image.png'; // change this back to lilypad.png
+import dummyPiece from "../game/pieces/dummyPiece"
+
+export const createHexagon = (x: number, y: number, radius: number, tile: any) => {
+  // Creates Hexagons for the board
+  const hexagon = new PIXI.Graphics();
+  hexagon.lineStyle(2, 0x6d86ad); // Blend in with background
+  hexagon.beginFill(0x6d86ad);
+  for (let i = 0; i < 6; i++) {
+    const angle = (Math.PI / 3) * i - Math.PI / 6;
+    const px = x + radius * Math.cos(angle);
+    const py = y + radius * Math.sin(angle);
+    if (i === 0) hexagon.moveTo(px, py);
+    else hexagon.lineTo(px, py);
+  }
+  hexagon.closePath();
+  hexagon.endFill();
+  hexagon.interactive = false;
+
+  // Load the lilypad image and add it as a sprite to the hexagon
+  const img = new Image();
+  img.src = lilypadImage.src;
+  img.onload = () => {
+    const texture = PIXI.Texture.from(img);
+    const sprite = new PIXI.Sprite(texture);
+
+    sprite.anchor.set(0.5);
+    sprite.x = x;
+    sprite.y = y;
+    sprite.width = radius * 3.5; // change this back to 1.8
+    sprite.height = radius * 3.5;
+    sprite.tint = 0x42f54b;
+
+    // Make the sprite interactive
+    sprite.eventMode = 'static';
+
+    // Define the hit area
+    const hitBox = new PIXI.Circle(
+        0, // x offset
+        0, // y offset
+        sprite.width / 1 // change this back to 0.4
+      );
+    sprite.hitArea = hitBox;
+
+    // Add hover interactivity to the sprite
+    sprite.on("pointerover", () => {
+      console.log(`Lilypad hovered: ${tile.id}`);
+      sprite.tint = 0xffcc00; // Tint yellow on hover
+    });
+
+    sprite.on("pointerout", () => {
+      console.log(`Lilypad hover ended: ${tile.id}`);
+      //sprite.tint = 0xffffff; // Reset tint to white
+      sprite.tint = 0x42f54b; // delete this line
+    });
+
+    // Add click interactivity to the sprite
+    sprite.on("click", () => {
+      console.log(`Lilypad clicked: ${tile.id}`);
+      sprite.tint = 0xff0000; // Change color on click
+      tile.piece = new dummyPiece(true); // change this with the piece that in hand
+      // Update state so that pieces re-render
+    });
+
+    hexagon.addChild(sprite);
+  };
+
+  return hexagon;
+};
