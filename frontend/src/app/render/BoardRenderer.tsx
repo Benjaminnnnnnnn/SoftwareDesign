@@ -2,8 +2,6 @@ import React, { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
 import { Board, Hex } from "../game/board"; // Import your Board class
 import lilypadImage from '../../../public/render_images/lilypad.png';
-import dummyPiece from "../game/pieces/dummyPiece"
-import dummyItem from "../game/items/dummyItem"
 
 const HexGrid = () => {
   const appRef = useRef<PIXI.Application | null>(null); // Explicitly type appRef
