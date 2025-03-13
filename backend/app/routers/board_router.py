@@ -15,7 +15,7 @@ def store_board(board: BoardCreate):
     """
     # Create the board in the database
     create_board(board.dict())
-    
+
     # Return True to indicate success
     return {"success": True}
 
