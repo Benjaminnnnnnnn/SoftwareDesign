@@ -20,6 +20,7 @@ import caterpillarImage from "../../../public/gameObjectImages/caterpillar.png";
 import gunImage from "../../../public/gameObjectImages/gun.png";
 import { StaticImageData } from "next/image";
 import { uploadBoard } from "../requests/requests";
+import icecubeImage from "../../../public/gameObjectImages/icecube.png";
 
 const gameObjects: Record<string, string> = {
   BLANK: "x000",
@@ -142,11 +143,8 @@ const Shop = () => {
 
   return (
     <div>
-      <div>
-        <h1> {game.currency} </h1>
-        <h1> {game.pieceImBuying} </h1>
-      </div>
       <div className="grid-container">
+        <div className="grid-row">SHOP</div>
         <div className="grid-row">
           <Square index={0} />
           <Square index={1} />
@@ -159,20 +157,30 @@ const Shop = () => {
           <Square index={4} />
           <Square index={5} />
         </div>
-        <div className="infoBox">
-          <button className="button" onClick={freezeObject}>
-            Freeze
-          </button>
-          <button className="button" onClick={buyObject}>
-            {" "}
-            {selectedSquare}{" "}
-          </button>
+        <div className="grid-row">
+          {selectedSquare > -1 ? (
+            <Square index={selectedSquare} />
+          ) : (
+            <div className="square"></div>
+          )}
+          <div className="flex-grid-container">
+            <div className="grid-row">Info</div>
+            <div className="grid-row">
+              <button className="button" onClick={freezeObject}>
+                Freeze
+              </button>
+              <button className="button" onClick={buyObject}>
+                {" "}
+                {selectedSquare}{" "}
+              </button>
+            </div>
+          </div>
         </div>
         <button className="button" onClick={clickRefresh}>
           Refresh
         </button>
         <button className="button" onClick={handleEndShopPhase}>
-          FIGHT
+          Fight
         </button>
       </div>
     </div>
