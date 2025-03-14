@@ -1,14 +1,14 @@
 import Piece from "./piece";
 
 // Ensure "export default" is used
-export default class DummyPiece extends Piece {
+export default class ArcherPiece extends Piece {
   // TODO : Finish Implementation
   constructor(allied: boolean) {
     super(allied);
-    this.id = "u000";
-    this.max_health = 5;
-    this.ad = 2;
-    this.range = 1;
+    this.id = "u002";
+    this.max_health = 4;
+    this.ad = 4;
+    this.range = 2;
     this.speed = 1;
   }
 }

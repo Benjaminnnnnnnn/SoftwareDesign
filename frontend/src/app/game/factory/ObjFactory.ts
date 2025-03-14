@@ -1,13 +1,17 @@
-import DummyItem from "../items/dummyItem";
-import DummyPiece from "../pieces/dummyPiece";
+import { DummyItem } from "../items";
+import { DummyPiece, WarriorPiece, ArcherPiece } from "../pieces";
 import { IPiece } from "../types";
 import { Iitem } from "../types";
 
-class ObjFactory {
+export class ObjFactory {
   public producePiece(id: string, allied: boolean): IPiece {
     let prodPiece: IPiece;
 
     switch (id) {
+      case "u001":
+        prodPiece = new WarriorPiece(allied);
+      case "u002":
+        prodPiece = new ArcherPiece(allied);
       default:
         prodPiece = new DummyPiece(allied);
     }

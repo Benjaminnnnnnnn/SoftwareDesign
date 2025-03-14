@@ -12,7 +12,7 @@ export default abstract class Piece implements IPiece {
   public ad: number;
   public range: number;
   public speed: number;
-  protected item?: Item; // Optional property declaration
+  public item?: Item; // Optional property declaration
   public allied: boolean;
   public alive: boolean;
 
@@ -29,11 +29,17 @@ export default abstract class Piece implements IPiece {
     this.alive = true;
   }
 
-  public abstract attack(): number;
-  // TODO : implement!
+  public attack(): number {
+    return this.ad;
+    // returns damage that will be deault
+  }
 
-  public abstract takeDamage(damage: number): void;
-  // TODO : implement!
+  public takeDamage(damage: number): void {
+    this.current_health -= damage;
+    if (this.current_health < 0) {
+      this.alive = false;
+    }
+  }
 
   public resetPiece(): void {
     this.current_health = this.max_health;
