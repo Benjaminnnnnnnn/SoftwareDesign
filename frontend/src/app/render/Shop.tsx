@@ -7,6 +7,8 @@ import {
   setGameState,
   setCurrency,
   setCurrentBoardString,
+  setImBuying,
+  setPieceImBuying,
 } from "../context/gameSlice";
 
 // Image imports
@@ -127,6 +129,8 @@ const Shop = () => {
       dispatch(
         setCurrentBoardString(game.current_boardstr + objList[selectedSquare]),
       );
+      dispatch(setImBuying(true));
+      dispatch(setPieceImBuying(objList[selectedSquare]));
       objList[selectedSquare] = gameObjects["BLANK"];
     }
   };
@@ -140,7 +144,7 @@ const Shop = () => {
     <div>
       <div>
         <h1> {game.currency} </h1>
-        <h1> {game.current_boardstr} </h1>
+        <h1> {game.pieceImBuying} </h1>
       </div>
       <div className="grid-container">
         <div className="grid-row">

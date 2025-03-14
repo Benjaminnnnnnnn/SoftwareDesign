@@ -11,7 +11,8 @@ export type state = {
   loggedin: boolean;
   current_user: string;
   current_boardstr: string;
-  //current_board_obj: Board;
+  imBuying: boolean;
+  pieceImBuying: string;
   current_game_stage: number;
   game_state: string;
   currency: number;
