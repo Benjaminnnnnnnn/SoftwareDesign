@@ -23,20 +23,19 @@ body {
 canvas {
     display: block;
     margin: 0 auto;
-    border: 1px solid white; /* Add a border for visibility */
 }
 
 .screen-container {
     display: flex;
     height: 100vh;
     width: 100vw;
+    background: #6d86ad;
 }
 
 .shop-container {
     flex: 1;
     height: 100vh;
     width: 25vw; /* Adjust the width as needed */
-    padding: 25px;
 }
 
 .board-container {
@@ -53,23 +52,32 @@ canvas {
 }
 
 .grid-container {
+    background-color: burlywood;
     display: flex;
     justify-content: center;
     flex-direction: column;
     height: 100vh;
     width: 25vw;
-    gap: 20px; /* Adjust the gap between rows as needed */
+    gap: 10px; /* Adjust the gap between rows as needed */
+}
+
+.flex-grid-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .grid-row {
     display: flex;
+    justify-content: center;
     gap: 10px; /* Adjust the gap between squares as needed */
 }
 
 .square {
-    width: 150px; /* Adjust the size of the squares as needed */
-    height: 150px; /* Adjust the size of the squares as needed */
-    background-color: #ccc; /* Adjust the background color as needed */
+    width: 125px; /* Adjust the size of the squares as needed */
+    height: 125px; /* Adjust the size of the squares as needed */
+    background-color: #deb866; /* Adjust the background color as needed */
+    outline: 2px solid brown;
 }
 
 .square.selected {
@@ -123,4 +131,15 @@ canvas {
 /* Optional: Add a box shadow for a more elevated look */
 .button {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-container {
+    width: 100vw;
+    height: 100vh;
+    background-color: #ffbbaa;
+    align-items: center;
+    outline: blue;
+}
+
+.frog-button {
 }
