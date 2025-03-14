@@ -1,8 +1,10 @@
 import * as PIXI from "pixi.js";
 import lilypadImage from '../../../public/render_images/lilypad.png';
 import dummyPiece from "../game/pieces/dummyPiece"
+import {Board} from "../game/board";
 
-export const createHexagon = (x: number, y: number, radius: number, tile: any) => {
+
+export const createHexagon = (x: number, y: number, radius: number, tile: any, board : Board) => {
   // Creates Hexagons for the board
   const hexagon = new PIXI.Graphics();
   hexagon.lineStyle(2, 0x6d86ad); // Blend in with background
@@ -56,9 +58,9 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any) =
     // Add click interactivity to the sprite
     sprite.on("click", () => {
       console.log(`Lilypad clicked: ${tile.id}`);
-      sprite.tint = 0xff0000; // Change color on click
       tile.piece = new dummyPiece(true); // change this with the piece that in hand
       // Update state so that pieces re-render
+      board.interactWithTile(tile.id);
     });
 
     hexagon.addChild(sprite);

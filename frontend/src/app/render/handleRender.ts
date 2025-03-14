@@ -21,14 +21,15 @@ export const renderBoard = (board: Board): { hexContainer: PIXI.Container, piece
   board.tiles.forEach((tile: Hex) => {
     const { x, y } = axialToPixel(tile.coord.q, tile.coord.r);
     try {
-      const hexagon = createHexagon(x + 400, y + 325, hexRadius, tile);
+      const hexagon = createHexagon(x + 400, y + 325, hexRadius, tile, board);
       hexContainer.addChild(hexagon); // Add hexagon to the hex container
 
       // If the tile has a piece, render the piece and add it to the piece container
       if (tile.piece) {
+        console.log("tile has a piece")
         tile.piece.getSprite().then((sprite: PIXI.Sprite | null) => {
           if (sprite) {
-            sprite.anchor.set(0.5, 0.5); // Center the sprite
+            sprite.anchor.set(0.5, 0.5);
             sprite.x = x + 400;
             sprite.y = y + 325;
             pieceContainer.addChild(sprite); // Add piece to the piece container
