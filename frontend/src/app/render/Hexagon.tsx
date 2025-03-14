@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import lilypadImage from '../../../public/render_images/image.png'; // change this back to lilypad.png
+import lilypadImage from '../../../public/render_images/lilypad.png';
 import dummyPiece from "../game/pieces/dummyPiece"
 
 export const createHexagon = (x: number, y: number, radius: number, tile: any) => {
@@ -28,9 +28,8 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any) =
     sprite.anchor.set(0.5);
     sprite.x = x;
     sprite.y = y;
-    sprite.width = radius * 3.5; // change this back to 1.8
-    sprite.height = radius * 3.5;
-    sprite.tint = 0x42f54b;
+    sprite.width = radius * 1.8; 
+    sprite.height = radius * 1.8;
 
     // Make the sprite interactive
     sprite.eventMode = 'static';
@@ -39,20 +38,19 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any) =
     const hitBox = new PIXI.Circle(
         0, // x offset
         0, // y offset
-        sprite.width / 1 // change this back to 0.4
+        sprite.width / 0.4
       );
     sprite.hitArea = hitBox;
 
     // Add hover interactivity to the sprite
     sprite.on("pointerover", () => {
       console.log(`Lilypad hovered: ${tile.id}`);
-      sprite.tint = 0xffcc00; // Tint yellow on hover
+      sprite.tint = 0xffcc00; // Tint on hover
     });
 
     sprite.on("pointerout", () => {
       console.log(`Lilypad hover ended: ${tile.id}`);
-      //sprite.tint = 0xffffff; // Reset tint to white
-      sprite.tint = 0x42f54b; // delete this line
+      sprite.tint = 0xffffff; // Reset tint to white
     });
 
     // Add click interactivity to the sprite

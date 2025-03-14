@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
 import { Board, Hex } from "../game/board"; // Import your Board class
 import { renderBoard } from "./handleRender";
