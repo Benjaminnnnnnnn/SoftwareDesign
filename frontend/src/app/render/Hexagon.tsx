@@ -58,8 +58,6 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any, b
     // Add click interactivity to the sprite
     sprite.on("click", () => {
       console.log(`Lilypad clicked: ${tile.id}`);
-      tile.piece = new dummyPiece(true); // change this with the piece that in hand
-      // Update state so that pieces re-render
       board.interactWithTile(tile.id);
     });
 

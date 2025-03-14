@@ -3,6 +3,7 @@ import { HexCoordinate } from "../types";
 import dummyPiece from "../pieces/dummyPiece";
 import React from "react";
 import Piece from "../pieces/piece";
+import { ObjFactory } from "../factory/ObjFactory";
 
 type setStateFunc = (func: React.SetStateAction<boolean>) => void; // define type for state functions
 
@@ -14,6 +15,7 @@ export default class Board {
   imHolding : boolean;
   whatImHolding : Piece | undefined;
   whereItsFrom : Hex | undefined;
+  factory : ObjFactory;
   
 
 
@@ -25,6 +27,7 @@ export default class Board {
     this.imHolding = _imHolding;
     this.whatImHolding = undefined;
     this.whereItsFrom = undefined;
+    this.factory = new ObjFactory();
 
   }
   // Generate hexagonal tiles and populate the board.
@@ -83,35 +86,63 @@ export default class Board {
   }
 
   // TODO: CREATE PIECE METHOD TO THAT USES FACTORY
+  public createPiece(piece_id : string, target_id: string, allied : boolean){
+    const newPiece = this.factory.producePiece(piece_id, allied)
+    this.addPiece(target_id, newPiece);
+  }
 
-  private placePiece(target_id: string ){
-    // method for interaction
-    const touched_tile = this.tiles.get(target_id);
-    if(!this.imHolding || !touched_tile || !this.whereItsFrom || touched_tile.piece){} 
-      // if user is not holding a piece 
-      // if touched tile doesnt exist 
-      // if theres already a piece 
-      // if there is no info about where the piece is from
+  private addPiece(target_id: string, piece: Piece){
+    const target_tile = this.tiles.get(target_id)
+    if (!target_tile || target_tile.piece){console.log("invalid tile given");} // if there is no target tile or if the one specified already has a piece
     else{
-        touched_tile.piece = this.whatImHolding;
-        this.whatImHolding = undefined;
-        this.whereItsFrom.piece = undefined;
-        this.whereItsFrom = undefined;
-        this.updateImHolding(false)
-        this.updateIPlaced(true)
-          } 
-        }
+      console.log("updated tile piece");
+      target_tile.piece = piece;
+      console.log(piece)
+      this.updateIPlaced(true);
+    }
+  }
+
+  private placePiece(target_id: string) {
+    console.log("Piece placed");
+    const touched_tile = this.tiles.get(target_id);
+  
+    // Check if the piece can be placed
+    if ((this.imHolding == undefined) || !touched_tile || !this.whereItsFrom || touched_tile.piece) {
+      console.log("Invalid conditions for placing piece");
+      return;
+    }
+  
+    console.log("Placing piece on tile:", target_id);
+  
+    // Move the piece to the new tile
+    touched_tile.piece = this.whatImHolding;
+  
+    // Clear the piece from its previous location
+    this.whereItsFrom.piece = undefined;
+  
+    // Reset the holding state
+    this.whatImHolding = undefined;
+    this.whereItsFrom = undefined;
+  
+    // Trigger a re-render
+    this.updateIPlaced(true);
+  
+    console.log("Piece placed successfully");
+  }
   private grabPiece(target_id: string){
     // method for interaction
+    console.log("tried piece grabbed");
     const touched_tile = this.tiles.get(target_id);
     if(this.imHolding || !touched_tile || !touched_tile.piece){} 
     // if already holding a piece 
     // if there is no touched tile 
     // if there is no piece on the touched tile
     else{
+      console.log("i actually grabbed it");
       this.updateImHolding(true);
       this.whatImHolding = touched_tile.piece;
       this.whereItsFrom = touched_tile;
+      console.log(this.whatImHolding);
       }
     }
 
@@ -119,11 +150,11 @@ export default class Board {
     const touched_tile = this.tiles.get(target_id);
     if (!touched_tile){}
     else{
-      if (!touched_tile.piece){
-        this.placePiece(target_id);
+      if (touched_tile.piece){
+        this.grabPiece(target_id);
       }
       else{
-        this.grabPiece(target_id);
+        this.placePiece(target_id);
       }
     }
   }

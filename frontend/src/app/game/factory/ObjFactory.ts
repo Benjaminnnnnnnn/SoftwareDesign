@@ -1,11 +1,11 @@
 import { DummyItem } from "../items";
 import { DummyPiece, WarriorPiece, ArcherPiece } from "../pieces";
-import { IPiece } from "../types";
-import { Iitem } from "../types";
+import Piece from "../pieces/piece";
+import item from "../items/item";
 
 export class ObjFactory {
-  public producePiece(id: string, allied: boolean): IPiece {
-    let prodPiece: IPiece;
+  public producePiece(id: string, allied: boolean): Piece {
+    let prodPiece: Piece;
 
     switch (id) {
       case "u001":
@@ -19,8 +19,8 @@ export class ObjFactory {
     return prodPiece;
   }
 
-  public produceItem(id: string, allied: boolean): Iitem {
-    let prodItem: Iitem;
+  public produceItem(id: string, allied: boolean): item {
+    let prodItem: item;
 
     switch (id) {
       default:
