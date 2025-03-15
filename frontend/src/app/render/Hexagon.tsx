@@ -46,12 +46,10 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any, b
 
     // Add hover interactivity to the sprite
     sprite.on("pointerover", () => {
-      console.log(`Lilypad hovered: ${tile.id}`);
       sprite.tint = 0xffcc00; // Tint on hover
     });
 
     sprite.on("pointerout", () => {
-      console.log(`Lilypad hover ended: ${tile.id}`);
       sprite.tint = 0xffffff; // Reset tint to white
     });
 

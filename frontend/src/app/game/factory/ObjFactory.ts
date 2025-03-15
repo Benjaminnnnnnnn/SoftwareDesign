@@ -10,8 +10,10 @@ export class ObjFactory {
     switch (id) {
       case "u001":
         prodPiece = new WarriorPiece(allied);
+        break;
       case "u002":
         prodPiece = new ArcherPiece(allied);
+        break;
       default:
         prodPiece = new DummyPiece(allied);
     }

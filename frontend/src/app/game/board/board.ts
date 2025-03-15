@@ -87,6 +87,7 @@ export default class Board {
 
   // TODO: CREATE PIECE METHOD TO THAT USES FACTORY
   public createPiece(piece_id : string, target_id: string, allied : boolean){
+    console.log(piece_id);
     const newPiece = this.factory.producePiece(piece_id, allied)
     this.addPiece(target_id, newPiece);
   }
