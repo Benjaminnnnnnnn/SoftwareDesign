@@ -1,32 +1,36 @@
 import Hex from "./hex";
 import { HexCoordinate } from "../types";
-import dummyPiece from "../pieces/dummyPiece";
 import React from "react";
 import Piece from "../pieces/piece";
 import { ObjFactory } from "../factory/ObjFactory";
+import item from "../items/item";
+import { Dispatch } from "redux";
+import { setImHolding} from "../../context/gameSlice";
+import { UnknownAction } from "redux";
 
 type setStateFunc = (func: React.SetStateAction<boolean>) => void; // define type for state functions
 
 export default class Board {
+  // responsible for the creation of the board
   tiles: Map<string, Hex> = new Map(); // A map to store hex tiles, keyed by their IDs.
   size: number; // The size (radius) of the hexagonal board.
-  updateImHolding : setStateFunc;
   updateIPlaced : setStateFunc;
-  imHolding : boolean;
-  whatImHolding : Piece | undefined;
+  dispatch : Dispatch;
+  unitImHolding : Piece | undefined;
+  itemImHolding : item | undefined;
   whereItsFrom : Hex | undefined;
   factory : ObjFactory;
   
 
 
-  constructor(size: number = 3, _updateImHolding: setStateFunc, _updateIPlaced: setStateFunc, _imHolding: boolean) { 
+  constructor(size: number = 3, _updateIPlaced: setStateFunc, _dispatch: Dispatch<UnknownAction>) { 
     this.size = size;
     this.generateBoard();
-    this.updateImHolding = _updateImHolding;
     this.updateIPlaced = _updateIPlaced;
-    this.imHolding = _imHolding;
-    this.whatImHolding = undefined;
+    this.dispatch = _dispatch // used to access game state
+    this.unitImHolding = undefined;
     this.whereItsFrom = undefined;
+    this.itemImHolding = undefined;
     this.factory = new ObjFactory();
 
   }
@@ -85,73 +89,111 @@ export default class Board {
     });
   }
 
-  // TODO: CREATE PIECE METHOD TO THAT USES FACTORY
+  // For when a piece is purchased , or created to be placed on the opponents side
   public createPiece(piece_id : string, target_id: string, allied : boolean){
-    console.log(piece_id);
-    const newPiece = this.factory.producePiece(piece_id, allied)
-    this.addPiece(target_id, newPiece);
+
+    if (allied){ console.log("creating allied piece")
+      console.log(piece_id);
+    if (piece_id.startsWith("u")){// if its a unit
+    const newUnit = this.factory.producePiece(piece_id, allied)
+    this.unitImHolding = newUnit;
+    this.dispatch(setImHolding(true))
+    console.log(this.unitImHolding);
+      }
+    else if (piece_id.startsWith("i")){// if its an item
+      const newItem = this.factory.produceItem(piece_id, allied)
+      this.itemImHolding = newItem;
+      this.dispatch(setImHolding(true))
+      console.log(this.itemImHolding)
+      }
+    }
+    else{ console.log("creating enemy piece")
+      const newPiece = this.factory.producePiece(piece_id, allied)
+      console.log("new piece:", newPiece)
+      const target_tile = this.tiles.get(target_id);
+      if(!target_tile){console.log("target tile not found")}
+      else{
+        console.log("piece assigned to:", target_tile)
+        target_tile.piece = newPiece
+        this.updateIPlaced(true); // re-render board
+      }
+    } 
   }
 
-  private addPiece(target_id: string, piece: Piece){
+  // when an item is in hand and you want to give it to a unit
+  private placeItem(target_id: string){
     const target_tile = this.tiles.get(target_id)
-    if (!target_tile || target_tile.piece){console.log("invalid tile given");} // if there is no target tile or if the one specified already has a piece
+    if (!target_tile || !target_tile.piece || this.itemImHolding ==  undefined){console.log("invalid tile given");}
     else{
       console.log("updated tile piece");
-      target_tile.piece = piece;
-      console.log(piece)
+      target_tile.piece.giveItem(this.itemImHolding);
+      this.itemImHolding = undefined;
       this.updateIPlaced(true);
+      this.dispatch(setImHolding(false));
     }
   }
 
-  private placePiece(target_id: string) {
-    console.log("Piece placed");
+  // when a unit is in hand and you want to place it on a tile
+  private placeUnit(target_id: string) {
+    console.log("Unit placed");
     const touched_tile = this.tiles.get(target_id);
   
     // Check if the piece can be placed
-    if ((this.imHolding == undefined) || !touched_tile || !this.whereItsFrom || touched_tile.piece) {
+    if ((this.unitImHolding == undefined) || !touched_tile || touched_tile.piece) {
       console.log("Invalid conditions for placing piece");
       return;
     }
-  
-    console.log("Placing piece on tile:", target_id);
-  
-    // Move the piece to the new tile
-    touched_tile.piece = this.whatImHolding;
-  
+    console.log("Placing unit on tile:", target_id);
+    touched_tile.piece = this.unitImHolding;
     // Clear the piece from its previous location
-    this.whereItsFrom.piece = undefined;
+    if(this.whereItsFrom != undefined){
+      this.whereItsFrom.piece = undefined;
+    }
   
     // Reset the holding state
-    this.whatImHolding = undefined;
+    this.unitImHolding = undefined;
     this.whereItsFrom = undefined;
-  
-    // Trigger a re-render
+    this.dispatch(setImHolding(false));
     this.updateIPlaced(true);
   
     console.log("Piece placed successfully");
   }
+
+  // places piece in hand on given tile, if allowed
+  private placePiece(target_id: string){
+    const touched_tile = this.tiles.get(target_id);
+    if (this.itemImHolding != undefined && (touched_tile != undefined) && touched_tile.piece){
+      this.placeItem(target_id)
+    }
+    else if (this.unitImHolding != undefined && (touched_tile != undefined) && !touched_tile.piece){
+      this.placeUnit(target_id);
+    }
+  }
+
+  // grabs unit from the selected tile
   private grabPiece(target_id: string){
     // method for interaction
     console.log("tried piece grabbed");
     const touched_tile = this.tiles.get(target_id);
-    if(this.imHolding || !touched_tile || !touched_tile.piece){} 
+    if(this.unitImHolding || !touched_tile || !touched_tile.piece){} 
     // if already holding a piece 
     // if there is no touched tile 
     // if there is no piece on the touched tile
     else{
       console.log("i actually grabbed it");
-      this.updateImHolding(true);
-      this.whatImHolding = touched_tile.piece;
+      this.unitImHolding = touched_tile.piece;
       this.whereItsFrom = touched_tile;
-      console.log(this.whatImHolding);
+      this.dispatch(setImHolding(true));
+      console.log(this.unitImHolding);
       }
     }
 
+  // interacts with clicked tile, either grabs or places
   public interactWithTile(target_id: string){
     const touched_tile = this.tiles.get(target_id);
     if (!touched_tile){}
     else{
-      if (touched_tile.piece){
+      if (touched_tile.piece && this.itemImHolding == undefined){
         this.grabPiece(target_id);
       }
       else{
