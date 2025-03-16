@@ -8,9 +8,9 @@ import { setCurrentBoardString, setPieceImBuying } from "../context/gameSlice";
 import { encodeBoardToString } from "../game/codification";
 
 const HexGrid = () => {
-  const [imHolding, updateImHolding] = useState<boolean>(false);
   const [iPlaced, updateIPlaced] = useState<boolean>(false);
-  // const [pieceImBuying, updatePieceImBuying] = useState<string | null>(null);
+
+  // dispatch to access game state
   const game = useSelector((state: RootState) => state.game);
   const dispatch = useDispatch();
 
@@ -38,7 +38,7 @@ const HexGrid = () => {
   // Render the board (hexes and pieces)
   const renderBoardOnce = () => {
     if (appRef.current && !boardRef.current) {
-      const board = new Board(3, updateImHolding, updateIPlaced, imHolding);
+      const board = new Board(3, updateIPlaced, dispatch);
       const { hexContainer, pieceContainer } = renderBoard(board);
       appRef.current.stage.addChild(hexContainer);
       appRef.current.stage.addChild(pieceContainer);
