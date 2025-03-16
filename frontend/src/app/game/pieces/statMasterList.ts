@@ -1,9 +1,4 @@
-type Stats = {
-  max_health: number;
-  ad: number;
-  range: number;
-  speed: number;
-};
+import { Stats } from "../types";
 
 export const statMasterList: Record<string, Stats> = {
   // Dummy
