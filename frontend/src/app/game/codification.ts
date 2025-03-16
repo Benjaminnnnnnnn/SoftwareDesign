@@ -1,4 +1,6 @@
+import { Pipe } from "node:stream";
 import { Board } from "./board";
+import { pieceAsObj } from "./types";
 
 // Takes in a whole board and creates and string representing it's units
 export function encodeBoardToString(b: Board): string {
@@ -38,26 +40,11 @@ export function encodeBoardToString(b: Board): string {
 export function decodeStringToBoard(
   s: string,
   allied: boolean,
-): Array<{
-  q: number;
-  r: number;
-  id: string;
-  max_health: number;
-  ad: number;
-  item: string | null;
-}> {
+): Array<pieceAsObj> {
   // Split the string into individual piece segments
   const pieceSegments = s.split("!").filter((segment) => segment.trim() !== "");
-
   // Initialize an array to hold the decoded pieces
-  const decodedPieces: Array<{
-    q: number;
-    r: number;
-    id: string;
-    max_health: number;
-    ad: number;
-    item: string | null;
-  }> = [];
+  const decodedPieces: Array<pieceAsObj> = [];
 
   // Iterate over each segment and extract the piece information
   pieceSegments.forEach((segment) => {
@@ -66,24 +53,20 @@ export function decodeStringToBoard(
       .split("#")
       .filter((pair) => pair.trim() !== "");
 
-    // Extract key-value pairs
-    for (let i = 0; i < keyValuePairs.length; i += 2) {
-      const key = keyValuePairs[i];
-      const value = keyValuePairs[i + 1];
-      pieceData[key] = value;
-    }
+    keyValuePairs.forEach((pair) => {
+      pieceData[pair[0]] = pair.slice(1);
+    });
 
-    // Construct the piece object, inverting the coordinated depending on if it's friendly or not.
+    // Construct the piece object, handling multi-digit and negative numbers
     const piece = {
       q: allied ? parseInt(pieceData["Q"], 10) : -parseInt(pieceData["Q"], 10),
       r: allied ? parseInt(pieceData["R"], 10) : -parseInt(pieceData["R"], 10),
       id: pieceData["I"],
       max_health: parseInt(pieceData["H"], 10),
       ad: parseInt(pieceData["A"], 10),
-      item: pieceData["M"] || null, // If no item, set to null
+      item: pieceData["M"] || null,
     };
-
-    // Add the piece to the decoded pieces array
+    console.log(piece);
     decodedPieces.push(piece);
   });
 

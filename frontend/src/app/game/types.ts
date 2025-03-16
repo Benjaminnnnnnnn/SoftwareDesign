@@ -51,3 +51,12 @@ export interface Iitem {
   allied: boolean;
   getSprite(): Promise<PIXI.Sprite | null>;
 }
+
+export type pieceAsObj = {
+  q: number;
+  r: number;
+  id: string;
+  max_health: number;
+  ad: number;
+  item: string | null;
+};

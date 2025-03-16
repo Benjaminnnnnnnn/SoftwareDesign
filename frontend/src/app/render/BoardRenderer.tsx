@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../context/context";
 import { setCurrentBoardString, setPieceImBuying } from "../context/gameSlice";
 import { encodeBoardToString } from "../game/codification";
+import BattleHandler from "../game/battle/BattleHandler";
 
 const HexGrid = () => {
   const [iPlaced, updateIPlaced] = useState<boolean>(false);
@@ -17,6 +18,7 @@ const HexGrid = () => {
   const appRef = useRef<PIXI.Application | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const boardRef = useRef<Board | null>(null); // Ref to store the board instance
+  const battleHandlerRef = useRef<BattleHandler | null>(null);
   const hexContainerRef = useRef<PIXI.Container | null>(null); // Ref to store the hex container
   const pieceContainerRef = useRef<PIXI.Container | null>(null); // Ref to store the piece container
 
@@ -39,6 +41,7 @@ const HexGrid = () => {
   const renderBoardOnce = () => {
     if (appRef.current && !boardRef.current) {
       const board = new Board(3, updateIPlaced, dispatch);
+      const battleHandler = new BattleHandler(board);
       const { hexContainer, pieceContainer } = renderBoard(board);
       appRef.current.stage.addChild(hexContainer);
       appRef.current.stage.addChild(pieceContainer);
@@ -47,6 +50,7 @@ const HexGrid = () => {
       boardRef.current = board;
       hexContainerRef.current = hexContainer;
       pieceContainerRef.current = pieceContainer;
+      battleHandlerRef.current = battleHandler;
 
       console.log("Board rendered"); // Debugging log
     }

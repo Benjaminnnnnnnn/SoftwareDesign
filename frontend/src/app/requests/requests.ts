@@ -31,7 +31,7 @@ export async function fetchBoard(stage: number): Promise<string> {
   let data: string = "";
   try {
     // Looks ugly but this makes a request which expects <string>, and then uses axios's .then() to extract the board string.
-    const response = axios
+    const response = await axios
       .get<string>(backend + board + "/generate/" + String(stage))
       .then((res) => {
         data = res.data;
@@ -48,10 +48,13 @@ export async function register(
   password: string,
 ): Promise<void> {
   try {
-    const response = axios.post<string, boolean>(backend + user + "/register", {
-      username: username,
-      password: password,
-    });
+    const response = await axios.post<string, boolean>(
+      backend + user + "/register",
+      {
+        username: username,
+        password: password,
+      },
+    );
   } catch (e) {
     console.error("Could not register user", e);
   }
@@ -61,7 +64,7 @@ export async function register(
 export async function checkUser(username: string): Promise<boolean> {
   let success: boolean = false;
   try {
-    const response = axios
+    const response = await axios
       .get<boolean>(backend + user + "/check-user/" + username)
       .then((res) => {
         success = res.data;

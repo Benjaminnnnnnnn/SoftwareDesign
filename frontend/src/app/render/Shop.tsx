@@ -24,7 +24,7 @@ import { uploadBoard } from "../requests/requests";
 import icecubeImage from "../../../public/gameObjectImages/icecube.png";
 import fireflyOnImage from "../../../public/gameObjectImages/firefly_on.jpg";
 import { DummyPiece } from "../game/pieces";
-import { encodeBoardToString } from "../game/codification";
+import { decodeStringToBoard, encodeBoardToString } from "../game/codification";
 
 const gameObjects: Record<string, string> = {
   BLANK: "x000",
@@ -144,6 +144,8 @@ const Shop = () => {
     uploadBoard(game.current_boardstr, 1);
     dispatch(setGameState("BATTLE"));
     console.log(game.current_boardstr);
+    console.log(decodeStringToBoard(game.current_boardstr, true));
+    console.log(decodeStringToBoard(game.current_boardstr, false));
   };
 
   return (
