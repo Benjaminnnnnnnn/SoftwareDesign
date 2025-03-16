@@ -1,9 +1,8 @@
 import * as PIXI from "pixi.js";
 import lilypadImage from '../../../public/render_images/lilypad.png';
-import dummyPiece from "../game/pieces/dummyPiece"
 import {Board} from "../game/board";
 
-
+const allied_tiles = new Set<string>(["-2,2","-1,2","0,2","-2,1","-1,1","0,1","1,1"])
 export const createHexagon = (x: number, y: number, radius: number, tile: any, board : Board) => {
   // Creates Hexagons for the board
   const hexagon = new PIXI.Graphics();
@@ -32,8 +31,9 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any, b
     sprite.y = y;
     sprite.width = radius * 1.8; 
     sprite.height = radius * 1.8;
-
-    // Make the sprite interactive
+    console.log(tile.tile_id);
+    if (allied_tiles.has(tile.id)){
+        // Make the sprite interactive
     sprite.eventMode = 'static';
 
     // Define the hit area
@@ -58,6 +58,7 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any, b
       console.log(`Lilypad clicked: ${tile.id}`);
       board.interactWithTile(tile.id);
     });
+    }
 
     hexagon.addChild(sprite);
   };
