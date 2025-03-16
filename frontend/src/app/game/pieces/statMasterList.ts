@@ -1,0 +1,32 @@
+type Stats = {
+  max_health: number;
+  ad: number;
+  range: number;
+  speed: number;
+};
+
+export const statMasterList: Record<string, Stats> = {
+  // Dummy
+  u000: {
+    max_health: 5,
+    ad: 2,
+    range: 1,
+    speed: 1,
+  },
+
+  // Warrior
+  u001: {
+    max_health: 7,
+    ad: 3,
+    range: 1,
+    speed: 1,
+  },
+
+  // Archer
+  u002: {
+    max_health: 4,
+    ad: 4,
+    range: 2,
+    speed: 1,
+  },
+};

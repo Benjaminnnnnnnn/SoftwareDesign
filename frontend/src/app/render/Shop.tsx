@@ -10,6 +10,7 @@ import {
   setImBuying,
   setPieceImBuying,
 } from "../context/gameSlice";
+import { statMasterList } from "../game/pieces/statMasterList";
 
 // Image imports
 import dummyImage from "../../../public/gameObjectImages/dummy.png";
@@ -21,6 +22,9 @@ import gunImage from "../../../public/gameObjectImages/gun.png";
 import { StaticImageData } from "next/image";
 import { uploadBoard } from "../requests/requests";
 import icecubeImage from "../../../public/gameObjectImages/icecube.png";
+import fireflyOnImage from "../../../public/gameObjectImages/firefly_on.jpg";
+import { DummyPiece } from "../game/pieces";
+import { encodeBoardToString } from "../game/codification";
 
 const gameObjects: Record<string, string> = {
   BLANK: "x000",
@@ -139,12 +143,23 @@ const Shop = () => {
   const handleEndShopPhase = () => {
     uploadBoard(game.current_boardstr, 1);
     dispatch(setGameState("BATTLE"));
+    console.log(game.current_boardstr);
   };
 
   return (
     <div>
       <div className="grid-container">
-        <div className="grid-row">SHOP</div>
+        <div className="grid-row">
+          <h1 className="text-xl underline font-bold text-amber-600">SHOP</h1>
+        </div>
+        <div className="grid-row">
+          <img
+            className="h-8 w-8"
+            src={game.currency > 0 ? icecubeImage.src : dummyImage.src}
+          />
+          <h2> {game.currency} </h2>
+          <h2> Stage: {game.current_game_stage} </h2>
+        </div>
         <div className="grid-row">
           <Square index={0} />
           <Square index={1} />
@@ -164,24 +179,45 @@ const Shop = () => {
             <div className="square"></div>
           )}
           <div className="flex-grid-container">
-            <div className="grid-row">Info</div>
+            <div className="grid-row">
+              {selectedSquare > -1 && (
+                <div className="grid-row">
+                  <h2>
+                    H{" "}
+                    {statMasterList[objList[selectedSquare]]
+                      ? statMasterList[objList[selectedSquare]].max_health
+                      : ""}
+                  </h2>
+                  <h2>
+                    AD{" "}
+                    {statMasterList[objList[selectedSquare]]
+                      ? statMasterList[objList[selectedSquare]].ad
+                      : ""}
+                  </h2>
+                </div>
+              )}
+            </div>
             <div className="grid-row">
               <button className="button" onClick={freezeObject}>
                 Freeze
               </button>
               <button className="button" onClick={buyObject}>
                 {" "}
-                {selectedSquare}{" "}
+                Buy
               </button>
             </div>
           </div>
         </div>
-        <button className="button" onClick={clickRefresh}>
-          Refresh
-        </button>
-        <button className="button" onClick={handleEndShopPhase}>
-          Fight
-        </button>
+        <div className="grid-row">
+          <button className="button" onClick={clickRefresh}>
+            Refresh
+          </button>
+        </div>
+        <div className="grid-row">
+          <button className="button" onClick={handleEndShopPhase}>
+            Fight
+          </button>
+        </div>
       </div>
     </div>
   );

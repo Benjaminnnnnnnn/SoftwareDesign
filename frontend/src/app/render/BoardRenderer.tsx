@@ -4,14 +4,15 @@ import { Board, Hex } from "../game/board"; // Import your Board class
 import { renderBoard } from "./handleRender";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../context/context";
-import { setPieceImBuying } from "../context/gameSlice";
+import { setCurrentBoardString, setPieceImBuying } from "../context/gameSlice";
+import { encodeBoardToString } from "../game/codification";
 
 const HexGrid = () => {
   const [imHolding, updateImHolding] = useState<boolean>(false);
   const [iPlaced, updateIPlaced] = useState<boolean>(false);
   // const [pieceImBuying, updatePieceImBuying] = useState<string | null>(null);
-    const game = useSelector((state: RootState) => state.game);
-    const dispatch = useDispatch();
+  const game = useSelector((state: RootState) => state.game);
+  const dispatch = useDispatch();
 
   const appRef = useRef<PIXI.Application | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -100,8 +101,10 @@ const HexGrid = () => {
   // Update pieces when `iPlaced` changes
   useEffect(() => {
     if (appRef.current) {
-      if (iPlaced) {
+      if (iPlaced && boardRef.current) {
         updatePieces();
+        const encodedboard = encodeBoardToString(boardRef.current);
+        dispatch(setCurrentBoardString(encodedboard));
       }
       updateIPlaced(false);
     }

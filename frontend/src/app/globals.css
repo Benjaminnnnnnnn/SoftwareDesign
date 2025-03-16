@@ -95,12 +95,13 @@ canvas {
 }
 
 .button {
+    width: 80%;
     display: inline-block;
     padding: 10px 20px;
     font-size: 16px;
     font-weight: bold;
     color: #ffffff;
-    background-color: #00aab3;
+    background-color: #65000c;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -112,7 +113,7 @@ canvas {
 }
 
 .button:hover {
-    background-color: #00ffb3;
+    background-color: #bd7965;
     transform: translateY(-2px);
 }
 

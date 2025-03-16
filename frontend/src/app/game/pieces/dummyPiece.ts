@@ -1,4 +1,5 @@
 import Piece from "./piece";
+import { statMasterList } from "./statMasterList";
 
 // Ensure "export default" is used
 export default class DummyPiece extends Piece {
@@ -6,9 +7,10 @@ export default class DummyPiece extends Piece {
   constructor(allied: boolean) {
     super(allied);
     this.id = "u000";
-    this.max_health = 5;
-    this.ad = 2;
-    this.range = 1;
-    this.speed = 1;
+    const { max_health, ad, range, speed } = statMasterList[this.id];
+    this.max_health = max_health;
+    this.ad = ad;
+    this.range = range;
+    this.speed = speed;
   }
 }

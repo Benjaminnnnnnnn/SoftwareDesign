@@ -1,4 +1,5 @@
 import Piece from "./piece";
+import { statMasterList } from "./statMasterList";
 
 // Ensure "export default" is used
 export default class ArcherPiece extends Piece {
