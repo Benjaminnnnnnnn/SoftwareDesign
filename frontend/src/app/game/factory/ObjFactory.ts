@@ -1,5 +1,5 @@
-import { DummyItem } from "../items";
 import { DummyPiece, WarriorPiece, ArcherPiece } from "../pieces";
+import { DummyItem, CaterpillarItem, ButterflyItem, GunItem } from "../items";
 import Piece from "../pieces/piece";
 import item from "../items/item";
 import { Stats } from "../types";
@@ -33,6 +33,15 @@ export class ObjFactory {
     let prodItem: item;
 
     switch (id) {
+      case "i001":
+        prodItem = new CaterpillarItem(allied);
+        break;
+      case "i002":
+        prodItem = new ButterflyItem(allied);
+        break;
+      case "i003":
+        prodItem = new GunItem(allied);
+        break;
       default:
         prodItem = new DummyItem(allied);
     }
