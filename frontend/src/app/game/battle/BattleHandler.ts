@@ -6,6 +6,7 @@ import { decodeStringToBoard } from "../codification";
 import { fetchBoard } from "@/app/requests/requests";
 import { pieceAsObj } from "../types";
 import { ObjFactory } from "../factory/ObjFactory";
+import { Stats } from "../types";
 
 export default class BattleHandler {
   factory: ObjFactory;
@@ -38,10 +39,18 @@ export default class BattleHandler {
     if (enemyBoardString) {
       const enemyBoardAsObjects = decodeStringToBoard(enemyBoardString, false);
       enemyBoardAsObjects.forEach((obj: pieceAsObj) => {
+        const stats: Stats = {
+          max_health: obj.max_health,
+          ad: obj.ad,
+          speed: obj.speed,
+          range: obj.range,
+        };
         this.boardReference.createPiece(
           obj.id,
           String(obj.q) + "," + String(obj.r),
           false,
+          stats,
+          obj.item,
         );
       });
     }

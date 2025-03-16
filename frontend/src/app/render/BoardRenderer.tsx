@@ -89,6 +89,9 @@ const HexGrid = () => {
   // Handle changes to `pieceImBuying`
   useEffect(() => {
     console.log("pieceImBuying updated:", game.pieceImBuying); // Debugging log
+    if (battleHandlerRef.current && game.game_state === "BATTLE") {
+      battleHandlerRef.current.start(1);
+    }
     if (game.pieceImBuying != "") {
       console.log("Piece being bought:", game.pieceImBuying);
 
@@ -100,7 +103,7 @@ const HexGrid = () => {
 
       dispatch(setPieceImBuying("")); // Reset after handling
     }
-  }, [game.pieceImBuying]);
+  }, [game.pieceImBuying, game.game_state]);
 
   // Update pieces when `iPlaced` changes
   useEffect(() => {

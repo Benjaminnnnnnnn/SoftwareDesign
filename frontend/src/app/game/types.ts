@@ -59,5 +59,14 @@ export type pieceAsObj = {
   id: string;
   max_health: number;
   ad: number;
-  item: string | null;
+  item: string | undefined;
+  range: number;
+  speed: number;
+};
+
+export type Stats = {
+  max_health: number;
+  ad: number;
+  range: number;
+  speed: number;
 };

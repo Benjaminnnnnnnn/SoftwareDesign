@@ -1,5 +1,5 @@
 import Hex from "./hex";
-import { HexCoordinate } from "../types";
+import { HexCoordinate, Stats } from "../types";
 import React from "react";
 import Piece from "../pieces/piece";
 import { ObjFactory } from "../factory/ObjFactory";
@@ -92,13 +92,24 @@ export default class Board {
   }
 
   // For when a piece is purchased , or created to be placed on the opponents side
-  public createPiece(piece_id: string, target_id: string, allied: boolean) {
+  public createPiece(
+    piece_id: string,
+    target_id: string,
+    allied: boolean,
+    stats: Stats | undefined = undefined,
+    item: string = "",
+  ) {
     if (allied) {
       console.log("creating allied piece");
       console.log(piece_id);
       if (piece_id.startsWith("u")) {
         // if its a unit
-        const newUnit = this.factory.producePiece(piece_id, allied);
+        const newUnit = this.factory.producePiece(
+          piece_id,
+          allied,
+          stats,
+          item,
+        );
         this.unitImHolding = newUnit;
         this.dispatch(setImHolding(true));
         console.log(this.unitImHolding);
@@ -111,7 +122,7 @@ export default class Board {
       }
     } else {
       console.log("creating enemy piece");
-      const newPiece = this.factory.producePiece(piece_id, allied);
+      const newPiece = this.factory.producePiece(piece_id, allied, stats, item);
       console.log("new piece:", newPiece);
       const target_tile = this.tiles.get(target_id);
       if (!target_tile) {

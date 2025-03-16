@@ -26,6 +26,10 @@ export function encodeBoardToString(b: Board): string {
         String(p.max_health),
         "#A",
         String(p.ad),
+        "#R",
+        String(p.range),
+        "#S",
+        String(p.speed),
         "#M",
         item,
       );
@@ -64,7 +68,9 @@ export function decodeStringToBoard(
       id: pieceData["I"],
       max_health: parseInt(pieceData["H"], 10),
       ad: parseInt(pieceData["A"], 10),
-      item: pieceData["M"] || null,
+      item: pieceData["M"] || undefined,
+      speed: parseInt(pieceData["S"], 10),
+      range: parseInt(pieceData["R"], 10),
     };
     console.log(piece);
     decodedPieces.push(piece);
