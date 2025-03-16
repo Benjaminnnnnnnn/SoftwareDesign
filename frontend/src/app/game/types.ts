@@ -17,6 +17,7 @@ export type state = {
   current_game_stage: number;
   game_state: string;
   currency: number;
+  imHolding: boolean;
 };
 
 export interface IPiece {
