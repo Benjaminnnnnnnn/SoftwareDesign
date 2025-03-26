@@ -1,8 +1,9 @@
 import * as PIXI from "pixi.js";
 import { Board, Hex } from "../game/board"; // Import your Board class
 import { createHexagon } from "./Hexagon";
+import { renderTrash } from "./renderTrash";
 
-export const renderBoard = (board: Board): { hexContainer: PIXI.Container, pieceContainer: PIXI.Container } => {
+export const renderBoard = (board: Board): { hexContainer: PIXI.Container, pieceContainer: PIXI.Container, uiContainer: PIXI.Container } => {
   const hexRadius = 70;
   const hexHeight = Math.sqrt(3) * hexRadius;
   const hexWidth = 2 * hexRadius;
@@ -10,6 +11,7 @@ export const renderBoard = (board: Board): { hexContainer: PIXI.Container, piece
   // Create containers for hexagons and pieces
   const hexContainer = new PIXI.Container();
   const pieceContainer = new PIXI.Container();
+  const uiContainer = new PIXI.Container();
 
   const axialToPixel = (q: number, r: number) => {
     const x = hexWidth * (q + r / 2);
@@ -44,9 +46,11 @@ export const renderBoard = (board: Board): { hexContainer: PIXI.Container, piece
       console.error("Failed to create hexagon:", error);
     }
   });
+  const trash = renderTrash(board);
+  uiContainer.addChild(trash);
 
   // Return both containers
-  return { hexContainer, pieceContainer };
+  return { hexContainer, pieceContainer, uiContainer };
 };
 
 export default renderBoard;

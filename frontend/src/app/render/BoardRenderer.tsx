@@ -42,9 +42,10 @@ const HexGrid = () => {
     if (appRef.current && !boardRef.current) {
       const board = new Board(3, updateIPlaced, dispatch);
       const battleHandler = new BattleHandler(board);
-      const { hexContainer, pieceContainer } = renderBoard(board);
+      const { hexContainer, pieceContainer, uiContainer } = renderBoard(board);
       appRef.current.stage.addChild(hexContainer);
       appRef.current.stage.addChild(pieceContainer);
+      appRef.current.stage.addChild(uiContainer);
 
       // Store references for later use
       boardRef.current = board;

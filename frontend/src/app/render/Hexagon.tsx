@@ -31,10 +31,12 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any, b
     sprite.y = y;
     sprite.width = radius * 1.8; 
     sprite.height = radius * 1.8;
+    sprite.tint = 0xa1edb2;
     console.log(tile.tile_id);
     if (allied_tiles.has(tile.id)){
         // Make the sprite interactive
     sprite.eventMode = 'static';
+    sprite.tint = 0xFFFFFF;
 
     // Define the hit area
     const hitBox = new PIXI.Circle(
@@ -61,7 +63,8 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any, b
     }
 
     hexagon.addChild(sprite);
+    console.log("child added to lilypad");
   };
-
+  console.log("lilypad reutned");
   return hexagon;
 };

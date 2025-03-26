@@ -68,7 +68,7 @@ const Shop = () => {
     console.log(game.currency);
     if (game.currency >= 1) {
       updateRefresh(refresh + 1);
-      dispatch(setCurrency(game.currency - 1));
+      dispatch(setCurrency( - 1));
     }
   };
 
@@ -130,7 +130,7 @@ const Shop = () => {
   // buys an object if the user can afford it, if it is purchased empty the shop space
   const buyObject = () => {
     if (game.currency >= 3 && (game.imHolding == false)) {
-      dispatch(setCurrency(game.currency - 3));
+      dispatch(setCurrency( - 3));
       dispatch(
         setCurrentBoardString(game.current_boardstr + objList[selectedSquare]),
       );
