@@ -245,7 +245,8 @@ export default class Board {
 
     else if(this.itemImHolding != undefined){ // if selling an item
       this.dispatch(setCurrency(+3));
-      this.unitImHolding = undefined
+      this.itemImHolding = undefined;
+      this.dispatch(setImHolding(false));
     }
   }
 }
