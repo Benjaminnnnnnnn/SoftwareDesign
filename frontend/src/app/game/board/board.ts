@@ -5,7 +5,7 @@ import Piece from "../pieces/piece";
 import { ObjFactory } from "../factory/ObjFactory";
 import item from "../items/item";
 import { Dispatch } from "redux";
-import { setImHolding } from "../../context/gameSlice";
+import { setImHolding, setCurrency } from "../../context/gameSlice";
 import { UnknownAction } from "redux";
 
 type setStateFunc = (func: React.SetStateAction<boolean>) => void; // define type for state functions
@@ -225,6 +225,27 @@ export default class Board {
       } else {
         this.placePiece(target_id);
       }
+    }
+  }
+  // interacts with trash can, sells a piece ans updates your money if you are holding
+  public interactWithTrash() {
+
+    if (this.unitImHolding != undefined){ // if selling a piece
+      this.dispatch(setCurrency(+1));
+      // Clear the piece from its previous location
+    if (this.whereItsFrom != undefined) {
+      this.whereItsFrom.piece = undefined;
+    }
+    // Reset the holding state  
+    this.unitImHolding = undefined;
+    this.whereItsFrom = undefined;
+    this.dispatch(setImHolding(false));
+    this.updateIPlaced(true);
+    }
+
+    else if(this.itemImHolding != undefined){ // if selling an item
+      this.dispatch(setCurrency(+3));
+      this.unitImHolding = undefined
     }
   }
 }

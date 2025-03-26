@@ -41,7 +41,7 @@ const gameSlice = createSlice({
       state.game_state = action.payload;
     },
     setCurrency: (state, action: PayloadAction<number>) => {
-      state.currency = action.payload;
+      state.currency = state.currency + action.payload;
     },
     setImHolding: (state, action: PayloadAction<boolean>) => {
       state.imHolding = action.payload;
