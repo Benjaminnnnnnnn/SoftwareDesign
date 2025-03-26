@@ -107,20 +107,24 @@ canvas {
 
 .button {
     width: 80%;
-    display: inline-block;
-    padding: 10px 1px;
+    display: inline-flex;
+    padding: 10px 15px;
     font-size: 16px;
     font-weight: bold;
     color: #ffffff;
-    background-color: #65000c;
+    background-color: #ef7636;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
-    transition:
-        background-color 0.3s ease,
-        transform 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    line-height: 1;
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .button:hover {
@@ -138,18 +142,6 @@ canvas {
     background-color: #cccccc;
     cursor: not-allowed;
     transform: none;
-}
-
-/* Optional: Add a box shadow for a more elevated look */
-.button {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: inline-flex;
-    align-items: center;  /* Vertical centering */
-    justify-content: center; /* Horizontal centering */
-    gap: 0.25rem;
-    padding: 1rem 1rem; /* Add consistent padding */
-    line-height: 1; /* Remove any inherited line-height */
-    font-family: 'Comic Neue', 'Comic Sans MS', cursive;
 }
   
 .login-container {
@@ -190,7 +182,7 @@ canvas {
     padding: 0.3rem 0.4rem; /* Reduced padding */
     background: #f69b41b3;
     border-radius: 4px;
-    border-bottom: 2px solid #ff99cc;
+    border-bottom: 2px solid #f19d15;
     height: 100%;
     min-width: 0; /* Crucial for text overflow */
 }
