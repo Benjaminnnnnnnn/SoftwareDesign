@@ -7,6 +7,7 @@ import { RootState } from "../context/context";
 import { setCurrentBoardString, setPieceImBuying } from "../context/gameSlice";
 import { encodeBoardToString } from "../game/codification";
 import BattleHandler from "../game/battle/BattleHandler";
+import CursorIndicator from "./cursorIndicator";
 
 const HexGrid = () => {
   const [iPlaced, updateIPlaced] = useState<boolean>(false);
@@ -21,6 +22,30 @@ const HexGrid = () => {
   const battleHandlerRef = useRef<BattleHandler | null>(null);
   const hexContainerRef = useRef<PIXI.Container | null>(null); // Ref to store the hex container
   const pieceContainerRef = useRef<PIXI.Container | null>(null); // Ref to store the piece container
+  const { imHolding } = useSelector((state: RootState) => state.game);
+    const cursorIndicatorRef = useRef<CursorIndicator | null>(null);
+
+    // Initialize cursor indicator
+    useEffect(() => {
+        if (appRef.current) {
+            cursorIndicatorRef.current = new CursorIndicator(appRef.current);
+        }
+
+        return () => {
+            cursorIndicatorRef.current?.destroy();
+        };
+    }, [appRef.current]);
+
+    // Toggle visibility based on imHolding state
+    useEffect(() => {
+        if (!cursorIndicatorRef.current) return;
+
+        if (imHolding) {
+            cursorIndicatorRef.current.show();
+        } else {
+            cursorIndicatorRef.current.hide();
+        }
+    }, [imHolding]);
 
   // Initialize Pixi.js app
   const initializePixiApp = () => {

@@ -34,6 +34,8 @@ export const renderBoard = (board: Board): { hexContainer: PIXI.Container, piece
             sprite.anchor.set(0.5, 0.5);
             sprite.x = x + 400;
             sprite.y = y + 325;
+            sprite.eventMode = 'none';  // <-- This makes it ignore all interactions
+            sprite.hitArea = null;      // <-- This removes any automatic hit area
             pieceContainer.addChild(sprite); // Add piece to the piece container
           } else {
             console.error("Failed to create sprite for piece on tile:", tile.id);

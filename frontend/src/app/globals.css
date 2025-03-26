@@ -49,7 +49,18 @@ canvas {
 }
 
 .button-container {
-}
+    display: flex;
+    gap: 0.5rem; /* Space between buttons */
+    justify-content: center; /* Center the buttons horizontally */
+    align-items: center; /* Align buttons vertically */
+    width: 80%;
+  }
+  
+  /* If you want the buttons to be equal width */
+  .button-container.equal-width > .button {
+    flex: 1;
+    min-width: 0; /* Allows text truncation if needed */
+  }
 
 .grid-container {
     background-color: burlywood;
@@ -97,7 +108,7 @@ canvas {
 .button {
     width: 80%;
     display: inline-block;
-    padding: 10px 20px;
+    padding: 10px 1px;
     font-size: 16px;
     font-weight: bold;
     color: #ffffff;
@@ -132,8 +143,15 @@ canvas {
 /* Optional: Add a box shadow for a more elevated look */
 .button {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: inline-flex;
+    align-items: center;  /* Vertical centering */
+    justify-content: center; /* Horizontal centering */
+    gap: 0.25rem;
+    padding: 1rem 1rem; /* Add consistent padding */
+    line-height: 1; /* Remove any inherited line-height */
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive;
 }
-
+  
 .login-container {
     width: 100vw;
     height: 100vh;
@@ -142,5 +160,62 @@ canvas {
     outline: blue;
 }
 
-.frog-button {
+/*.frog-button {
+}*/
+
+.stats-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; /* Reduced gap */
+    background: burlywood;
+    padding: 0.8rem; /* Slightly reduced padding */
+    border-radius: 5px;
+    width: 200px;
+    height: 130px;
+    overflow: hidden;
+    position: relative;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.2rem;
+    height: 50%;
+}
+
+.stat-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.3rem 0.4rem; /* Reduced padding */
+    background: #f69b41b3;
+    border-radius: 4px;
+    border-bottom: 2px solid #ff99cc;
+    height: 100%;
+    min-width: 0; /* Crucial for text overflow */
+}
+
+.stat-label {
+    font-weight: 700;
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+    font-size: 0.75rem; /* Slightly smaller */
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds ... if text too long */
+    flex-shrink: 0; /* Prevents label from shrinking */
+    max-width: 60%; /* Limits label width */
+}
+
+.stat-value {
+    font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 1rem; /* Smaller to fit */
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+    margin-left: 0.2rem; /* Small separation */
 }

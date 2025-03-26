@@ -11,8 +11,10 @@ import {
   setPieceImBuying,
 } from "../context/gameSlice";
 import { statMasterList } from "../game/pieces/statMasterList";
+import { attributeMasterList } from "../game/items/attributeMasterList";
 
 // Image imports
+import soldImage from "../../../public/gameObjectImages/sold.png";
 import dummyImage from "../../../public/gameObjectImages/dummy.png";
 import warriorImage from "../../../public/gameObjectImages/warrior.png";
 import archerImage from "../../../public/gameObjectImages/archer.png";
@@ -22,6 +24,8 @@ import gunImage from "../../../public/gameObjectImages/gun.png";
 import { StaticImageData } from "next/image";
 import { uploadBoard } from "../requests/requests";
 import icecubeImage from "../../../public/gameObjectImages/icecube.png";
+import dimflyImage from "../../../public/gameObjectImages/dimfly.png";
+import litflyImage from "../../../public/gameObjectImages/litfly.png";
 import fireflyOnImage from "../../../public/gameObjectImages/firefly_on.jpg";
 import { DummyPiece } from "../game/pieces";
 import { decodeStringToBoard, encodeBoardToString } from "../game/codification";
@@ -36,7 +40,7 @@ const gameObjects: Record<string, string> = {
 };
 
 const images: Record<string, StaticImageData> = {
-  x000: dummyImage,
+  x000: soldImage,
   u001: warriorImage,
   u002: archerImage,
   i001: butterflyImage,
@@ -129,7 +133,7 @@ const Shop = () => {
 
   // buys an object if the user can afford it, if it is purchased empty the shop space
   const buyObject = () => {
-    if (game.currency >= 3 && (game.imHolding == false)) {
+    if (game.currency >= 3 && (game.imHolding == false) && objList[selectedSquare] != gameObjects["BLANK"] && objList[selectedSquare] != null) {
       dispatch(setCurrency( - 3));
       dispatch(
         setCurrentBoardString(game.current_boardstr + objList[selectedSquare]),
@@ -148,6 +152,37 @@ const Shop = () => {
     console.log(decodeStringToBoard(game.current_boardstr, false));
   };
 
+  // Helper function to format amplification values
+  const formatAmp = (amp: number[] = [0, 1]): string => {
+    const [add, mult] = amp;
+    if (add !== 0 && mult !== 1) return `+${add} ×${mult}`;
+    if (add !== 0) return `+${add}`;
+    if (mult !== 1) return `×${mult}`;
+    return "";
+  };
+
+  // Helper component for stat/attribute display
+  interface StatDisplayProps {
+    label: string;
+    unitValue?: number;
+    itemAmp?: number[];
+  }
+
+  const StatDisplay: React.FC<StatDisplayProps> = ({ label, unitValue, itemAmp }) => {
+    const value = objList[selectedSquare]?.startsWith('u')
+      ? unitValue?.toString()
+      : objList[selectedSquare]?.startsWith('i')
+      ? formatAmp(itemAmp)
+      : "";
+  
+    return value ? (
+      <div className="stat-display">
+        <span className="stat-label">{label}</span>
+        <span className="stat-value">{value}</span>
+      </div>
+    ) : null;
+  };
+
   return (
     <div>
       <div className="grid-container">
@@ -157,7 +192,7 @@ const Shop = () => {
         <div className="grid-row">
           <img
             className="h-8 w-8"
-            src={game.currency > 0 ? icecubeImage.src : dummyImage.src}
+            src={game.currency > 0 ? litflyImage.src : dimflyImage.src}
           />
           <h2> {game.currency} </h2>
           <h2> Stage: {game.current_game_stage} </h2>
@@ -182,39 +217,62 @@ const Shop = () => {
           )}
           <div className="flex-grid-container">
             <div className="grid-row">
-              {selectedSquare > -1 && (
-                <div className="grid-row">
-                  <h2>
-                    H{" "}
-                    {statMasterList[objList[selectedSquare]]
-                      ? statMasterList[objList[selectedSquare]].max_health
-                      : ""}
-                  </h2>
-                  <h2>
-                    AD{" "}
-                    {statMasterList[objList[selectedSquare]]
-                      ? statMasterList[objList[selectedSquare]].ad
-                      : ""}
-                  </h2>
+            {selectedSquare > -1 && (
+              <div className="stats-container">
+                {/* First row for HP and AD */}
+                <div className="stats-row">
+                  <StatDisplay
+                    label="HP:"
+                    unitValue={statMasterList[objList[selectedSquare]]?.max_health}
+                    itemAmp={attributeMasterList[objList[selectedSquare]]?.max_health_amp}
+                  />
+                  <StatDisplay
+                    label="AD:"
+                    unitValue={statMasterList[objList[selectedSquare]]?.ad}
+                    itemAmp={attributeMasterList[objList[selectedSquare]]?.ad_amp}
+                  />
                 </div>
-              )}
-            </div>
-            <div className="grid-row">
-              <button className="button" onClick={freezeObject}>
-                Freeze
-              </button>
-              <button className="button" onClick={buyObject}>
-                {" "}
-                Buy
-              </button>
+                
+                {/* Second row for Range and Speed */}
+                <div className="stats-row">
+                  <StatDisplay
+                    label="Range:"
+                    unitValue={statMasterList[objList[selectedSquare]]?.range}
+                    itemAmp={attributeMasterList[objList[selectedSquare]]?.range_amp}
+                  />
+                  <StatDisplay
+                    label="Speed:"
+                    unitValue={statMasterList[objList[selectedSquare]]?.speed}
+                    itemAmp={attributeMasterList[objList[selectedSquare]]?.speed_amp}
+                  />
+                </div>
+              </div>
+            )}
             </div>
           </div>
         </div>
         <div className="grid-row">
-          <button className="button" onClick={clickRefresh}>
+          <div className="button-container">
+            <button 
+              className="button flex items-center gap-1" 
+              onClick={freezeObject}
+            >
+              Freeze
+              <img
+                className="h-4 w-"
+                src={icecubeImage.src}
+                alt="Freeze"
+              />
+            </button>
+              <button className="button" onClick={buyObject}>
+                {" "}
+                Buy
+              </button>
+              <button className="button" onClick={clickRefresh}>
             Refresh
           </button>
-        </div>
+            </div>
+            </div>
         <div className="grid-row">
           <button className="button" onClick={handleEndShopPhase}>
             Fight
