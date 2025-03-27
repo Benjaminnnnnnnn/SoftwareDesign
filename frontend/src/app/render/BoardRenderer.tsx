@@ -23,29 +23,29 @@ const HexGrid = () => {
   const hexContainerRef = useRef<PIXI.Container | null>(null); // Ref to store the hex container
   const pieceContainerRef = useRef<PIXI.Container | null>(null); // Ref to store the piece container
   const { imHolding } = useSelector((state: RootState) => state.game);
-    const cursorIndicatorRef = useRef<CursorIndicator | null>(null);
+  const cursorIndicatorRef = useRef<CursorIndicator | null>(null);
 
-    // Initialize cursor indicator
-    useEffect(() => {
-        if (appRef.current) {
-            cursorIndicatorRef.current = new CursorIndicator(appRef.current);
-        }
+  // Initialize cursor indicator
+  useEffect(() => {
+    if (appRef.current) {
+      cursorIndicatorRef.current = new CursorIndicator(appRef.current);
+    }
 
-        return () => {
-            cursorIndicatorRef.current?.destroy();
-        };
-    }, [appRef.current]);
+    return () => {
+      cursorIndicatorRef.current?.destroy();
+    };
+  }, [appRef.current]);
 
-    // Toggle visibility based on imHolding state
-    useEffect(() => {
-        if (!cursorIndicatorRef.current) return;
+  // Toggle visibility based on imHolding state
+  useEffect(() => {
+    if (!cursorIndicatorRef.current) return;
 
-        if (imHolding) {
-            cursorIndicatorRef.current.show();
-        } else {
-            cursorIndicatorRef.current.hide();
-        }
-    }, [imHolding]);
+    if (imHolding) {
+      cursorIndicatorRef.current.show();
+    } else {
+      cursorIndicatorRef.current.hide();
+    }
+  }, [imHolding]);
 
   // Initialize Pixi.js app
   const initializePixiApp = () => {

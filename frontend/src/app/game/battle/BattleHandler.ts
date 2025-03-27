@@ -9,16 +9,16 @@ import { ObjFactory } from "../factory/ObjFactory";
 import { Stats } from "../types";
 
 export default class BattleHandler {
-  factory: ObjFactory;
   boardReference: Board;
   alliedPieces: Set<Piece>;
   enemyPieces: Set<Piece>;
+  commandStack: Array<Function>;
 
   constructor(b: Board) {
-    this.factory = new ObjFactory();
     this.boardReference = b;
     this.alliedPieces = new Set<Piece>();
     this.enemyPieces = new Set<Piece>();
+    this.commandStack = [];
 
     // iterate through the board and then split pieces into two groups
     this.boardReference.tiles.forEach((tile) => {
@@ -37,7 +37,9 @@ export default class BattleHandler {
     // get the opposing board string;
     const enemyBoardString = await fetchBoard(stage);
     if (enemyBoardString) {
+      // Decode it to a list of objects
       const enemyBoardAsObjects = decodeStringToBoard(enemyBoardString, false);
+      // Destructure each obj into it's attributes, then pass those attributes to the createPiece function which uses teh factory
       enemyBoardAsObjects.forEach((obj: pieceAsObj) => {
         const stats: Stats = {
           max_health: obj.max_health,
