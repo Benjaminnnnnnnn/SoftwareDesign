@@ -5,7 +5,7 @@ import archerImage from "../../../public/gameObjectImages/archer.png";
 import butterflyImage from "../../../public/gameObjectImages/butterfly.png";
 import caterpillarImage from "../../../public/gameObjectImages/caterpillar.png";
 import gunImage from "../../../public/gameObjectImages/gun.png";
-import blankImage from "../../../public/gameObjectImages/Blank.png";
+import blankImage from "../../../public/gameObjectImages/blank.png";
 import { StaticImageData } from "next/image";
 
 export const gameObjects: Record<string, string> = {
