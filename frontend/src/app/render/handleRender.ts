@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Board, Hex } from "../game/board"; // Import your Board class
 import { createHexagon } from "./Hexagon";
+import { createBattleHexagon } from "./BattleHexagon";
 import { renderTrash } from "./renderTrash";
 
 export const renderBoard = (board: Board): { hexContainer: PIXI.Container, pieceContainer: PIXI.Container, uiContainer: PIXI.Container } => {
@@ -23,8 +24,11 @@ export const renderBoard = (board: Board): { hexContainer: PIXI.Container, piece
   board.tiles.forEach((tile: Hex) => {
     const { x, y } = axialToPixel(tile.coord.q, tile.coord.r);
     try {
+      const battleHexagon = createBattleHexagon(x + 400, y + 325, hexRadius, tile, board);
+      hexContainer.addChild(battleHexagon); // Add hexagon to the hex container
+
       const hexagon = createHexagon(x + 400, y + 325, hexRadius, tile, board);
-      hexContainer.addChild(hexagon); // Add hexagon to the hex container
+      uiContainer.addChild(hexagon);
 
       // If the tile has a piece, render the piece and add it to the piece container
       if (tile.piece) {

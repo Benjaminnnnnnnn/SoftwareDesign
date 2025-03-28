@@ -64,6 +64,7 @@ const HexGrid = () => {
 
   // Render the board (hexes and pieces)
   const renderBoardOnce = () => {
+    console.log("render board once called");
     if (appRef.current && !boardRef.current) {
       const board = new Board(3, updateIPlaced, dispatch);
       const battleHandler = new BattleHandler(board);
@@ -79,6 +80,30 @@ const HexGrid = () => {
       battleHandlerRef.current = battleHandler;
 
       console.log("Board rendered"); // Debugging log
+    }
+  };
+
+  const renderGameState = () => {
+    if (!appRef.current || !boardRef.current) return;
+  
+    // Clear the stage first
+    appRef.current.stage.removeChildren();
+  
+    // Always render pieces (needed in both states)
+    const { pieceContainer } = renderBoard(boardRef.current);
+    appRef.current.stage.addChild(pieceContainer);
+    pieceContainerRef.current = pieceContainer;
+  
+    // Render state-specific containers
+    if (game.game_state === "BATTLE") {
+      const { hexContainer } = renderBoard(boardRef.current);
+      appRef.current.stage.addChild(hexContainer);
+      hexContainerRef.current = hexContainer;
+      console.log("Rendered BATTLE state");
+    } else if (game.game_state === "PLANNING") {
+      const { uiContainer } = renderBoard(boardRef.current);
+      appRef.current.stage.addChild(uiContainer);
+      console.log("Rendered PLANNING state");
     }
   };
 
@@ -131,6 +156,18 @@ const HexGrid = () => {
     }
   }, [game.pieceImBuying, game.game_state]);
 
+  // Handle game state changes
+useEffect(() => {
+  if (appRef.current && boardRef.current) {
+    renderGameState();
+    console.log("Game state changed to:", game.game_state);
+    
+    if (game.game_state === "BATTLE" && battleHandlerRef.current) {
+      battleHandlerRef.current.start(1);
+    }
+  }
+}, [game.game_state]);
+
   // Update pieces when `iPlaced` changes
   useEffect(() => {
     if (appRef.current) {
@@ -142,6 +179,14 @@ const HexGrid = () => {
       updateIPlaced(false);
     }
   }, [iPlaced]); // Re-run only when `iPlaced` changes
+
+  // Remount board when the game state changes
+  useEffect(() => {
+    if(appRef.current){
+      renderBoardOnce()
+      console.log("use effect activated", game.game_state);
+    }
+  }, [game.game_state])
 
   return <canvas ref={canvasRef} />;
 };
