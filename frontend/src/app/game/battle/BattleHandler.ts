@@ -6,6 +6,7 @@ import { decodeStringToBoard } from "../codification";
 import { fetchBoard } from "@/app/requests/requests";
 import { pieceAsObj } from "../types";
 import { Stats, TargetInfo } from "../types";
+import Command from "./Command";
 
 
 
@@ -20,9 +21,6 @@ export default class BattleHandler {
     this.alliedPieces = new Map<string, Piece>();
     this.enemyPieces = new Map<string, Piece>();
     this.commandStack = [];
-
-
-
   }
 
   // recieve an enemy board, and assign initial targets before commencing combat;
@@ -72,11 +70,26 @@ export default class BattleHandler {
     return findNearestEnemy(h, allied);
   }
 
-  public run() {}
+  public run() {
+    // fill the action stack
+    let current_actions = []
+    this.alliedPieces.forEach((piece, key) => {
+      current_actions.push(this.determineAction(piece, key));
+    })
+  }
 
   // vague but this will be the main driver
-  private action() {}
+  private action() {
 
+  }
+
+  private determineAction(piece: Piece, coord: string) {
+    if (piece.target && piece.path) {
+      if (piece.range <= piece.path.length) {
+        return new Command(piece.attack, piece.target.id);
+      }
+    }
+  }
   // cleanup function
   public end() {}
 }
