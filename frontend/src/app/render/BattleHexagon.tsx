@@ -2,9 +2,8 @@ import * as PIXI from "pixi.js";
 import lilypadImage from '../../../public/render_images/lilypad.png';
 import {Board} from "../game/board";
 
-const allied_tiles = new Set<string>(["-2,2","-1,2","0,2","-2,1","-1,1","0,1","1,1"])
-export const createHexagon = (x: number, y: number, radius: number, tile: any, board : Board) => {
-  // Creates Hexagons for the board
+export const createBattleHexagon = (x: number, y: number, radius: number, tile: any, board : Board) => {
+  // Creates Hexagons for the board, doesnt have interactibility
   const hexagon = new PIXI.Graphics();
   hexagon.lineStyle(2, 0x6d86ad); // Blend in with background
   hexagon.beginFill(0x6d86ad);
@@ -32,35 +31,11 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any, b
     sprite.width = radius * 1.8; 
     sprite.height = radius * 1.8;
     sprite.tint = 0xa1edb2;
-    if (allied_tiles.has(tile.id)){
-        // Make the sprite interactive
-    sprite.eventMode = 'static';
-    sprite.tint = 0xFFFFFF;
-
-    // Define the hit area
-    const hitBox = new PIXI.Circle(
-        0, // x offset
-        0, // y offset
-        sprite.width / 0.4
-      );
-    sprite.hitArea = hitBox;
-
-    // Add hover interactivity to the sprite
-    sprite.on("pointerover", () => {
-      sprite.tint = 0xffcc00; // Tint on hover
-    });
-
-    sprite.on("pointerout", () => {
-      sprite.tint = 0xffffff; // Reset tint to white
-    });
-
-    // Add click interactivity to the sprite
-    sprite.on("click", () => {
-      board.interactWithTile(tile.id);
-    });
-    }
+    console.log(tile.tile_id);
 
     hexagon.addChild(sprite);
+    console.log("child added to lilypad (BATTLE)");
   };
+  console.log("lilypad reutned");
   return hexagon;
 };
