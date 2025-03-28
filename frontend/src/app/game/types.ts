@@ -1,6 +1,7 @@
 import { Board } from "./board";
 import item from "./items/item";
 import * as PIXI from "pixi.js";
+import {Hex} from "./board";
 export type HexCoordinate = { q: number; r: number };
 
 export enum States {
@@ -70,3 +71,8 @@ export type Stats = {
   range: number;
   speed: number;
 };
+
+export type TargetInfo = {
+  target?: Hex,
+  path?: Array<string>
+}

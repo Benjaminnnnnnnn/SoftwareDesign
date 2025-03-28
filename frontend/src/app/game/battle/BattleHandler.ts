@@ -5,35 +5,28 @@ import { findNearestEnemy } from "./battleFunctions";
 import { decodeStringToBoard } from "../codification";
 import { fetchBoard } from "@/app/requests/requests";
 import { pieceAsObj } from "../types";
-import { ObjFactory } from "../factory/ObjFactory";
-import { Stats } from "../types";
+import { Stats, TargetInfo } from "../types";
+
+
 
 export default class BattleHandler {
   boardReference: Board;
-  alliedPieces: Set<Piece>;
-  enemyPieces: Set<Piece>;
+  alliedPieces: Map<string, Piece>;
+  enemyPieces: Map<string, Piece>;
   commandStack: Array<Function>;
 
   constructor(b: Board) {
     this.boardReference = b;
-    this.alliedPieces = new Set<Piece>();
-    this.enemyPieces = new Set<Piece>();
+    this.alliedPieces = new Map<string, Piece>();
+    this.enemyPieces = new Map<string, Piece>();
     this.commandStack = [];
 
-    // iterate through the board and then split pieces into two groups
-    this.boardReference.tiles.forEach((tile) => {
-      if (tile.piece) {
-        if (tile.piece.allied) {
-          this.alliedPieces.add(tile.piece);
-        } else {
-          this.enemyPieces.add(tile.piece);
-        }
-      }
-    });
+
+
   }
 
   // recieve an enemy board, and assign initial targets before commencing combat;
-  public async start(stage: number) {
+  public async prepare(stage: number) {
     // get the opposing board string;
     const enemyBoardString = await fetchBoard(stage);
     if (enemyBoardString) {
@@ -55,18 +48,34 @@ export default class BattleHandler {
           obj.item,
         );
       });
+      // iterate through the board and then split pieces into two groups, also assign their initial targets
+      this.boardReference.tiles.forEach((tile) => {
+        if (tile.piece) {
+          if (tile.piece.allied) {
+            this.alliedPieces.set(tile.id, tile.piece);
+            const {target, path} = this.assignTargets(tile, true);
+            tile.piece.target = target;
+            tile.piece.path = path;
+          } else {
+            this.enemyPieces.set(tile.id, tile.piece);
+            const {target, path} = this.assignTargets(tile, false);
+            tile.piece.target = target;
+            tile.piece.path = path;
+          }
+        }
+      });
     }
   }
 
   // assign targets for pieces.
-  private assignTargets(h: Hex) {
-    findNearestEnemy(h);
+  private assignTargets(h: Hex, allied: boolean): TargetInfo {
+    return findNearestEnemy(h, allied);
   }
 
   public run() {}
 
   // vague but this will be the main driver
-  private actions() {}
+  private action() {}
 
   // cleanup function
   public end() {}

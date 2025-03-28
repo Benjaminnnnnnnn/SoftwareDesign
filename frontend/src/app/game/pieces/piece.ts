@@ -3,6 +3,7 @@ import { Assets } from "pixi.js";
 import Item from "../items/item";
 import { images } from "../ImageRef";
 import { IPiece } from "../types";
+import { Hex } from "../board";
 
 export default abstract class Piece implements IPiece {
   public id: string;
@@ -15,6 +16,8 @@ export default abstract class Piece implements IPiece {
   public item?: Item; // Optional property declaration
   public allied: boolean;
   public alive: boolean;
+  public target?: Hex;
+  public path?: Array<string>;
 
   constructor(_allied: boolean) {
     this.id = "u000"; // modify
