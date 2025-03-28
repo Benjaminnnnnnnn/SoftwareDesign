@@ -18,6 +18,7 @@ export default abstract class Piece implements IPiece {
   public alive: boolean;
   public target?: Hex;
   public path?: Array<string>;
+  public tile_id: string | null;
 
   constructor(_allied: boolean) {
     this.id = "u000"; // modify
@@ -30,6 +31,7 @@ export default abstract class Piece implements IPiece {
     this.item = undefined; // Initialization (no ?)
     this.allied = _allied;
     this.alive = true;
+    this.tile_id = null;
   }
 
   public attack(): number {
@@ -73,6 +75,7 @@ export default abstract class Piece implements IPiece {
       this.speed += this.item.speed_amp[0];
       this.speed *= this.item.speed_amp[1];
     }
+    this.current_health = this.max_health;
   }
 
   private removeItemModifier(): void {
@@ -88,67 +91,65 @@ export default abstract class Piece implements IPiece {
       this.speed /= this.item.speed_amp[1];
       this.speed -= this.item.speed_amp[0];
     }
+    this.current_health = this.max_health;
   }
 
   public async getSprite(): Promise<PIXI.Sprite | null> {
     console.log("get sprite is called");
-    if (!images[this.id]) {
-      console.log("no image for given id"); // if no image is associated with id, load default
+    
+    // Try to load the main sprite texture
+    let texture: PIXI.Texture;
+    try {
+      const imageId = images[this.id] ? this.id : "u000"; // Fallback to default
+      texture = await Assets.load(images[imageId].src);
+    } catch (error) {
+      console.error("Failed to load texture for piece:", error);
+      return null;
+    }
+  
+    // Create the main sprite
+    const piece = new PIXI.Sprite(texture);
+    piece.anchor.set(0.5);
+    piece.width = 90;
+    piece.height = 90;
+  
+    const statsText = new PIXI.Text({
+      text: `❤️${this.current_health}/${this.max_health}   ⚔️${this.ad}`,
+      style: new PIXI.TextStyle({
+          fontFamily: 'Arial',
+          fontSize: 75,  // Slightly larger for better readability
+          fontWeight: 'bold',
+          fill: this.allied ? 0xffffff : 0xff0000,  // Green for allied, red for enemy
+          align: 'center',
+          stroke: 0x000000,
+          lineHeight: 24,
+          wordWrap: false,
+          wordWrapWidth: 200
+      })
+  });
+  
+  // Position the text at the bottom center of the sprite
+  statsText.anchor.set(0.5);
+  statsText.position.set(
+      0,  // Center horizontally
+      250  // position to bottom
+  );
+  
+  // Add to sprite (make sure this is after other children)
+  piece.addChild(statsText);
+  
+    // Add item sprite if exists
+    if (this.item) {
       try {
-        console.log("load default");
-        const texture = await Assets.load(images["u000"].src);
-        const piece = new PIXI.Sprite(texture);
-
-        // Customize the sprite
-        piece.anchor.set(0.5);
-        piece.width = 90;
-        piece.height = 90;
-        // Add item as a child to piece sprite
-        if (!this.item) {
-          console.log("no item");
-        } else {
-          console.log("there is an image");
-          const item_sprite = await this.item.getSprite();
-          console.log("piece has item");
-          if (!item_sprite) {
-          } else {
-            console.log("item added to piece");
-            piece.addChild(item_sprite);
-          }
+        const itemSprite = await this.item.getSprite();
+        if (itemSprite) {
+          piece.addChild(itemSprite);
         }
-        return piece;
       } catch (error) {
-        console.error("Failed to load texture for piece:", error);
-        return null; // Return null if there's an error
-      }
-    } else {
-      // otherwise, load corresponding image
-      try {
-        const texture = await Assets.load(images[this.id].src);
-        const piece = new PIXI.Sprite(texture);
-
-        // Customize the sprite
-        piece.anchor.set(0.5);
-        piece.width = 90;
-        piece.height = 90;
-        // TODO : add item as a child to the sprite
-        if (!this.item) {
-          console.log("no item");
-        } else {
-          console.log("there is an image");
-          const item_sprite = await this.item.getSprite();
-          console.log("piece has item");
-          if (!item_sprite) {
-          } else {
-            console.log("item added to piece");
-            piece.addChild(item_sprite);
-          }
-        }
-        return piece;
-      } catch (error) {
-        console.error("Failed to load texture for piece:", error);
-        return null; // Return null if there's an error
+        console.error("Failed to load item sprite:", error);
       }
     }
+  
+    return piece;
   }
 }

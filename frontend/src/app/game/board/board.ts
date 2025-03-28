@@ -130,6 +130,7 @@ export default class Board {
       } else {
         console.log("piece assigned to:", target_tile);
         target_tile.piece = newPiece;
+        target_tile.piece.tile_id = target_id;
         this.updateIPlaced(true); // re-render board
       }
     }
@@ -165,6 +166,7 @@ export default class Board {
     }
     console.log("Placing unit on tile:", target_id);
     touched_tile.piece = this.unitImHolding;
+    touched_tile.piece.tile_id = target_id;
     // Clear the piece from its previous location
     if (this.whereItsFrom != undefined) {
       this.whereItsFrom.piece = undefined;

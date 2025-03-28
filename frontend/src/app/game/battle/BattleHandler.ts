@@ -86,7 +86,7 @@ export default class BattleHandler {
   private determineAction(piece: Piece, coord: string) {
     if (piece.target && piece.path) {
       if (piece.range <= piece.path.length) {
-        return new Command(piece.attack, piece.target.id);
+          return new Command(piece.attack, piece.target.id);
       }
     }
   }

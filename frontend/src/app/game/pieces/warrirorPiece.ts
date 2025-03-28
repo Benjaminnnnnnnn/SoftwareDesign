@@ -17,6 +17,7 @@ export default class WarriorPiece extends Piece {
       ? stats
       : statMasterList[this.id];
     this.max_health = max_health;
+    this.current_health = max_health;
     this.ad = ad;
     this.range = range;
     this.speed = speed;
