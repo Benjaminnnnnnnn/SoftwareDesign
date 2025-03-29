@@ -28,11 +28,11 @@ export default class BattleHandler {
    * Post : Enemy Board is loaded, all valid pieces are in this.pieces and each piece has their initial target
    * @param stage
    */
-  public prepare(stage: number) {
+  public async prepare(stage: number) {
     // get the opposing board string;
     this.pieces = new Array<Piece>();
-    // const enemyBoardString = await fetchBoard(stage);
-    const enemyBoardString = "#Q-1#R1#Iu001#H7#A3#R1#S1#M";
+    const enemyBoardString = await fetchBoard(stage);
+    //const enemyBoardString = "#Q-1#R1#Iu001#H7#A3#R1#S1#M";
     if (enemyBoardString) {
       // Decode it to a list of objects
       const enemyBoardAsObjects = decodeStringToBoard(enemyBoardString, false);
@@ -73,6 +73,7 @@ export default class BattleHandler {
   Post : that piece will now be targeting either nothing (undefined) or a valid opposing piece
   */
   private findNearestEnemy(startPiece: Piece): TargetInfo {
+    console.log("INSIDE FIND NEAREST ENEMY");
     let Obj: TargetInfo = {
       target: undefined,
       path: undefined,
@@ -102,7 +103,11 @@ export default class BattleHandler {
       visited.add(node.id);
 
       // Check if this node contains an enemy piece
-      if (node.piece && node.piece.allied !== startPiece.allied) {
+      if (
+        node.piece &&
+        node.piece.allied !== startPiece.allied &&
+        node.piece.alive
+      ) {
         Obj.target = node.piece;
         Obj.path = [...path.slice(1), node.id];
         return Obj; // Since BFS guarantees shortest path, return immediately
@@ -123,28 +128,36 @@ export default class BattleHandler {
    */
   public run_combat_loop() {
     // remove dead pieces from combat
-
     setTimeout(() => {
       let f_alive = 0;
       let e_alive = 0;
-      console.log(this.pieces);
       // remove pieces that died, and count the number of pieces on each side
-      this.pieces.filter((p) => {
+      this.pieces = this.pieces.filter((p) => {
         if (p.alive) {
           if (p.allied) {
             f_alive++;
           } else {
             e_alive++;
           }
+          return true; // Keep alive pieces
+        } else if (p.current_health <= 0) {
+          const tile = p.tile_id;
+          if (tile) {
+            const hex = this.boardReference.tiles.get(tile);
+            if (hex) {
+              hex.piece = undefined;
+            }
+          }
+          return false; // Remove dead pieces
         }
-        return p.alive;
+        return p.alive; // Fallback (though the above conditions should cover all cases)
       });
 
       if (e_alive == 0) {
-        //handle winning
+        this.end(true);
         return;
       } else if (f_alive == 0) {
-        //handle losing
+        this.end(false);
         return;
       }
       this.fillCommandStack();
@@ -166,7 +179,6 @@ export default class BattleHandler {
    */
   private fillCommandStack() {
     // determine the command each piece will put onto the stack
-    console.log("in fill commandStack");
     this.pieces.forEach((p) => {
       const nextCommand = this.determineAction(p);
       console.log("next", nextCommand);
@@ -189,8 +201,21 @@ export default class BattleHandler {
     let args: CommandArgs = {
       type: "base",
     };
-    if (!piece.target || !piece.path) {
+    console.log("PIECE IN DETERMINE ACTION", piece);
+    if (
+      !piece.target ||
+      !piece.path ||
+      piece.path.length == 0 ||
+      !piece.target.alive ||
+      piece.target.current_health <= 0
+    ) {
       this.findNearestEnemy(piece);
+      args = {
+        type: "move",
+        board: this.boardReference,
+        pieceToMove: piece,
+      };
+      command = new Command(this.boardReference.move, args);
     } else if (piece.target && piece.path) {
       if (piece.range >= piece.path.length) {
         // returns a command contaiing an attack and a

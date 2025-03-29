@@ -162,7 +162,11 @@ const HexGrid = () => {
 
       if (game.game_state === "BATTLE" && battleHandlerRef.current) {
         battleHandlerRef.current.prepare(1);
-        battleHandlerRef.current.run_combat_loop();
+        setTimeout(() => {
+          if (battleHandlerRef.current) {
+            battleHandlerRef.current.run_combat_loop();
+          }
+        }, 2000);
       }
     }
   }, [game.game_state]);
