@@ -1,19 +1,24 @@
 import Piece from "../pieces/piece";
-import { CommandArgs } from "../types";
+import { AttackCommand, CommandArgs, MoveCommand } from "../types";
 
 export default class Command {
-  func: Function;
-  args: CommandArgs;
+  args: AttackCommand | MoveCommand;
 
-  constructor(_func: Function, _args: CommandArgs) {
-    this.func = _func;
+  constructor(_func: Function, _args: AttackCommand | MoveCommand) {
     this.args = _args;
   }
 
   public exec() {
+    console.log(this.args);
     switch (this.args.type) {
       case "attack":
-        this.func();
+        this.args.from.attack();
+        break;
+      case "move":
+        // temp
+        break;
+      default:
+        break;
     }
   }
 }

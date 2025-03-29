@@ -85,15 +85,15 @@ const HexGrid = () => {
 
   const renderGameState = () => {
     if (!appRef.current || !boardRef.current) return;
-  
+
     // Clear the stage first
     appRef.current.stage.removeChildren();
-  
+
     // Always render pieces (needed in both states)
     const { pieceContainer } = renderBoard(boardRef.current);
     appRef.current.stage.addChild(pieceContainer);
     pieceContainerRef.current = pieceContainer;
-  
+
     // Render state-specific containers
     if (game.game_state === "BATTLE") {
       const { hexContainer } = renderBoard(boardRef.current);
@@ -140,9 +140,7 @@ const HexGrid = () => {
   // Handle changes to `pieceImBuying`
   useEffect(() => {
     console.log("pieceImBuying updated:", game.pieceImBuying); // Debugging log
-    if (battleHandlerRef.current && game.game_state === "BATTLE") {
-      battleHandlerRef.current.prepare(1);
-    }
+
     if (game.pieceImBuying != "") {
       console.log("Piece being bought:", game.pieceImBuying);
 
@@ -157,16 +155,17 @@ const HexGrid = () => {
   }, [game.pieceImBuying, game.game_state]);
 
   // Handle game state changes
-useEffect(() => {
-  if (appRef.current && boardRef.current) {
-    renderGameState();
-    console.log("Game state changed to:", game.game_state);
-    
-    if (game.game_state === "BATTLE" && battleHandlerRef.current) {
-      battleHandlerRef.current.prepare(1);
+  useEffect(() => {
+    if (appRef.current && boardRef.current) {
+      renderGameState();
+      console.log("Game state changed to:", game.game_state);
+
+      if (game.game_state === "BATTLE" && battleHandlerRef.current) {
+        battleHandlerRef.current.prepare(1);
+        battleHandlerRef.current.run_combat_loop();
+      }
     }
-  }
-}, [game.game_state]);
+  }, [game.game_state]);
 
   // Update pieces when `iPlaced` changes
   useEffect(() => {
@@ -182,11 +181,11 @@ useEffect(() => {
 
   // Remount board when the game state changes
   useEffect(() => {
-    if(appRef.current){
-      renderBoardOnce()
+    if (appRef.current) {
+      renderBoardOnce();
       console.log("use effect activated", game.game_state);
     }
-  }, [game.game_state])
+  }, [game.game_state]);
 
   return <canvas ref={canvasRef} />;
 };
