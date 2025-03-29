@@ -19,8 +19,8 @@ export const statMasterList: Record<string, Stats> = {
 
   // Archer
   u002: {
-    max_health: 4,
-    ad: 4,
+    max_health: 3,
+    ad: 2,
     range: 2,
     speed: 1,
   },

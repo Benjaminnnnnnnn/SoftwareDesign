@@ -15,7 +15,14 @@ export default class Command {
         this.args.from.attack();
         break;
       case "move":
-        // temp
+        if (this.args.pieceToMove?.path && this.args.pieceToMove.tile_id) {
+          this.args.board.move(
+            this.args.pieceToMove.tile_id,
+            this.args.pieceToMove.path[0],
+          );
+          this.args.pieceToMove.path = this.args.pieceToMove.path.slice(1);
+        }
+
         break;
       default:
         break;

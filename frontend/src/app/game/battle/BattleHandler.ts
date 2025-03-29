@@ -7,16 +7,20 @@ import { CommandArgs, pieceAsObj } from "../types";
 import { shuffleArray } from "./helperFunctions";
 import { Stats, TargetInfo } from "../types";
 import Command from "./Command";
+import { Dispatch } from "redux";
+import { setForceRerender } from "@/app/context/gameSlice";
 
 export default class BattleHandler {
   boardReference: Board;
   pieces: Array<Piece>;
   commandStack: Array<Command>;
+  dispatch: Dispatch;
 
-  constructor(b: Board) {
+  constructor(b: Board, dispatch: Dispatch) {
     this.boardReference = b;
     this.pieces = new Array<Piece>();
     this.commandStack = [];
+    this.dispatch = dispatch;
   }
 
   /**
@@ -119,41 +123,41 @@ export default class BattleHandler {
    */
   public run_combat_loop() {
     // remove dead pieces from combat
-    let f_alive = 0;
-    let e_alive = 0;
-    console.log(this.pieces);
-    // remove pieces that died, and count the number of pieces on each side
-    this.pieces.filter((p) => {
-      if (p.alive) {
-        if (p.allied) {
-          f_alive++;
-        } else {
-          e_alive++;
+
+    setTimeout(() => {
+      let f_alive = 0;
+      let e_alive = 0;
+      console.log(this.pieces);
+      // remove pieces that died, and count the number of pieces on each side
+      this.pieces.filter((p) => {
+        if (p.alive) {
+          if (p.allied) {
+            f_alive++;
+          } else {
+            e_alive++;
+          }
+        }
+        return p.alive;
+      });
+
+      if (e_alive == 0) {
+        //handle winning
+        return;
+      } else if (f_alive == 0) {
+        //handle losing
+        return;
+      }
+      this.fillCommandStack();
+      while (this.commandStack.length > 0) {
+        const currCommand = this.commandStack.pop();
+        if (currCommand) {
+          currCommand.exec();
         }
       }
-      return p.alive;
-    });
-
-    if (e_alive == 0) {
-      //handle winning
-      return;
-    } else if (f_alive == 0) {
-      //handle losing
-      return;
-    }
-    this.fillCommandStack();
-    while (this.commandStack.length > 0) {
-      const currCommand = this.commandStack.pop();
-      if (currCommand) {
-        currCommand.exec();
-      }
-    }
-
-    console.log(this.pieces);
-
+      this.dispatch(setForceRerender(1));
+      this.run_combat_loop();
+    }, 1000);
     // run recursivly
-    //this.run_combat_loop();
-    return;
   }
 
   /**
@@ -185,9 +189,8 @@ export default class BattleHandler {
     let args: CommandArgs = {
       type: "base",
     };
-    if (!piece.target) {
+    if (!piece.target || !piece.path) {
       this.findNearestEnemy(piece);
-      // should also assign the move command
     } else if (piece.target && piece.path) {
       if (piece.range >= piece.path.length) {
         // returns a command contaiing an attack and a
@@ -201,14 +204,21 @@ export default class BattleHandler {
       } else {
         args = {
           type: "move",
+          board: this.boardReference,
           pieceToMove: piece,
         };
         command = new Command(this.boardReference.move, args);
       }
     }
-
+    console.log(piece, command);
     return command;
   }
   // cleanup function
-  public end() {}
+  public end(win: boolean) {
+    if (win) {
+      console.log("YOU WIN");
+    } else {
+      console.log("YOU LOST");
+    }
+  }
 }

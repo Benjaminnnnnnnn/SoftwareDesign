@@ -45,7 +45,7 @@ export default abstract class Piece implements IPiece {
 
   public takeDamage(damage: number): void {
     this.current_health -= damage;
-    if (this.current_health < 0) {
+    if (this.current_health <= 0) {
       this.alive = false;
     }
   }

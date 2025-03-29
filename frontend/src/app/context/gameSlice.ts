@@ -13,6 +13,7 @@ const initialState: state = {
   game_state: "PLANNING",
   currency: 10,
   imHolding: false,
+  forceRerender: 0,
 };
 
 const gameSlice = createSlice({
@@ -45,7 +46,10 @@ const gameSlice = createSlice({
     },
     setImHolding: (state, action: PayloadAction<boolean>) => {
       state.imHolding = action.payload;
-    }
+    },
+    setForceRerender: (state, action: PayloadAction<number>) => {
+      state.forceRerender = state.forceRerender + action.payload;
+    },
   },
 });
 
@@ -58,6 +62,7 @@ export const {
   setCurrentGameStage,
   setGameState,
   setCurrency,
-  setImHolding
+  setImHolding,
+  setForceRerender,
 } = gameSlice.actions;
 export default gameSlice.reducer;

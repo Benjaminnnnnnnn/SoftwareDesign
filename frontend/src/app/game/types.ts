@@ -20,6 +20,7 @@ export type state = {
   game_state: string;
   currency: number;
   imHolding: boolean;
+  forceRerender: number;
 };
 
 export interface IPiece {
@@ -85,6 +86,7 @@ interface BaseCommand {
 // Specific command interfaces
 export interface MoveCommand extends BaseCommand {
   type: "move";
+  board: Board;
   pieceToMove: Piece;
 }
 

@@ -5,7 +5,11 @@ import Piece from "../pieces/piece";
 import { ObjFactory } from "../factory/ObjFactory";
 import item from "../items/item";
 import { Dispatch } from "redux";
-import { setImHolding, setCurrency } from "../../context/gameSlice";
+import {
+  setImHolding,
+  setCurrency,
+  setForceRerender,
+} from "../../context/gameSlice";
 import { UnknownAction } from "redux";
 
 type setStateFunc = (func: React.SetStateAction<boolean>) => void; // define type for state functions
@@ -251,5 +255,23 @@ export default class Board {
     }
   }
 
-  public move() {}
+  /**
+   * Pre : A valid start and end hex ID
+   * Post : The piece on the given start hex is moved to the given end hex
+   */
+  public move(start: string, end: string) {
+    console.log(start, end);
+    const moving_piece = this.tiles.get(start)?.piece;
+    const target_hex = this.tiles.get(end);
+    if (moving_piece && target_hex) {
+      if (!target_hex.piece) {
+        target_hex.piece = moving_piece;
+        moving_piece.tile_id = target_hex.id;
+        const cleanup = this.tiles.get(start);
+        if (cleanup) {
+          cleanup.piece = undefined;
+        }
+      }
+    }
+  }
 }

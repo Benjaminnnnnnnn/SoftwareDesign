@@ -67,7 +67,7 @@ const HexGrid = () => {
     console.log("render board once called");
     if (appRef.current && !boardRef.current) {
       const board = new Board(3, updateIPlaced, dispatch);
-      const battleHandler = new BattleHandler(board);
+      const battleHandler = new BattleHandler(board, dispatch);
       const { hexContainer, pieceContainer, uiContainer } = renderBoard(board);
       appRef.current.stage.addChild(hexContainer);
       appRef.current.stage.addChild(pieceContainer);
@@ -179,6 +179,12 @@ const HexGrid = () => {
     }
   }, [iPlaced]); // Re-run only when `iPlaced` changes
 
+  // For rerender;
+  useEffect(() => {
+    if (appRef.current) {
+      updatePieces();
+    }
+  }, [game.forceRerender]);
   // Remount board when the game state changes
   useEffect(() => {
     if (appRef.current) {
