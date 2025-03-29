@@ -48,6 +48,7 @@ export default abstract class Piece implements IPiece {
 
   public resetPiece(): void {
     this.current_health = this.max_health;
+    this.alive = true;
   }
 
   public giveItem(_item: Item): void {
@@ -96,7 +97,7 @@ export default abstract class Piece implements IPiece {
 
   public async getSprite(): Promise<PIXI.Sprite | null> {
     console.log("get sprite is called");
-    
+
     // Try to load the main sprite texture
     let texture: PIXI.Texture;
     try {
@@ -106,38 +107,38 @@ export default abstract class Piece implements IPiece {
       console.error("Failed to load texture for piece:", error);
       return null;
     }
-  
+
     // Create the main sprite
     const piece = new PIXI.Sprite(texture);
     piece.anchor.set(0.5);
     piece.width = 90;
     piece.height = 90;
-  
+
     const statsText = new PIXI.Text({
       text: `❤️${this.current_health}/${this.max_health}   ⚔️${this.ad}`,
       style: new PIXI.TextStyle({
-          fontFamily: 'Arial',
-          fontSize: 75,  // Slightly larger for better readability
-          fontWeight: 'bold',
-          fill: this.allied ? 0xffffff : 0xff0000,  // Green for allied, red for enemy
-          align: 'center',
-          stroke: 0x000000,
-          lineHeight: 24,
-          wordWrap: false,
-          wordWrapWidth: 200
-      })
-  });
-  
-  // Position the text at the bottom center of the sprite
-  statsText.anchor.set(0.5);
-  statsText.position.set(
-      0,  // Center horizontally
-      250  // position to bottom
-  );
-  
-  // Add to sprite (make sure this is after other children)
-  piece.addChild(statsText);
-  
+        fontFamily: "Arial",
+        fontSize: 75, // Slightly larger for better readability
+        fontWeight: "bold",
+        fill: this.allied ? 0xffffff : 0xff0000, // Green for allied, red for enemy
+        align: "center",
+        stroke: 0x000000,
+        lineHeight: 24,
+        wordWrap: false,
+        wordWrapWidth: 200,
+      }),
+    });
+
+    // Position the text at the bottom center of the sprite
+    statsText.anchor.set(0.5);
+    statsText.position.set(
+      0, // Center horizontally
+      250, // position to bottom
+    );
+
+    // Add to sprite (make sure this is after other children)
+    piece.addChild(statsText);
+
     // Add item sprite if exists
     if (this.item) {
       try {
@@ -149,7 +150,7 @@ export default abstract class Piece implements IPiece {
         console.error("Failed to load item sprite:", error);
       }
     }
-  
+
     return piece;
   }
 }
