@@ -231,24 +231,25 @@ export default class Board {
   }
   // interacts with trash can, sells a piece ans updates your money if you are holding
   public interactWithTrash() {
-
-    if (this.unitImHolding != undefined){ // if selling a piece
+    if (this.unitImHolding != undefined) {
+      // if selling a piece
       this.dispatch(setCurrency(+1));
       // Clear the piece from its previous location
-    if (this.whereItsFrom != undefined) {
-      this.whereItsFrom.piece = undefined;
-    }
-    // Reset the holding state  
-    this.unitImHolding = undefined;
-    this.whereItsFrom = undefined;
-    this.dispatch(setImHolding(false));
-    this.updateIPlaced(true);
-    }
-
-    else if(this.itemImHolding != undefined){ // if selling an item
+      if (this.whereItsFrom != undefined) {
+        this.whereItsFrom.piece = undefined;
+      }
+      // Reset the holding state
+      this.unitImHolding = undefined;
+      this.whereItsFrom = undefined;
+      this.dispatch(setImHolding(false));
+      this.updateIPlaced(true);
+    } else if (this.itemImHolding != undefined) {
+      // if selling an item
       this.dispatch(setCurrency(+3));
       this.itemImHolding = undefined;
       this.dispatch(setImHolding(false));
     }
   }
+
+  public move() {}
 }

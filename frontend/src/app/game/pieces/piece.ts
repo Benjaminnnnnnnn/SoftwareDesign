@@ -35,7 +35,11 @@ export default abstract class Piece implements IPiece {
   }
 
   public attack() {
-    this.target?.takeDamage(this.ad);
+    console.log("ATTACK", this.target);
+    if (this.target) {
+      this.target.takeDamage(this.ad);
+    }
+    console.log(this.target);
     // returns damage that will be deault
   }
 

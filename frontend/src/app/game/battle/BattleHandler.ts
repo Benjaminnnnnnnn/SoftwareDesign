@@ -15,7 +15,7 @@ export default class BattleHandler {
 
   constructor(b: Board) {
     this.boardReference = b;
-    this.pieces = [];
+    this.pieces = new Array<Piece>();
     this.commandStack = [];
   }
 
@@ -24,9 +24,11 @@ export default class BattleHandler {
    * Post : Enemy Board is loaded, all valid pieces are in this.pieces and each piece has their initial target
    * @param stage
    */
-  public async prepare(stage: number) {
+  public prepare(stage: number) {
     // get the opposing board string;
-    const enemyBoardString = await fetchBoard(stage);
+    this.pieces = new Array<Piece>();
+    // const enemyBoardString = await fetchBoard(stage);
+    const enemyBoardString = "#Q-1#R1#Iu001#H7#A3#R1#S1#M";
     if (enemyBoardString) {
       // Decode it to a list of objects
       const enemyBoardAsObjects = decodeStringToBoard(enemyBoardString, false);
@@ -50,12 +52,13 @@ export default class BattleHandler {
       this.boardReference.tiles.forEach((hex) => {
         if (hex.piece) {
           // also set up their initial targets
-          console.log(hex.piece, "Start Finding Target");
+          //console.log(hex.piece, "Start Finding Target");
           const targeting: TargetInfo = this.findNearestEnemy(hex.piece);
-          console.log(hex.piece, "Found", targeting);
+          //console.log(hex.piece, "Found", targeting);
           hex.piece.target = targeting.target;
           hex.piece.path = targeting.path;
           this.pieces.push(hex.piece);
+          console.log("Pushing of a piece", this.pieces);
         }
       });
     }
@@ -97,7 +100,7 @@ export default class BattleHandler {
       // Check if this node contains an enemy piece
       if (node.piece && node.piece.allied !== startPiece.allied) {
         Obj.target = node.piece;
-        Obj.path = [...path, node.id];
+        Obj.path = [...path.slice(1), node.id];
         return Obj; // Since BFS guarantees shortest path, return immediately
       }
 
@@ -108,7 +111,6 @@ export default class BattleHandler {
         }
       });
     }
-
     return Obj; // No enemy found
   }
 
@@ -119,29 +121,27 @@ export default class BattleHandler {
     // remove dead pieces from combat
     let f_alive = 0;
     let e_alive = 0;
-    for (let i = 0; i < this.pieces.length; i++) {
-      if (!this.pieces[i].alive) {
-        this.pieces.splice(i, 1);
-        i--;
-      } else {
-        if (this.pieces[i].allied) {
+    console.log(this.pieces);
+    // remove pieces that died, and count the number of pieces on each side
+    this.pieces.filter((p) => {
+      if (p.alive) {
+        if (p.allied) {
           f_alive++;
         } else {
           e_alive++;
         }
       }
-    }
+      return p.alive;
+    });
 
     if (e_alive == 0) {
-      // do actions related to winning
+      //handle winning
       return;
     } else if (f_alive == 0) {
-      // actions related to losing
+      //handle losing
       return;
     }
-
     this.fillCommandStack();
-
     while (this.commandStack.length > 0) {
       const currCommand = this.commandStack.pop();
       if (currCommand) {
@@ -149,8 +149,11 @@ export default class BattleHandler {
       }
     }
 
+    console.log(this.pieces);
+
     // run recursivly
-    this.run_combat_loop();
+    //this.run_combat_loop();
+    return;
   }
 
   /**
@@ -159,8 +162,10 @@ export default class BattleHandler {
    */
   private fillCommandStack() {
     // determine the command each piece will put onto the stack
+    console.log("in fill commandStack");
     this.pieces.forEach((p) => {
       const nextCommand = this.determineAction(p);
+      console.log("next", nextCommand);
       if (nextCommand != undefined) {
         this.commandStack.push(nextCommand);
       }
@@ -184,12 +189,21 @@ export default class BattleHandler {
       this.findNearestEnemy(piece);
       // should also assign the move command
     } else if (piece.target && piece.path) {
-      if (piece.range <= piece.path.length) {
+      if (piece.range >= piece.path.length) {
         // returns a command contaiing an attack and a
+        args = {
+          type: "attack",
+          from: piece,
+          to: piece.target,
+        };
+        console.log("args for attack", args);
         command = new Command(piece.attack, args);
       } else {
-        // things to make a piece move
-        //command = new Command();
+        args = {
+          type: "move",
+          pieceToMove: piece,
+        };
+        command = new Command(this.boardReference.move, args);
       }
     }
 

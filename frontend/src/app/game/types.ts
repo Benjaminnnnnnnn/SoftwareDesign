@@ -1,7 +1,7 @@
 import { Board } from "./board";
 import item from "./items/item";
 import * as PIXI from "pixi.js";
-import {Hex} from "./board";
+import { Hex } from "./board";
 import Piece from "./pieces/piece";
 export type HexCoordinate = { q: number; r: number };
 
@@ -74,9 +74,9 @@ export type Stats = {
 };
 
 export type TargetInfo = {
-  target?: Piece,
-  path?: Array<string>
-}
+  target?: Piece;
+  path?: Array<string>;
+};
 
 interface BaseCommand {
   type: string;
@@ -84,14 +84,14 @@ interface BaseCommand {
 
 // Specific command interfaces
 export interface MoveCommand extends BaseCommand {
-  type: 'move';
+  type: "move";
   pieceToMove: Piece;
 }
 
 export interface AttackCommand extends BaseCommand {
-  type: 'attack';
+  type: "attack";
   from: Piece;
-  to: Piece
+  to: Piece;
 }
 
-export type CommandArgs = MoveCommand | AttackCommand | BaseCommand
+export type CommandArgs = MoveCommand | AttackCommand | BaseCommand;
