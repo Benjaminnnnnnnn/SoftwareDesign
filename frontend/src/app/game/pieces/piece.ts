@@ -16,7 +16,7 @@ export default abstract class Piece implements IPiece {
   public item?: Item; // Optional property declaration
   public allied: boolean;
   public alive: boolean;
-  public target?: Hex;
+  public target?: Piece;
   public path?: Array<string>;
   public tile_id: string | null;
 
@@ -34,8 +34,8 @@ export default abstract class Piece implements IPiece {
     this.tile_id = null;
   }
 
-  public attack(): number {
-    return this.ad;
+  public attack() {
+    this.target?.takeDamage(this.ad);
     // returns damage that will be deault
   }
 

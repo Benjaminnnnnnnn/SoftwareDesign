@@ -2,6 +2,7 @@ import { Board } from "./board";
 import item from "./items/item";
 import * as PIXI from "pixi.js";
 import {Hex} from "./board";
+import Piece from "./pieces/piece";
 export type HexCoordinate = { q: number; r: number };
 
 export enum States {
@@ -32,7 +33,7 @@ export interface IPiece {
   allied: boolean;
   alive: boolean;
 
-  attack(): number;
+  attack(): void;
 
   takeDamage(damage: number): void;
 
@@ -73,6 +74,24 @@ export type Stats = {
 };
 
 export type TargetInfo = {
-  target?: Hex,
+  target?: Piece,
   path?: Array<string>
 }
+
+interface BaseCommand {
+  type: string;
+}
+
+// Specific command interfaces
+export interface MoveCommand extends BaseCommand {
+  type: 'move';
+  pieceToMove: Piece;
+}
+
+export interface AttackCommand extends BaseCommand {
+  type: 'attack';
+  from: Piece;
+  to: Piece
+}
+
+export type CommandArgs = MoveCommand | AttackCommand | BaseCommand

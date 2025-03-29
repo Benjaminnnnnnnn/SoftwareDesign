@@ -163,7 +163,7 @@ useEffect(() => {
     console.log("Game state changed to:", game.game_state);
     
     if (game.game_state === "BATTLE" && battleHandlerRef.current) {
-      battleHandlerRef.current.start(1);
+      battleHandlerRef.current.prepare(1);
     }
   }
 }, [game.game_state]);

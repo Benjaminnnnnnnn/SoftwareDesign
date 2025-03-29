@@ -1,13 +1,18 @@
+import Piece from "../pieces/piece";
+import { CommandArgs } from "../types";
+
 export default class Command {
     func: Function;
-    target: string; 
+    args: CommandArgs; 
 
-    constructor(_func: Function, _target: string) {
+    constructor(_func: Function, _target: Piece) {
         this.func = _func;
-        this.target = _target;
+        this.args = {
+            type: "base"
+        };
     }
 
     public exec() {
-        this.func(this.target);
+        this.func(this.args);
     }
 }
