@@ -118,7 +118,6 @@ const HexGrid = () => {
       const { pieceContainer } = renderBoard(boardRef.current);
       appRef.current.stage.addChild(pieceContainer);
       pieceContainerRef.current = pieceContainer;
-
       console.log("Pieces re-rendered"); // Debugging log
     }
   };
@@ -230,5 +229,5 @@ const HexGrid = () => {
 
   return <canvas ref={canvasRef} />;
 };
-
+ 
 export default HexGrid;

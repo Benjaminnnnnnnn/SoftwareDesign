@@ -171,7 +171,7 @@ export default class BattleHandler {
       });
 
       this.run_combat_loop();
-    }, 1000);
+    }, 1500); // delay between combat
     // run recursivly
   }
 

@@ -3,6 +3,7 @@ import item from "./items/item";
 import * as PIXI from "pixi.js";
 import { Hex } from "./board";
 import Piece from "./pieces/piece";
+import { Sprite } from "pixi.js";
 export type HexCoordinate = { q: number; r: number };
 
 export enum States {
@@ -46,6 +47,20 @@ export interface IPiece {
   giveItem(_item: item): void;
 
   getSprite(): Promise<PIXI.Sprite | null>;
+}
+
+export interface IAnimate {
+  // animation interface for pieces
+  slideTo(x: number, y: number): Promise<void>;
+  shake(): Promise<void>;
+}
+
+export interface IAnimatedPiece {
+  getSprite(): Promise<{
+  // interface for a animated piece
+    sprite: Sprite,
+    animate: IAnimate
+  } | null>;
 }
 
 export interface Iitem {
