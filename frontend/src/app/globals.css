@@ -54,13 +54,13 @@ canvas {
     justify-content: center; /* Center the buttons horizontally */
     align-items: center; /* Align buttons vertically */
     width: 80%;
-  }
-  
-  /* If you want the buttons to be equal width */
-  .button-container.equal-width > .button {
+}
+
+/* If you want the buttons to be equal width */
+.button-container.equal-width > .button {
     flex: 1;
     min-width: 0; /* Allows text truncation if needed */
-  }
+}
 
 .grid-container {
     background-color: burlywood;
@@ -118,13 +118,20 @@ canvas {
     cursor: pointer;
     text-align: center;
     text-decoration: none;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition:
+        background-color 0.3s ease,
+        transform 0.2s ease;
     align-items: center;
     justify-content: center;
     gap: 0.25rem;
     line-height: 1;
-    font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+    font-family: "Comic Neue", "Comic Sans MS", cursive;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Add this to your CSS */
+.button--thin {
+    width: 20%;
 }
 
 .button:hover {
@@ -143,11 +150,15 @@ canvas {
     cursor: not-allowed;
     transform: none;
 }
-  
+
 .login-container {
     width: 100vw;
     height: 100vh;
-    background-color: #ffbbaa;
+    background-color: #fef9de;
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+    justify-content: center;
     align-items: center;
     outline: blue;
 }
@@ -189,7 +200,7 @@ canvas {
 
 .stat-label {
     font-weight: 700;
-    font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+    font-family: "Comic Neue", "Comic Sans MS", cursive;
     font-size: 0.75rem; /* Slightly smaller */
     color: #ffffff;
     white-space: nowrap;
@@ -200,7 +211,7 @@ canvas {
 }
 
 .stat-value {
-    font-family: 'Comic Neue', 'Comic Sans MS', cursive;
+    font-family: "Comic Neue", "Comic Sans MS", cursive;
     font-weight: 700;
     color: #ffffff;
     font-size: 1rem; /* Smaller to fit */

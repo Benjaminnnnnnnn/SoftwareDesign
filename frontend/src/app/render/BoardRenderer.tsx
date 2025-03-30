@@ -188,28 +188,32 @@ const HexGrid = () => {
   // Fill the board with the last board you had
   useEffect(() => {
     if (game.game_state == "PLANNING") {
-      const friendlyBoardAsObjects = decodeStringToBoard(game.pre_combat_string, true);
-            // Destructure each obj into it's attributes, then pass those attributes to the createPiece function which uses teh factory
-            console.log("FRIENDLY BOARD", friendlyBoardAsObjects)
-            friendlyBoardAsObjects.forEach((obj: pieceAsObj) => {
-              const stats: Stats = {
-                max_health: obj.max_health,
-                ad: obj.ad,
-                speed: obj.speed,
-                range: obj.range,
-              };
-              boardRef.current?.createPiece(
-                obj.id,
-                String(obj.q) + "," + String(obj.r),
-                true,
-                stats,
-                obj.item,
-                true
-              );
-            });
+      const friendlyBoardAsObjects = decodeStringToBoard(
+        game.pre_combat_string,
+        true,
+      );
+      // Destructure each obj into it's attributes, then pass those attributes to the createPiece function which uses teh factory
+      console.log("FRIENDLY BOARD", friendlyBoardAsObjects);
+      friendlyBoardAsObjects.forEach((obj: pieceAsObj) => {
+        console.log("OBJECT HAPPENING", obj);
+        const stats: Stats = {
+          max_health: obj.max_health,
+          ad: obj.ad,
+          speed: obj.speed,
+          range: obj.range,
+        };
+        boardRef.current?.createPiece(
+          obj.id,
+          String(obj.q) + "," + String(obj.r),
+          true,
+          stats,
+          obj.item,
+          true,
+        );
+      });
     }
     updatePieces();
-  }, [game.game_state])
+  }, [game.game_state]);
   // For rerender;
   useEffect(() => {
     if (appRef.current) {
