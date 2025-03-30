@@ -9,10 +9,12 @@ const initialState: state = {
   current_boardstr: "",
   imBuying: false,
   pieceImBuying: "",
-  current_game_stage: 0,
+  current_game_stage: 1,
   game_state: "PLANNING",
   currency: 10,
   imHolding: false,
+  wins: 0,
+  losses: 0,
   forceRerender: 0,
 };
 
@@ -36,7 +38,7 @@ const gameSlice = createSlice({
       state.imBuying = action.payload;
     },
     setCurrentGameStage: (state, action: PayloadAction<number>) => {
-      state.current_game_stage = action.payload;
+      state.current_game_stage = state.current_game_stage + action.payload;
     },
     setGameState: (state, action: PayloadAction<string>) => {
       state.game_state = action.payload;
@@ -44,10 +46,19 @@ const gameSlice = createSlice({
     setCurrency: (state, action: PayloadAction<number>) => {
       state.currency = state.currency + action.payload;
     },
+    resetCurrency: (state, action: PayloadAction<number>) => {
+      state.currency = action.payload;
+    },
     setImHolding: (state, action: PayloadAction<boolean>) => {
       state.imHolding = action.payload;
     },
     setForceRerender: (state, action: PayloadAction<number>) => {
+      state.forceRerender = state.forceRerender + action.payload;
+    },
+    setCurrentWins: (state, action: PayloadAction<number>) => {
+      state.forceRerender = state.forceRerender + action.payload;
+    },
+    setCurrentLosses: (state, action: PayloadAction<number>) => {
       state.forceRerender = state.forceRerender + action.payload;
     },
   },
@@ -64,5 +75,8 @@ export const {
   setCurrency,
   setImHolding,
   setForceRerender,
+  setCurrentLosses,
+  setCurrentWins,
+  resetCurrency
 } = gameSlice.actions;
 export default gameSlice.reducer;

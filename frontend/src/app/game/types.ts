@@ -21,6 +21,8 @@ export type state = {
   currency: number;
   imHolding: boolean;
   forceRerender: number;
+  wins: number;
+  losses: number;
 };
 
 export interface IPiece {

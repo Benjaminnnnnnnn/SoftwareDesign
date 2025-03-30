@@ -166,7 +166,7 @@ const HexGrid = () => {
           if (battleHandlerRef.current) {
             battleHandlerRef.current.run_combat_loop();
           }
-        }, 2000);
+        }, 500);
       }
     }
   }, [game.game_state]);

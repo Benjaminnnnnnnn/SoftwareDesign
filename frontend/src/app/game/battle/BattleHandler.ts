@@ -8,7 +8,7 @@ import { shuffleArray } from "./helperFunctions";
 import { Stats, TargetInfo } from "../types";
 import Command from "./Command";
 import { Dispatch } from "redux";
-import { setForceRerender } from "@/app/context/gameSlice";
+import { setCurrentWins, setForceRerender, setCurrentLosses, setGameState } from "@/app/context/gameSlice";
 
 export default class BattleHandler {
   boardReference: Board;
@@ -62,7 +62,6 @@ export default class BattleHandler {
           hex.piece.target = targeting.target;
           hex.piece.path = targeting.path;
           this.pieces.push(hex.piece);
-          console.log("Pushing of a piece", this.pieces);
         }
       });
     }
@@ -73,7 +72,6 @@ export default class BattleHandler {
   Post : that piece will now be targeting either nothing (undefined) or a valid opposing piece
   */
   private findNearestEnemy(startPiece: Piece): TargetInfo {
-    console.log("INSIDE FIND NEAREST ENEMY");
     let Obj: TargetInfo = {
       target: undefined,
       path: undefined,
@@ -87,12 +85,11 @@ export default class BattleHandler {
     if (!startingHex) {
       return Obj;
     }
-
+    
     const queue: Array<{ node: Hex; path: Array<string> }> = [
       { node: startingHex, path: [] },
     ];
     const visited = new Set<string>();
-
     while (queue.length > 0) {
       const { node, path } = queue.shift()!;
 
@@ -101,7 +98,6 @@ export default class BattleHandler {
         continue;
       }
       visited.add(node.id);
-
       // Check if this node contains an enemy piece
       if (
         node.piece &&
@@ -152,7 +148,7 @@ export default class BattleHandler {
         }
         return p.alive; // Fallback (though the above conditions should cover all cases)
       });
-
+      this.dispatch(setForceRerender(1));
       if (e_alive == 0) {
         this.end(true);
         return;
@@ -167,7 +163,13 @@ export default class BattleHandler {
           currCommand.exec();
         }
       }
-      this.dispatch(setForceRerender(1));
+      this.pieces.forEach((p) => {
+        if (p.target?.alive == false) {
+          p.target = undefined;
+          p.path = [];
+        }
+      });
+
       this.run_combat_loop();
     }, 1000);
     // run recursivly
@@ -201,22 +203,16 @@ export default class BattleHandler {
     let args: CommandArgs = {
       type: "base",
     };
-    console.log("PIECE IN DETERMINE ACTION", piece);
     if (
       !piece.target ||
       !piece.path ||
-      piece.path.length == 0 ||
-      !piece.target.alive ||
-      piece.target.current_health <= 0
+      piece.path.length == 0
     ) {
-      this.findNearestEnemy(piece);
-      args = {
-        type: "move",
-        board: this.boardReference,
-        pieceToMove: piece,
-      };
-      command = new Command(this.boardReference.move, args);
-    } else if (piece.target && piece.path) {
+      const targeting = this.findNearestEnemy(piece);
+      piece.target = targeting.target;
+      piece.path = targeting.path;
+    } 
+    if (piece.target && piece.path) {
       if (piece.range >= piece.path.length) {
         // returns a command contaiing an attack and a
         args = {
@@ -224,7 +220,6 @@ export default class BattleHandler {
           from: piece,
           to: piece.target,
         };
-        console.log("args for attack", args);
         command = new Command(piece.attack, args);
       } else {
         args = {
@@ -235,15 +230,17 @@ export default class BattleHandler {
         command = new Command(this.boardReference.move, args);
       }
     }
-    console.log(piece, command);
     return command;
   }
   // cleanup function
   public end(win: boolean) {
+    
     if (win) {
-      console.log("YOU WIN");
+      this.dispatch(setCurrentWins(1))
     } else {
-      console.log("YOU LOST");
+      this.dispatch(setCurrentLosses(1))
     }
+
+    this.dispatch(setGameState("CLEANUP"));
   }
 }

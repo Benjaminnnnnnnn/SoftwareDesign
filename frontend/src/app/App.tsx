@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,12 +9,19 @@ import { store } from "./context/context";
 import HexGrid from "./render/BoardRenderer";
 import Shop from "./render/Shop";
 import { useState } from "react";
+import { setCurrency, resetCurrency, setGameState } from "./context/gameSlice";
 
 export default function App() {
   const game = useSelector((state: RootState) => state.game);
   const dispatch = useDispatch();
-  // Pulls all relevent data from the data base about a user's current game state.
-  function setup() {}
+
+  // resetting useEffect;
+  useEffect(() => {
+    if (game.game_state === "CLEANUP") {
+      dispatch(resetCurrency(10));
+      dispatch(setGameState("PLANNING"));
+    }
+  }, [game.game_state])
 
   return (
     <div className="screen-container">
