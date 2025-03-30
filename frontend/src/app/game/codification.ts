@@ -26,7 +26,7 @@ export function encodeBoardToString(b: Board): string {
         String(p.max_health),
         "#A",
         String(p.ad),
-        "#R",
+        "#L",
         String(p.range),
         "#S",
         String(p.speed),
@@ -49,7 +49,7 @@ export function decodeStringToBoard(
   const pieceSegments = s.split("!").filter((segment) => segment.trim() !== "");
   // Initialize an array to hold the decoded pieces
   const decodedPieces: Array<pieceAsObj> = [];
-
+  let first_r = false;
   // Iterate over each segment and extract the piece information
   pieceSegments.forEach((segment) => {
     const pieceData: { [key: string]: string } = {};
@@ -58,7 +58,7 @@ export function decodeStringToBoard(
       .filter((pair) => pair.trim() !== "");
 
     keyValuePairs.forEach((pair) => {
-      pieceData[pair[0]] = pair.slice(1);
+      pieceData[first_r ? pair[0] + "L" : pair[0]] = pair.slice(1);
     });
 
     // Construct the piece object, handling multi-digit and negative numbers
@@ -70,7 +70,7 @@ export function decodeStringToBoard(
       ad: parseInt(pieceData["A"], 10),
       item: pieceData["M"] || undefined,
       speed: parseInt(pieceData["S"], 10),
-      range: parseInt(pieceData["R"], 10),
+      range: parseInt(pieceData["L"], 10),
     };
     console.log(piece);
     decodedPieces.push(piece);
