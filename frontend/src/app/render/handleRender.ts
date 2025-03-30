@@ -69,7 +69,7 @@ export const renderBoard = (board: Board) => {
                                 sprite, 
                                 x + 400, 
                                 y + 325, 
-                                300
+                                400
                             ).then(() => {
                                 console.log("Finished animating movement:", movementKey);
                                 // Remove this specific movement
@@ -89,10 +89,18 @@ export const renderBoard = (board: Board) => {
                 if (tile.piece?.attackHistory?.size != 0) {
                     console.log("ATTACK ANIMATION TRIGGERED")
                     tile.piece?.shake(sprite, 100, x + 400, y + 325)
+                    tile.piece?.attackHistory?.clear();
                 }
                 if (tile.piece?.damageHistory?.size != 0) {
                     console.log("DAMAGE ANIMATION TRIGGERED")
                     tile.piece?.turnRed(sprite, 100);
+                    tile.piece?.damageHistory?.clear();
+                }
+                if (tile.piece?.deathHistory?.size != 0) {
+                    console.log("DEATH ANIMATION TRIGGERED",tile.id);
+                    tile.piece?.showDeath(sprite);
+                    tile.piece?.deathHistory?.clear();
+                    tile.piece = undefined; // remove piece from tile for next render
                 }
                 //check if attack animation is needed
 
