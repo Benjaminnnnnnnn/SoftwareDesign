@@ -141,7 +141,8 @@ export default class BattleHandler {
           if (tile) {
             const hex = this.boardReference.tiles.get(tile);
             if (hex) {
-              hex.piece = undefined;
+              hex.piece?.die(); // Let piece know it is dead
+              //hex.piece = undefined; // board will do this
             }
           }
           return false; // Remove dead pieces

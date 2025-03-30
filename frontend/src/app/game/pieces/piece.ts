@@ -20,6 +20,7 @@ export default abstract class Piece implements IPiece {
   public tile_id: string | null;
   public attackHistory: Set<string>;
   public damageHistory: Set<string>;
+  public deathHistory: Set<string>;
   private animationQueue: Array<() => Promise<void>> = []; // for animations
   public currentSprite: PIXI.Sprite | null = null; // Track the active sprite
 
@@ -37,6 +38,7 @@ export default abstract class Piece implements IPiece {
     this.tile_id = null;
     this.attackHistory = new Set();
     this.damageHistory = new Set();
+    this.deathHistory = new Set();
   }
 
   public attack() {
@@ -55,6 +57,12 @@ export default abstract class Piece implements IPiece {
     }
     if (this.current_health <= 0) {
       this.alive = false;
+    }
+  }
+
+  public die(): void {
+    if(this.tile_id){
+      this.deathHistory.add(this.tile_id)
     }
   }
 
@@ -164,42 +172,49 @@ export default abstract class Piece implements IPiece {
     this.currentSprite = piece; // Store reference to the sprite
     return piece;
   }
-  // SHOULD MOVE THESE INTO AN ANIMATOR CLASS
-  public async slideTo(
-    sprite: PIXI.Sprite,
-    targetX: number,
-    targetY: number,
-    duration: number,
-  ): Promise<void> {
-    return new Promise((resolve) => {
+// SHOULD MOVE THESE INTO AN ANIMATOR CLASS
+public async slideTo(
+  sprite: PIXI.Sprite, 
+  targetX: number, 
+  targetY: number, 
+  duration: number
+): Promise<void> {
+  return new Promise((resolve) => {
       const startX = sprite.x;
       const startY = sprite.y;
+      const startScale = sprite.scale.x; // Assuming uniform scaling
       const startTime = Date.now();
 
       const animate = () => {
-        const now = Date.now();
-        const progress = Math.min((now - startTime) / duration, 1);
-
-        sprite.x = startX + (targetX - startX) * progress;
-        sprite.y = startY + (targetY - startY) * progress;
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          resolve();
-        }
+          const now = Date.now();
+          const progress = Math.min((now - startTime) / duration, 1);
+          
+          // Linear movement
+          sprite.x = startX + (targetX - startX) * progress;
+          sprite.y = startY + (targetY - startY) * progress;
+          
+          // Bouncing scale effect (peaks at midpoint)
+          const scaleProgress = Math.sin(progress * Math.PI); // 0→1→0
+          const scaleFactor = 0.2; // How much it grows (20%)
+          sprite.scale.set(
+              startScale + scaleFactor * scaleProgress,
+              startScale + scaleFactor * scaleProgress
+          );
+          
+          if (progress < 1) {
+              requestAnimationFrame(animate);
+          } else {
+              // Reset to original scale when done
+              sprite.scale.set(startScale, startScale);
+              resolve();
+          }
       };
 
       animate();
-    });
-  }
-
-  public async shake(
-    sprite: PIXI.Sprite,
-    duration: number,
-    anchorX: number,
-    anchorY: number,
-  ): Promise<void> {
+  });
+}
+  
+  public async shake(sprite: PIXI.Sprite, duration: number, anchorX: number, anchorY: number): Promise<void> {
     return new Promise((resolve) => {
       const startX = anchorX;
       const startTime = Date.now();
@@ -238,4 +253,32 @@ export default abstract class Piece implements IPiece {
       }, duration);
     });
   }
+  public async showDeath(sprite: PIXI.Sprite, duration: number = 350): Promise<void> {
+    return new Promise((resolve) => {
+        const startAlpha = sprite.alpha;
+        const startScale = sprite.scale.x;
+        const startTime = Date.now();
+
+        const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            sprite.tint = 0xff0000;
+            // Fade out linearly
+            sprite.alpha = startAlpha * (1 - progress);
+            
+            // Shrink with slight acceleration at the end
+            const shrinkProgress = Math.pow(progress, 1.5); // Makes shrink faster at end
+            sprite.scale.set(startScale * (1 - shrinkProgress));
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                sprite.visible = false;
+                resolve();
+            }
+        };
+        
+        animate();
+    });
+}
 }
