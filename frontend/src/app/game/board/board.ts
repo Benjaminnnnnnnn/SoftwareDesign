@@ -102,8 +102,9 @@ export default class Board {
     allied: boolean,
     stats: Stats | undefined = undefined,
     item: string = "",
+    override=false
   ) {
-    if (allied) {
+    if (allied && !override) {
       console.log("creating allied piece");
       console.log(piece_id);
       if (piece_id.startsWith("u")) {
@@ -125,7 +126,20 @@ export default class Board {
         console.log(this.itemImHolding);
       }
     } else {
-      console.log("creating enemy piece");
+      if (allied && override) {
+      const newPiece = this.factory.producePiece(piece_id, allied, stats, item);
+      console.log("new piece:", newPiece);
+      const target_tile = this.tiles.get(target_id);
+        if (!target_tile) {
+          console.log("target tile not found");
+        } else {
+          console.log("piece assigned to:", target_tile);
+          target_tile.piece = newPiece;
+          target_tile.piece.tile_id = target_id;
+          this.updateIPlaced(true); // re-render board
+        }} else 
+      {
+        console.log("creating enemy piece");
       const newPiece = this.factory.producePiece(piece_id, allied, stats, item);
       console.log("new piece:", newPiece);
       const target_tile = this.tiles.get(target_id);
@@ -136,7 +150,7 @@ export default class Board {
         target_tile.piece = newPiece;
         target_tile.piece.tile_id = target_id;
         this.updateIPlaced(true); // re-render board
-      }
+      }}
     }
   }
 
@@ -273,5 +287,15 @@ export default class Board {
         }
       }
     }
+  }
+
+  /**
+   * Pre : A valid board
+   * Post : Remove all units for a fresh start
+   */
+  public wipe() {
+    this.tiles.forEach((hex) => {
+      hex.piece = undefined;
+    })
   }
 }

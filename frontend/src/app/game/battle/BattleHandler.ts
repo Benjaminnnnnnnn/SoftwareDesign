@@ -234,13 +234,12 @@ export default class BattleHandler {
   }
   // cleanup function
   public end(win: boolean) {
-    
     if (win) {
       this.dispatch(setCurrentWins(1))
     } else {
       this.dispatch(setCurrentLosses(1))
     }
-
+    this.boardReference.wipe();
     this.dispatch(setGameState("CLEANUP"));
   }
 }

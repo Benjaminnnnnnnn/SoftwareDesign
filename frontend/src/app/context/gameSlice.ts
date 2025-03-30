@@ -7,6 +7,7 @@ const initialState: state = {
   loggedin: false,
   current_user: "",
   current_boardstr: "",
+  pre_combat_string: "",
   imBuying: false,
   pieceImBuying: "",
   current_game_stage: 1,
@@ -30,6 +31,9 @@ const gameSlice = createSlice({
     },
     setCurrentBoardString: (state, action: PayloadAction<string>) => {
       state.current_boardstr = action.payload;
+    },
+    setPreCombatString: (state, action: PayloadAction<string>) => {
+      state.pre_combat_string = action.payload;
     },
     setPieceImBuying: (state, action: PayloadAction<string>) => {
       state.pieceImBuying = action.payload;
@@ -56,10 +60,10 @@ const gameSlice = createSlice({
       state.forceRerender = state.forceRerender + action.payload;
     },
     setCurrentWins: (state, action: PayloadAction<number>) => {
-      state.forceRerender = state.forceRerender + action.payload;
+      state.wins = state.wins + action.payload;
     },
     setCurrentLosses: (state, action: PayloadAction<number>) => {
-      state.forceRerender = state.forceRerender + action.payload;
+      state.losses = state.losses + action.payload;
     },
   },
 });
@@ -77,6 +81,7 @@ export const {
   setForceRerender,
   setCurrentLosses,
   setCurrentWins,
-  resetCurrency
+  resetCurrency,
+  setPreCombatString
 } = gameSlice.actions;
 export default gameSlice.reducer;

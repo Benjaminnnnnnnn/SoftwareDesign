@@ -9,6 +9,7 @@ import {
   setCurrentBoardString,
   setImBuying,
   setPieceImBuying,
+  setPreCombatString,
 } from "../context/gameSlice";
 import { statMasterList } from "../game/pieces/statMasterList";
 import { attributeMasterList } from "../game/items/attributeMasterList";
@@ -145,11 +146,9 @@ const Shop = () => {
   };
 
   const handleEndShopPhase = () => {
-    uploadBoard(game.current_boardstr, 1);
+    uploadBoard(game.current_boardstr, game.current_game_stage);
+    dispatch(setPreCombatString(game.current_boardstr))
     dispatch(setGameState("BATTLE"));
-    console.log(game.current_boardstr);
-    console.log(decodeStringToBoard(game.current_boardstr, true));
-    console.log(decodeStringToBoard(game.current_boardstr, false));
   };
 
   // Helper function to format amplification values
@@ -196,6 +195,8 @@ const Shop = () => {
           />
           <h2> {game.currency} </h2>
           <h2> Stage: {game.current_game_stage} </h2>
+          <h2> W: {game.wins} </h2>
+          <h2> L: {game.losses} </h2>
         </div>
         <div className="grid-row">
           <Square index={0} />

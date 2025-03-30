@@ -14,6 +14,7 @@ export type state = {
   loggedin: boolean;
   current_user: string;
   current_boardstr: string;
+  pre_combat_string: string;
   imBuying: boolean;
   pieceImBuying: string;
   current_game_stage: number;

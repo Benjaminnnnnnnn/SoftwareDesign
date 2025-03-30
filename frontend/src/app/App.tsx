@@ -9,7 +9,7 @@ import { store } from "./context/context";
 import HexGrid from "./render/BoardRenderer";
 import Shop from "./render/Shop";
 import { useState } from "react";
-import { setCurrency, resetCurrency, setGameState } from "./context/gameSlice";
+import { setCurrency, resetCurrency, setGameState, setCurrentGameStage } from "./context/gameSlice";
 
 export default function App() {
   const game = useSelector((state: RootState) => state.game);
@@ -19,6 +19,7 @@ export default function App() {
   useEffect(() => {
     if (game.game_state === "CLEANUP") {
       dispatch(resetCurrency(10));
+      dispatch(setCurrentGameStage(1))
       dispatch(setGameState("PLANNING"));
     }
   }, [game.game_state])

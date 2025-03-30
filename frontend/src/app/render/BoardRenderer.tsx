@@ -8,6 +8,8 @@ import { setCurrentBoardString, setPieceImBuying } from "../context/gameSlice";
 import { encodeBoardToString } from "../game/codification";
 import BattleHandler from "../game/battle/BattleHandler";
 import CursorIndicator from "./cursorIndicator";
+import { decodeStringToBoard } from "../game/codification";
+import { pieceAsObj, Stats } from "../game/types";
 
 const HexGrid = () => {
   const [iPlaced, updateIPlaced] = useState<boolean>(false);
@@ -161,7 +163,7 @@ const HexGrid = () => {
       console.log("Game state changed to:", game.game_state);
 
       if (game.game_state === "BATTLE" && battleHandlerRef.current) {
-        battleHandlerRef.current.prepare(1);
+        battleHandlerRef.current.prepare(game.current_game_stage);
         setTimeout(() => {
           if (battleHandlerRef.current) {
             battleHandlerRef.current.run_combat_loop();
@@ -183,6 +185,31 @@ const HexGrid = () => {
     }
   }, [iPlaced]); // Re-run only when `iPlaced` changes
 
+  // Fill the board with the last board you had
+  useEffect(() => {
+    if (game.game_state == "PLANNING") {
+      const friendlyBoardAsObjects = decodeStringToBoard(game.pre_combat_string, true);
+            // Destructure each obj into it's attributes, then pass those attributes to the createPiece function which uses teh factory
+            console.log("FRIENDLY BOARD", friendlyBoardAsObjects)
+            friendlyBoardAsObjects.forEach((obj: pieceAsObj) => {
+              const stats: Stats = {
+                max_health: obj.max_health,
+                ad: obj.ad,
+                speed: obj.speed,
+                range: obj.range,
+              };
+              boardRef.current?.createPiece(
+                obj.id,
+                String(obj.q) + "," + String(obj.r),
+                true,
+                stats,
+                obj.item,
+                true
+              );
+            });
+    }
+    updatePieces();
+  }, [game.game_state])
   // For rerender;
   useEffect(() => {
     if (appRef.current) {
