@@ -25,6 +25,7 @@ export default class Board {
   itemImHolding: item | undefined;
   whereItsFrom: Hex | undefined;
   factory: ObjFactory;
+  public movementHistory: {fromId: string, toId: string, piece: Piece | undefined}[] = [];
 
   constructor(
     size: number = 3,
@@ -89,8 +90,7 @@ export default class Board {
 
     let rowIndex = 0;
     rows.forEach((row, r) => {
-      const indent = " ".repeat((this.size - Math.abs(r)) * 3); // Indent rows for alignment.
-      console.log(indent + row.map((tile) => `[${tile.id}]`).join("   ")); // Print the row.
+      const indent = " ".repeat((this.size - Math.abs(r)) * 3); // Indent rows for alignment.x
       rowIndex++;
     });
   }
@@ -117,13 +117,11 @@ export default class Board {
         );
         this.unitImHolding = newUnit;
         this.dispatch(setImHolding(true));
-        console.log(this.unitImHolding);
       } else if (piece_id.startsWith("i")) {
         // if its an item
         const newItem = this.factory.produceItem(piece_id, allied);
         this.itemImHolding = newItem;
         this.dispatch(setImHolding(true));
-        console.log(this.itemImHolding);
       }
     } else {
       if (allied && override) {
@@ -141,12 +139,9 @@ export default class Board {
       {
         console.log("creating enemy piece");
       const newPiece = this.factory.producePiece(piece_id, allied, stats, item);
-      console.log("new piece:", newPiece);
       const target_tile = this.tiles.get(target_id);
       if (!target_tile) {
-        console.log("target tile not found");
       } else {
-        console.log("piece assigned to:", target_tile);
         target_tile.piece = newPiece;
         target_tile.piece.tile_id = target_id;
         this.updateIPlaced(true); // re-render board
@@ -158,9 +153,7 @@ export default class Board {
   private placeItem(target_id: string) {
     const target_tile = this.tiles.get(target_id);
     if (!target_tile || !target_tile.piece || this.itemImHolding == undefined) {
-      console.log("invalid tile given");
     } else {
-      console.log("updated tile piece");
       target_tile.piece.giveItem(this.itemImHolding);
       this.itemImHolding = undefined;
       this.updateIPlaced(true);
@@ -170,7 +163,6 @@ export default class Board {
 
   // when a unit is in hand and you want to place it on a tile
   private placeUnit(target_id: string) {
-    console.log("Unit placed");
     const touched_tile = this.tiles.get(target_id);
 
     // Check if the piece can be placed
@@ -179,10 +171,9 @@ export default class Board {
       !touched_tile ||
       touched_tile.piece
     ) {
-      console.log("Invalid conditions for placing piece");
       return;
     }
-    console.log("Placing unit on tile:", target_id);
+    // animate movement of piece
     touched_tile.piece = this.unitImHolding;
     touched_tile.piece.tile_id = target_id;
     // Clear the piece from its previous location
@@ -190,12 +181,11 @@ export default class Board {
       this.whereItsFrom.piece = undefined;
     }
     // Reset the holding state
+    
     this.unitImHolding = undefined;
     this.whereItsFrom = undefined;
     this.dispatch(setImHolding(false));
     this.updateIPlaced(true);
-
-    console.log("Piece placed successfully");
   }
 
   // places piece in hand on given tile, if allowed
@@ -219,7 +209,6 @@ export default class Board {
   // grabs unit from the selected tile
   private grabPiece(target_id: string) {
     // method for interaction
-    console.log("tried piece grabbed");
     const touched_tile = this.tiles.get(target_id);
     if (this.unitImHolding || !touched_tile || !touched_tile.piece) {
     }
@@ -227,11 +216,9 @@ export default class Board {
     // if there is no touched tile
     // if there is no piece on the touched tile
     else {
-      console.log("i actually grabbed it");
       this.unitImHolding = touched_tile.piece;
       this.whereItsFrom = touched_tile;
       this.dispatch(setImHolding(true));
-      console.log(this.unitImHolding);
     }
   }
 
@@ -274,11 +261,16 @@ export default class Board {
    * Post : The piece on the given start hex is moved to the given end hex
    */
   public move(start: string, end: string) {
-    console.log(start, end);
+    console.log("MOVEMENT",start, end);
     const moving_piece = this.tiles.get(start)?.piece;
     const target_hex = this.tiles.get(end);
     if (moving_piece && target_hex) {
       if (!target_hex.piece) {
+        this.movementHistory.push({
+          fromId: start,
+          toId: end,
+          piece: moving_piece,
+      });
         target_hex.piece = moving_piece;
         moving_piece.tile_id = target_hex.id;
         const cleanup = this.tiles.get(start);

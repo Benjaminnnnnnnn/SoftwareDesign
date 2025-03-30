@@ -2,8 +2,8 @@ import * as PIXI from "pixi.js";
 import { Assets } from "pixi.js";
 import Item from "../items/item";
 import { images } from "../ImageRef";
-import { IPiece } from "../types";
-import { Hex } from "../board";
+import { IPiece, IAnimatedPiece, IAnimate } from "../types";
+
 
 export default abstract class Piece implements IPiece {
   public id: string;
@@ -19,6 +19,10 @@ export default abstract class Piece implements IPiece {
   public target?: Piece;
   public path?: Array<string>;
   public tile_id: string | null;
+  public attackHistory: Set<string>;
+  public damageHistory: Set<string>;
+  private animationQueue: Array<() => Promise<void>> = []; // for animations
+  public currentSprite: PIXI.Sprite | null = null; // Track the active sprite
 
   constructor(_allied: boolean) {
     this.id = "u000"; // modify
@@ -32,11 +36,14 @@ export default abstract class Piece implements IPiece {
     this.allied = _allied;
     this.alive = true;
     this.tile_id = null;
+    this.attackHistory = new Set();
+    this.damageHistory = new Set();
   }
 
   public attack() {
     console.log("ATTACK", this.target);
-    if (this.target) {
+    if (this.target && this.tile_id) {
+      this.attackHistory.add(this.tile_id)
       this.target.takeDamage(this.ad);
     }
     console.log(this.target);
@@ -45,6 +52,8 @@ export default abstract class Piece implements IPiece {
 
   public takeDamage(damage: number): void {
     this.current_health -= damage;
+    if(this.tile_id){
+    this.damageHistory.add(this.tile_id);}
     if (this.current_health <= 0) {
       this.alive = false;
     }
@@ -98,6 +107,7 @@ export default abstract class Piece implements IPiece {
     }
     this.current_health = this.max_health;
   }
+  // sprite methods
 
   public async getSprite(): Promise<PIXI.Sprite | null> {
     console.log("get sprite is called");
@@ -154,7 +164,76 @@ export default abstract class Piece implements IPiece {
         console.error("Failed to load item sprite:", error);
       }
     }
-
+    this.currentSprite = piece; // Store reference to the sprite
     return piece;
+  }
+// SHOULD MOVE THESE INTO AN ANIMATOR CLASS
+  public async slideTo(
+    sprite: PIXI.Sprite, 
+    targetX: number, 
+    targetY: number, 
+    duration: number
+  ): Promise<void> {
+    return new Promise((resolve) => {
+      const startX = sprite.x;
+      const startY = sprite.y;
+      const startTime = Date.now();
+  
+      const animate = () => {
+        const now = Date.now();
+        const progress = Math.min((now - startTime) / duration, 1);
+        
+        sprite.x = startX + (targetX - startX) * progress;
+        sprite.y = startY + (targetY - startY) * progress;
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          resolve();
+        }
+      };
+      
+      animate();
+    });
+  }
+  
+  public async shake(sprite: PIXI.Sprite, duration: number, anchorX: number, anchorY: number): Promise<void> {
+    return new Promise((resolve) => {
+      const startX = anchorX;
+      const startTime = Date.now();
+  
+      const animate = () => {
+        const now = Date.now();
+        const progress = (now - startTime) / duration;
+        const shake = Math.sin(progress * Math.PI * 20) * 20;
+        
+        sprite.x = startX + shake;
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          sprite.x = startX;
+          resolve();
+        }
+      };
+      
+      animate();
+    });
+  }
+
+  public async turnRed(sprite: PIXI.Sprite, duration: number): Promise<void> {
+    return new Promise((resolve) => {
+      // Store original tint
+      const originalTint = sprite.tint;
+        
+      // Set to red
+      sprite.tint = 0xFF0000; // Red color
+      
+      // Revert after duration
+      setTimeout(() => {
+          sprite.tint = originalTint;
+          resolve();
+      }, duration);
+    });
   }
 }

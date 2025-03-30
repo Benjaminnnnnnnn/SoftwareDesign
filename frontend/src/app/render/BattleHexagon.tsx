@@ -31,11 +31,8 @@ export const createBattleHexagon = (x: number, y: number, radius: number, tile: 
     sprite.width = radius * 1.8; 
     sprite.height = radius * 1.8;
     sprite.tint = 0xa1edb2;
-    console.log(tile.tile_id);
 
     hexagon.addChild(sprite);
-    console.log("child added to lilypad (BATTLE)");
   };
-  console.log("lilypad reutned");
   return hexagon;
 };
