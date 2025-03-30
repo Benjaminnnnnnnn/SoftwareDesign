@@ -30,7 +30,6 @@ export const createBattleHexagon = (x: number, y: number, radius: number, tile: 
     sprite.y = y;
     sprite.width = radius * 1.8; 
     sprite.height = radius * 1.8;
-    sprite.tint = 0xa1edb2;
 
     hexagon.addChild(sprite);
   };

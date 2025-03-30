@@ -35,7 +35,7 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any, b
     if (allied_tiles.has(tile.id)){
         // Make the sprite interactive
     sprite.eventMode = 'static';
-    sprite.tint = 0xFFFFFF;
+    sprite.tint = 0xF0FFF0;
 
     // Define the hit area
     const hitBox = new PIXI.Circle(

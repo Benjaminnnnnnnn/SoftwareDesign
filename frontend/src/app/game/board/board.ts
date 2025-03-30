@@ -8,6 +8,7 @@ import { Dispatch } from "redux";
 import {
   setImHolding,
   setCurrency,
+  setCurrentPieces,
   setForceRerender,
 } from "../../context/gameSlice";
 import { UnknownAction } from "redux";
@@ -104,7 +105,7 @@ export default class Board {
     item: string = "",
     override=false
   ) {
-    if (allied && !override) {
+    if (allied && !override) { // for creating allied pieces upon purchase
       console.log("creating allied piece");
       console.log(piece_id);
       if (piece_id.startsWith("u")) {
@@ -117,6 +118,7 @@ export default class Board {
         );
         this.unitImHolding = newUnit;
         this.dispatch(setImHolding(true));
+        this.dispatch(setCurrentPieces(1))
       } else if (piece_id.startsWith("i")) {
         // if its an item
         const newItem = this.factory.produceItem(piece_id, allied);
@@ -124,7 +126,7 @@ export default class Board {
         this.dispatch(setImHolding(true));
       }
     } else {
-      if (allied && override) {
+      if (allied && override) { // for creating allied pieces after a battle
       const newPiece = this.factory.producePiece(piece_id, allied, stats, item);
       console.log("new piece:", newPiece);
       const target_tile = this.tiles.get(target_id);
@@ -239,6 +241,7 @@ export default class Board {
     if (this.unitImHolding != undefined) {
       // if selling a piece
       this.dispatch(setCurrency(+1));
+      this.dispatch(setCurrentPieces(-1)) // notify state that there is 1 less piece on the board
       // Clear the piece from its previous location
       if (this.whereItsFrom != undefined) {
         this.whereItsFrom.piece = undefined;

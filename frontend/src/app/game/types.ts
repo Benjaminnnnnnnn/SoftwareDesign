@@ -25,6 +25,7 @@ export type state = {
   forceRerender: number;
   wins: number;
   losses: number;
+  currentPieces: number;
 };
 
 export interface IPiece {

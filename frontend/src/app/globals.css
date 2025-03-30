@@ -112,9 +112,9 @@ canvas {
     font-size: 16px;
     font-weight: bold;
     color: #ffffff;
-    background-color: #ef7636;
+    background-color: #78b564;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
     text-align: center;
     text-decoration: none;
@@ -191,9 +191,9 @@ canvas {
     justify-content: space-between;
     align-items: center;
     padding: 0.3rem 0.4rem; /* Reduced padding */
-    background: #f69b41b3;
+    background: #ff84a7b3;
     border-radius: 4px;
-    border-bottom: 2px solid #f19d15;
+    border-bottom: 2px solid #ea56aa;
     height: 100%;
     min-width: 0; /* Crucial for text overflow */
 }
@@ -222,3 +222,77 @@ canvas {
     flex-shrink: 0;
     margin-left: 0.2rem; /* Small separation */
 }
+
+.player-stats-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columns */
+    gap: 0.5rem;
+    background: linear-gradient(to right, #e8f5e9, #c8e6c9);
+    border-radius: 12px;
+    padding: 0.5rem;
+    box-shadow: 
+      0 2px 4px rgba(0,0,0,0.1),
+      inset 0 0 0 1px rgba(255,255,255,0.8);
+    border: 2px solid #a5d6a7;
+    width: fit-content; /* Only take needed width */
+  }
+  
+  .player-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    background-color: rgba(255,255,255,0.7);
+    min-width: 0; /* Prevent overflow */
+  }
+  
+  /* Keep all other styles the same */
+  .player-stat-icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.1));
+  }
+  
+  .player-stat-label {
+    font-family: "Nunito", "Comic Sans MS", sans-serif;
+    font-weight: 700;
+    color: #558b2f;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+  
+  .player-stat-label.win {
+    color: #7cb342;
+  }
+  
+  .player-stat-label.loss {
+    color: #e57373;
+  }
+  
+  .player-stat-value {
+    font-family: "Nunito", "Comic Sans MS", sans-serif;
+    font-weight: 800;
+    color: #2e7d32;
+    font-size: 0.95rem;
+  }
+
+  .simple-retro-shop {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    background-color: #78b564; /* Vibrant pink */
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: 3px solid white;
+    border-radius: 4px;
+    box-shadow: 
+      4px 4px 0 #5ccc3a, /* Darker pink shadow */
+      inset 0 0 0 2px rgba(255,255,255,0.3); /* Inner glow */
+    transform: rotate(-1deg);
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+  }
