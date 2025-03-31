@@ -135,6 +135,9 @@ const Shop = () => {
   // buys an object if the user can afford it, if it is purchased empty the shop space
   const buyObject = () => {
     if (game.currency >= 3 && (game.imHolding == false) && objList[selectedSquare] != gameObjects["BLANK"] && objList[selectedSquare] != null) {
+      if (objList[selectedSquare].startsWith("u") && game.currentPieces >= 5) {console.log("DONT ALLOW BUY")}
+      else{
+      console.log("CURRENT:",objList[selectedSquare])
       dispatch(setCurrency( - 3));
       dispatch(
         setCurrentBoardString(game.current_boardstr + objList[selectedSquare]),
@@ -142,6 +145,7 @@ const Shop = () => {
       dispatch(setImBuying(true));
       dispatch(setPieceImBuying(objList[selectedSquare]));
       objList[selectedSquare] = gameObjects["BLANK"];
+    }
     }
   };
 
@@ -186,17 +190,34 @@ const Shop = () => {
     <div>
       <div className="grid-container">
         <div className="grid-row">
-          <h1 className="text-xl underline font-bold text-amber-600">SHOP</h1>
+        <div className="simple-retro-shop">SHOP</div> 
         </div>
         <div className="grid-row">
-          <img
-            className="h-8 w-8"
-            src={game.currency > 0 ? litflyImage.src : dimflyImage.src}
-          />
-          <h2> {game.currency} </h2>
-          <h2> Stage: {game.current_game_stage} </h2>
-          <h2> W: {game.wins} </h2>
-          <h2> L: {game.losses} </h2>
+        <div className="player-stats-container">
+          <div className="player-stat-item">
+            <img 
+              className="player-stat-icon"
+              src={game.currency > 0 ? litflyImage.src : dimflyImage.src}
+              alt="Currency"
+            />
+            <span className="player-stat-value">{game.currency}</span>
+          </div>
+          
+          <div className="player-stat-item">
+            <span className="player-stat-label">Stage:</span>
+            <span className="player-stat-value">{game.current_game_stage}</span>
+          </div>
+          
+          <div className="player-stat-item">
+            <span className="player-stat-label win">W:</span>
+            <span className="player-stat-value">{game.wins}</span>
+          </div>
+          
+          <div className="player-stat-item">
+            <span className="player-stat-label loss">L:</span>
+            <span className="player-stat-value">{game.losses}</span>
+          </div>
+        </div>
         </div>
         <div className="grid-row">
           <Square index={0} />
@@ -265,9 +286,16 @@ const Shop = () => {
                 alt="Freeze"
               />
             </button>
-              <button className="button" onClick={buyObject}>
+              <button 
+              className="button flex items-center gap-1" 
+              onClick={buyObject}>
                 {" "}
                 Buy
+                <img
+                className="h-4 w-"
+                src={litflyImage.src}
+                alt="Freeze"
+              />
               </button>
               <button className="button" onClick={clickRefresh}>
             Refresh

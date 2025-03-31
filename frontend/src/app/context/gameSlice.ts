@@ -17,6 +17,7 @@ const initialState: state = {
   wins: 0,
   losses: 0,
   forceRerender: 0,
+  currentPieces: 0,
 };
 
 const gameSlice = createSlice({
@@ -65,6 +66,9 @@ const gameSlice = createSlice({
     setCurrentLosses: (state, action: PayloadAction<number>) => {
       state.losses = state.losses + action.payload;
     },
+    setCurrentPieces: (state, action: PayloadAction<number>) => {
+      state.currentPieces = state.currentPieces + action.payload;
+    }
   },
 });
 
@@ -82,6 +86,7 @@ export const {
   setCurrentLosses,
   setCurrentWins,
   resetCurrency,
-  setPreCombatString
+  setPreCombatString,
+  setCurrentPieces
 } = gameSlice.actions;
 export default gameSlice.reducer;

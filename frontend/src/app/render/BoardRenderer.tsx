@@ -144,6 +144,7 @@ const HexGrid = () => {
 
     if (game.pieceImBuying != "") {
       console.log("Piece being bought:", game.pieceImBuying);
+      console.log("Current pieces increased");
 
       if (boardRef.current) {
         const targetTileId = "0,0"; // Replace with the actual target tile ID
