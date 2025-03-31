@@ -18,6 +18,8 @@ const initialState: state = {
   losses: 0,
   forceRerender: 0,
   currentPieces: 0,
+  recentResult: "",
+  currentTrophies: 0,
 };
 
 const gameSlice = createSlice({
@@ -62,12 +64,27 @@ const gameSlice = createSlice({
     },
     setCurrentWins: (state, action: PayloadAction<number>) => {
       state.wins = state.wins + action.payload;
+      state.recentResult = "W";
     },
     setCurrentLosses: (state, action: PayloadAction<number>) => {
       state.losses = state.losses + action.payload;
+      state.recentResult = "L";
     },
     setCurrentPieces: (state, action: PayloadAction<number>) => {
       state.currentPieces = state.currentPieces + action.payload;
+    },
+    setRecentResult: (state, action: PayloadAction<string>) => {
+      state.recentResult = action.payload;
+    },
+    resetAll: (state, action: PayloadAction<boolean>) => {
+      state.wins = 0;
+      state.losses = 0;
+      state.current_game_stage = 1;
+      state.current_boardstr = "";
+      state.pre_combat_string = "";
+      if (state.recentResult = "W"){
+        state.currentTrophies = state.currentTrophies + 1
+      }
     }
   },
 });
@@ -87,6 +104,7 @@ export const {
   setCurrentWins,
   resetCurrency,
   setPreCombatString,
-  setCurrentPieces
+  setCurrentPieces,
+  resetAll
 } = gameSlice.actions;
 export default gameSlice.reducer;

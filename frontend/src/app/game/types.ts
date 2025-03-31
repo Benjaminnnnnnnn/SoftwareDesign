@@ -26,6 +26,8 @@ export type state = {
   wins: number;
   losses: number;
   currentPieces: number;
+  recentResult: string;
+  currentTrophies: number;
 };
 
 export interface IPiece {
