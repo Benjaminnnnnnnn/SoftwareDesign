@@ -135,8 +135,6 @@ const Shop = () => {
   // buys an object if the user can afford it, if it is purchased empty the shop space
   const buyObject = () => {
     if (game.currency >= 3 && (game.imHolding == false) && objList[selectedSquare] != gameObjects["BLANK"] && objList[selectedSquare] != null) {
-      if (objList[selectedSquare].startsWith("u") && game.currentPieces >= 5) {console.log("DONT ALLOW BUY")}
-      else{
       console.log("CURRENT:",objList[selectedSquare])
       dispatch(setCurrency( - 3));
       dispatch(
@@ -146,13 +144,17 @@ const Shop = () => {
       dispatch(setPieceImBuying(objList[selectedSquare]));
       objList[selectedSquare] = gameObjects["BLANK"];
     }
-    }
   };
 
   const handleEndShopPhase = () => {
+    if (game.currentPieces > 5) {
+      console.log("dont allow fight") // maybe display some message to the user here
+    }
+    else{
     uploadBoard(game.current_boardstr, game.current_game_stage);
     dispatch(setPreCombatString(game.current_boardstr))
     dispatch(setGameState("BATTLE"));
+    }
   };
 
   // Helper function to format amplification values

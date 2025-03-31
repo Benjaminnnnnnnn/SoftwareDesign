@@ -173,7 +173,7 @@ export default class Board {
       !touched_tile ||
       touched_tile.piece
     ) {
-      if (this.unitImHolding?.id === touched_tile?.piece?.id) {
+      if (this.unitImHolding?.id === touched_tile?.piece?.id && (touched_tile != this.whereItsFrom)) {
         touched_tile?.piece?.level()
         this.unitImHolding = undefined;
         if (this.whereItsFrom) {
