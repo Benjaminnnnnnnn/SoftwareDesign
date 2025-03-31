@@ -130,7 +130,7 @@ export default abstract class Piece implements IPiece {
     // Try to load the main sprite texture
     let texture: PIXI.Texture;
     try {
-      const imageId = images[this.id] ? this.id : "u000"; // Fallback to default
+      const imageId = images[this.id] ? this.id : "du000"; // Fallback to default
       texture = await Assets.load(images[imageId].src);
     } catch (error) {
       console.error("Failed to load texture for piece:", error);

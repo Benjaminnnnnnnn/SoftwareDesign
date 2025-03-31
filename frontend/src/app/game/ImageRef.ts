@@ -6,19 +6,22 @@ import butterflyImage from "../../../public/gameObjectImages/butterfly.png";
 import caterpillarImage from "../../../public/gameObjectImages/caterpillar.png";
 import gunImage from "../../../public/gameObjectImages/gun.png";
 import blankImage from "../../../public/gameObjectImages/blank.png";
+import soldImage from "../../../public/gameObjectImages/sold.png";
 import { StaticImageData } from "next/image";
 
 export const gameObjects: Record<string, string> = {
-  DUMMY_UNIT: "u000",
+  BLANK : "x000",
+  DUMMY_UNIT: "du000",
   WARRIOR: "u001",
   ARCHER: "u002",
-  DUMMY_ITEM: "i000",
+  DUMMY_ITEM: "di000",
   BUTTERFLY: "i001",
   CATERPILLAR: "i002",
   GUN: "i003",
 };
 
 export const images: Record<string, StaticImageData> = {
+  x000: soldImage,
   u000: dummyImage,
   u001: warriorImage,
   u002: archerImage,
