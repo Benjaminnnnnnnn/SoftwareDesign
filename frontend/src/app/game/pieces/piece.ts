@@ -3,6 +3,7 @@ import { Assets } from "pixi.js";
 import Item from "../items/item";
 import { images } from "../ImageRef";
 import { IPiece, IAnimatedPiece, IAnimate } from "../types";
+import { statMasterList } from "./statMasterList";
 
 export default abstract class Piece implements IPiece {
   public id: string;
@@ -63,6 +64,15 @@ export default abstract class Piece implements IPiece {
   public die(): void {
     if(this.tile_id){
       this.deathHistory.add(this.tile_id)
+    }
+  }
+
+  public level(): void {
+    console.log("In level");
+    if (statMasterList[this.id]?.level) {
+      this.max_health += statMasterList[this.id]!.level![0]; // "!" asserts non-null
+      this.ad += statMasterList[this.id]!.level![1];
+      this.current_health = this.max_health;
     }
   }
 

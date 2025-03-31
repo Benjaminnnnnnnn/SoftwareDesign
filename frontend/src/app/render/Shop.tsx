@@ -167,7 +167,7 @@ const Shop = () => {
   // Helper component for stat/attribute display
   interface StatDisplayProps {
     label: string;
-    unitValue?: number;
+    unitValue?: number | [number, number];
     itemAmp?: number[];
   }
 
@@ -263,8 +263,8 @@ const Shop = () => {
                     itemAmp={attributeMasterList[objList[selectedSquare]]?.range_amp}
                   />
                   <StatDisplay
-                    label="Speed:"
-                    unitValue={statMasterList[objList[selectedSquare]]?.speed}
+                    label="Bonus:"
+                    unitValue={statMasterList[objList[selectedSquare]]?.level}
                     itemAmp={attributeMasterList[objList[selectedSquare]]?.speed_amp}
                   />
                 </div>

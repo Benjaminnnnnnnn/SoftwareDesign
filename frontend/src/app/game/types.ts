@@ -91,6 +91,7 @@ export type Stats = {
   ad: number;
   range: number;
   speed: number;
+  level?: [number, number];
 };
 
 export type TargetInfo = {

@@ -7,6 +7,7 @@ export const statMasterList: Record<string, Stats> = {
     ad: 2,
     range: 1,
     speed: 1,
+    level: [1, 1],
   },
 
   // Warrior
@@ -15,6 +16,7 @@ export const statMasterList: Record<string, Stats> = {
     ad: 3,
     range: 1,
     speed: 1,
+    level: [2, 0],
   },
 
   // Archer
@@ -23,5 +25,6 @@ export const statMasterList: Record<string, Stats> = {
     ad: 2,
     range: 2,
     speed: 1,
+    level: [0, 1],
   },
 };

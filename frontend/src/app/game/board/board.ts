@@ -166,13 +166,24 @@ export default class Board {
   // when a unit is in hand and you want to place it on a tile
   private placeUnit(target_id: string) {
     const touched_tile = this.tiles.get(target_id);
-
+    console.log("In place unit");
     // Check if the piece can be placed
     if (
       this.unitImHolding == undefined ||
       !touched_tile ||
       touched_tile.piece
     ) {
+      if (this.unitImHolding?.id === touched_tile?.piece?.id) {
+        touched_tile?.piece?.level()
+        this.unitImHolding = undefined;
+        if (this.whereItsFrom) {
+          this.whereItsFrom.piece = undefined;
+        }
+        this.whereItsFrom = undefined;
+        this.dispatch(setImHolding(false));
+        this.updateIPlaced(true);
+        this.dispatch(setCurrentPieces(-1));
+      }
       return;
     }
     // animate movement of piece
@@ -193,6 +204,7 @@ export default class Board {
   // places piece in hand on given tile, if allowed
   private placePiece(target_id: string) {
     const touched_tile = this.tiles.get(target_id);
+    console.log("in place piece")
     if (
       this.itemImHolding != undefined &&
       touched_tile != undefined &&
@@ -201,8 +213,7 @@ export default class Board {
       this.placeItem(target_id);
     } else if (
       this.unitImHolding != undefined &&
-      touched_tile != undefined &&
-      !touched_tile.piece
+      touched_tile != undefined
     ) {
       this.placeUnit(target_id);
     }
@@ -229,7 +240,7 @@ export default class Board {
     const touched_tile = this.tiles.get(target_id);
     if (!touched_tile) {
     } else {
-      if (touched_tile.piece && this.itemImHolding == undefined) {
+      if (touched_tile.piece && this.itemImHolding == undefined && touched_tile.piece.id !== this?.unitImHolding?.id) {
         this.grabPiece(target_id);
       } else {
         this.placePiece(target_id);
