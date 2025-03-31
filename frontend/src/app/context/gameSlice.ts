@@ -82,6 +82,7 @@ const gameSlice = createSlice({
       state.current_game_stage = 1;
       state.current_boardstr = "";
       state.pre_combat_string = "";
+      state.currentPieces = 0;
       if (state.recentResult = "W"){
         state.currentTrophies = state.currentTrophies + 1
       }
