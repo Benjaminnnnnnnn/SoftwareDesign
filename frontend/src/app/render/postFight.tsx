@@ -49,7 +49,7 @@ export const postFight = ( wins: number, losses: number, recent: string, dispatc
     const statsText = new PIXI.Text(
         `Wins: ${wins} / 5\nLosses: ${losses} / 3`,
         {
-            fontFamily: 'Arial',
+            fontFamily: 'Comic Sans MS',
             fontSize: 28,
             fill: 0x913335,
             align: 'center',
@@ -69,7 +69,7 @@ export const postFight = ( wins: number, losses: number, recent: string, dispatc
     const buttonText = new PIXI.Text(
         (wins < 5 && losses < 3) ? "Continue" : "End Run",
         {
-        fontFamily: 'Arial',
+        fontFamily: 'Comic Sans MS',
         fontSize: 24,
         fill: 0xffffff,
         fontWeight: 'bold'

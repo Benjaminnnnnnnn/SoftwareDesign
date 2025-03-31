@@ -28,7 +28,7 @@ export default abstract class item implements Iitem {
     if (!images[this.id]) {
       // if no image is associated with id, load default
       try {
-        const texture = await Assets.load(images["i000"].src);
+        const texture = await Assets.load(images["di000"].src);
         const piece = new PIXI.Sprite(texture);
 
         // Customize the sprite

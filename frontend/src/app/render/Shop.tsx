@@ -1,9 +1,8 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../context/context";
 import {
-  setCurrentUser,
   setGameState,
   setCurrency,
   setCurrentBoardString,
@@ -13,41 +12,12 @@ import {
 } from "../context/gameSlice";
 import { statMasterList } from "../game/pieces/statMasterList";
 import { attributeMasterList } from "../game/items/attributeMasterList";
-
-// Image imports
-import soldImage from "../../../public/gameObjectImages/sold.png";
-import dummyImage from "../../../public/gameObjectImages/dummy.png";
-import warriorImage from "../../../public/gameObjectImages/warrior.png";
-import archerImage from "../../../public/gameObjectImages/archer.png";
-import butterflyImage from "../../../public/gameObjectImages/butterfly.png";
-import caterpillarImage from "../../../public/gameObjectImages/caterpillar.png";
-import gunImage from "../../../public/gameObjectImages/gun.png";
-import { StaticImageData } from "next/image";
 import { uploadBoard } from "../requests/requests";
 import icecubeImage from "../../../public/gameObjectImages/icecube.png";
 import dimflyImage from "../../../public/gameObjectImages/dimfly.png";
 import litflyImage from "../../../public/gameObjectImages/litfly.png";
-import fireflyOnImage from "../../../public/gameObjectImages/firefly_on.jpg";
-import { DummyPiece } from "../game/pieces";
-import { decodeStringToBoard, encodeBoardToString } from "../game/codification";
+import { gameObjects, images } from "../game/ImageRef";
 
-const gameObjects: Record<string, string> = {
-  BLANK: "x000",
-  WARRIOR: "u001",
-  ARCHER: "u002",
-  BUTTERFLY: "i001",
-  CATERPILLAR: "i002",
-  GUN: "i003",
-};
-
-const images: Record<string, StaticImageData> = {
-  x000: soldImage,
-  u001: warriorImage,
-  u002: archerImage,
-  i001: butterflyImage,
-  i002: caterpillarImage,
-  i003: gunImage,
-};
 
 const Shop = () => {
   // Store loading :)
