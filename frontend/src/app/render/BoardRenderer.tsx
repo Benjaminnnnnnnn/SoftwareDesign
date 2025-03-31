@@ -26,6 +26,7 @@ const HexGrid = () => {
   const pieceContainerRef = useRef<PIXI.Container | null>(null); // Ref to store the piece container
   const { imHolding } = useSelector((state: RootState) => state.game);
   const cursorIndicatorRef = useRef<CursorIndicator | null>(null);
+  const cursorContainerRef = useRef<PIXI.Container | null>(null);
 
   // Initialize cursor indicator
   useEffect(() => {
@@ -88,26 +89,35 @@ const HexGrid = () => {
   const renderGameState = () => {
     if (!appRef.current || !boardRef.current) return;
 
-    // Clear the stage first
+    // Store cursor position before clearing
+    const cursorPos = cursorIndicatorRef.current?.indicator.position.clone();
+
+    // Clear stage
     appRef.current.stage.removeChildren();
 
-    // Always render pieces (needed in both states)
+    // Render game elements
     const { pieceContainer } = renderBoard(boardRef.current);
     appRef.current.stage.addChild(pieceContainer);
     pieceContainerRef.current = pieceContainer;
 
-    // Render state-specific containers
     if (game.game_state === "BATTLE") {
-      const { hexContainer } = renderBoard(boardRef.current);
-      appRef.current.stage.addChild(hexContainer);
-      hexContainerRef.current = hexContainer;
-      console.log("Rendered BATTLE state");
+        const { hexContainer } = renderBoard(boardRef.current);
+        appRef.current.stage.addChild(hexContainer);
+        hexContainerRef.current = hexContainer;
     } else if (game.game_state === "PLANNING") {
-      const { uiContainer } = renderBoard(boardRef.current);
-      appRef.current.stage.addChild(uiContainer);
-      console.log("Rendered PLANNING state");
+        const { uiContainer } = renderBoard(boardRef.current);
+        appRef.current.stage.addChild(uiContainer);
     }
-  };
+
+    // Re-add and reposition cursor
+    if (cursorIndicatorRef.current) {
+        appRef.current.stage.addChild(cursorIndicatorRef.current.indicator);
+        if (cursorPos) {
+            cursorIndicatorRef.current.indicator.position.copyFrom(cursorPos);
+        }
+        //cursorIndicatorRef.current.show();
+    }
+};
 
   // Re-render only the pieces
   const updatePieces = () => {
