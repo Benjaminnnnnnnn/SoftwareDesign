@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 
 export default class CursorIndicator {
-    private indicator: PIXI.Graphics;
+    public indicator: PIXI.Graphics;
     private app: PIXI.Application;
 
     constructor(app: PIXI.Application) {
@@ -12,7 +12,7 @@ export default class CursorIndicator {
 
     private createIndicator(): PIXI.Graphics {
         const indicator = new PIXI.Graphics();
-        indicator.beginFill(0xffffff, 0.8); // Semi-transparent red
+        indicator.beginFill(0xebb5ca, 0.8); // Semi-transparent red
         indicator.drawCircle(0, 0, 15);
         indicator.endFill();
         indicator.visible = false;
