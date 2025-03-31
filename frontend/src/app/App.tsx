@@ -35,7 +35,7 @@ export default function App() {
     if (game.game_state === "CLEANUP") {
       dispatch(resetCurrency(10));
       dispatch(setCurrentGameStage(1));
-      dispatch(setGameState("PLANNING"));
+     // dispatch(setGameState("PLANNING"));
     }
   }, [game.game_state]);
 

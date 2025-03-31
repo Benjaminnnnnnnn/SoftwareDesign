@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
 import { Board, Hex } from "../game/board"; // Import your Board class
 import { renderBoard } from "./handleRender";
+import { postFight } from "./postFight";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../context/context";
 import { setCurrentBoardString, setPieceImBuying } from "../context/gameSlice";
@@ -27,6 +28,7 @@ const HexGrid = () => {
   const { imHolding } = useSelector((state: RootState) => state.game);
   const cursorIndicatorRef = useRef<CursorIndicator | null>(null);
   const cursorContainerRef = useRef<PIXI.Container | null>(null);
+  const postFightContainer = useRef<PIXI.Container | null>(null);
 
   // Initialize cursor indicator
   useEffect(() => {
@@ -107,6 +109,9 @@ const HexGrid = () => {
     } else if (game.game_state === "PLANNING") {
         const { uiContainer } = renderBoard(boardRef.current);
         appRef.current.stage.addChild(uiContainer);
+    } else if (game.game_state === "CLEANUP") {
+        const postFightContainer  = postFight(game.wins, game.losses, game.recentResult, dispatch);
+        appRef.current.stage.addChild((postFightContainer));
     }
 
     // Re-add and reposition cursor
@@ -115,7 +120,6 @@ const HexGrid = () => {
         if (cursorPos) {
             cursorIndicatorRef.current.indicator.position.copyFrom(cursorPos);
         }
-        //cursorIndicatorRef.current.show();
     }
 };
 
