@@ -5,7 +5,7 @@ import { createBattleHexagon } from "./BattleHexagon";
 import { renderTrash } from "./renderTrash";
 
 export const renderBoard = (board: Board) => {
-    const hexRadius = 70;
+    const hexRadius = 85;
     const hexHeight = Math.sqrt(3) * hexRadius;
     const hexWidth = 2 * hexRadius;
 
@@ -38,10 +38,10 @@ export const renderBoard = (board: Board) => {
     const { x, y } = axialToPixel(tile.coord.q, tile.coord.r);
     try {
         // Create hex visuals
-        const battleHexagon = createBattleHexagon(x + 400, y + 325, hexRadius, tile, board);
+        const battleHexagon = createBattleHexagon(x + 500, y + 400, hexRadius, tile, board);
         hexContainer.addChild(battleHexagon);
         
-        const hexagon = createHexagon(x + 400, y + 325, hexRadius, tile, board);
+        const hexagon = createHexagon(x + 500, y + 400, hexRadius, tile, board);
         uiContainer.addChild(hexagon);
 
         // Handle pieces
@@ -62,14 +62,14 @@ export const renderBoard = (board: Board) => {
                         const fromTile = board.tiles.get(move.fromId);
                         if (fromTile) {
                             const startPos = axialToPixel(fromTile.coord.q, fromTile.coord.r);
-                            sprite.position.set(startPos.x + 400, startPos.y + 325);
+                            sprite.position.set(startPos.x + 500, startPos.y + 400);
                             pieceContainer.addChild(sprite);
 
                             tile.piece?.slideTo(
                                 sprite, 
-                                x + 400, 
-                                y + 325, 
-                                400
+                                x + 500, 
+                                y + 400, 
+                                450
                             ).then(() => {
                                 console.log("Finished animating movement:", movementKey);
                                 // Remove this specific movement
@@ -88,7 +88,7 @@ export const renderBoard = (board: Board) => {
                 }
                 if (tile.piece?.attackHistory?.size != 0) {
                     console.log("ATTACK ANIMATION TRIGGERED")
-                    tile.piece?.shake(sprite, 100, x + 400, y + 325)
+                    tile.piece?.shake(sprite, 150, x + 500, y + 400)
                     tile.piece?.attackHistory?.clear();
                 }
                 if (tile.piece?.damageHistory?.size != 0) {
@@ -106,7 +106,7 @@ export const renderBoard = (board: Board) => {
 
 
                 // Static placement if no animation needed
-                sprite.position.set(x + 400, y + 325);
+                sprite.position.set(x + 500, y + 400);
                 pieceContainer.addChild(sprite);
             }).catch(console.error);
         }

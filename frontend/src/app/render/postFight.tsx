@@ -11,25 +11,25 @@ import { Dispatch } from "redux";
 
 
 
-export const postFight = ( wins: number, losses: number, recent: string, dispatch: Dispatch): PIXI.Container => {
+export const postFight = (wins: number, losses: number, recent: string, dispatch: Dispatch): PIXI.Container => {
     const container = new PIXI.Container();
     
-    // 1. Create a semi-transparent background overlay
+    // 1. Create a semi-transparent background overlay (now 1000x800)
     const overlay = new PIXI.Graphics()
         .beginFill(0x6d86ad, 0.7)
-        .drawRect(0, 0, 800, 650)
+        .drawRect(0, 0, 1000, 800)
         .endFill();
     container.addChild(overlay);
 
-    // 2. Create main panel
+    // 2. Create main panel (centered, scaled up)
     const panel = new PIXI.Graphics()
         .beginFill(0xfacacb)
         .lineStyle(4, 0xed6669)
-        .drawRoundedRect(200, 150, 400, 350, 15)
+        .drawRoundedRect(250, 185, 500, 430, 20) // Adjusted position and size
         .endFill();
     container.addChild(panel);
 
-    // 3. Add result text
+    // 3. Add result text (centered)
     const resultText = new PIXI.Text(
         recent == "W" ? "VICTORY!" : "DEFEAT",
         {
@@ -42,7 +42,7 @@ export const postFight = ( wins: number, losses: number, recent: string, dispatc
         }
     );
     resultText.anchor.set(0.5);
-    resultText.position.set(400, 200);
+    resultText.position.set(500, 250); // Adjusted position
     container.addChild(resultText);
 
     // 4. Add stats display
@@ -57,25 +57,25 @@ export const postFight = ( wins: number, losses: number, recent: string, dispatc
         }
     );
     statsText.anchor.set(0.5);
-    statsText.position.set(400, 280);
+    statsText.position.set(500, 350); // Adjusted position
     container.addChild(statsText);
 
     // 5. Add continue button
     const button = new PIXI.Graphics()
         .beginFill(0xdb7099)
-        .drawRoundedRect(300, 350, 200, 60, 10)
+        .drawRoundedRect(375, 430, 250, 75, 15) // Adjusted position and size
         .endFill();
     
     const buttonText = new PIXI.Text(
         (wins < 5 && losses < 3) ? "Continue" : "End Run",
         {
-        fontFamily: 'Comic Sans MS',
-        fontSize: 24,
-        fill: 0xffffff,
-        fontWeight: 'bold'
-    });
+            fontFamily: 'Comic Sans MS',
+            fontSize: 24,
+            fill: 0xffffff,
+            fontWeight: 'bold'
+        });
     buttonText.anchor.set(0.5);
-    buttonText.position.set(400, 380);
+    buttonText.position.set(500, 470); // Adjusted position
     
     // Make button interactive
     button.eventMode = 'static';
@@ -102,7 +102,7 @@ export const postFight = ( wins: number, losses: number, recent: string, dispatc
     container.addChild(button);
     container.addChild(buttonText);
 
-    // 3. Load image
+    // 6. Load trophy image
     const img = new Image();
     img.src = trophyImage.src;
     
@@ -113,13 +113,13 @@ export const postFight = ( wins: number, losses: number, recent: string, dispatc
             const texture = PIXI.Texture.from(img);
             const sprite = new PIXI.Sprite(texture);
             
-            // 4. Set sprite properties (no initial tint)
-            sprite.width = 100;
-            sprite.height = 100;
+            // Set sprite properties
+            sprite.width = 120; // Slightly larger
+            sprite.height = 120;
             
-            // 5. Position at bottom-left (relative to container)
+            // Position at bottom-right (adjusted)
             sprite.anchor.set(0.5);
-            sprite.position.set(540, 425);
+            sprite.position.set(675, 450); // Adjusted position
             if (wins == 5) container.addChild(sprite);
             
             console.log("Sprite successfully added");
@@ -130,7 +130,7 @@ export const postFight = ( wins: number, losses: number, recent: string, dispatc
     };
 
     img.onerror = () => {
-        console.error("Failed to load trash image!");
+        console.error("Failed to load trophy image!");
     };
 
     return container;

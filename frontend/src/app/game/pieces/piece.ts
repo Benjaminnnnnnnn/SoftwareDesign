@@ -124,7 +124,27 @@ export default abstract class Piece implements IPiece {
     }
     this.current_health = this.max_health;
   }
+
+  private getDirectionAngle (): number { // for potential implementation
+    const target_tile = this.target?.tile_id;
+    const current_tile = this.tile_id;
+
+    const target_qr = target_tile?.split(",");
+    const current_qr = current_tile?.split(",");
+    if (target_qr && current_qr) {
+      const difference = [(Number(target_qr[0]) - Number(current_qr[0])), ((-Number(target_qr[1]))-(-Number(current_qr[1])))]
+
+      const x = (3/2) * difference[0];
+      const y = (Math.sqrt(3)/2) * difference[0] + Math.sqrt(3) * difference[1];
+    
+      // Calculate angle in radians (0 points to the right, increasing counter-clockwise)
+      const angleRad = Math.atan2(y, x);
+      return angleRad;
+    }
+    return 0;
+  }
   // sprite methods
+
 
   public async getSprite(): Promise<PIXI.Sprite | null> {
     // Try to load the main sprite texture
@@ -132,6 +152,7 @@ export default abstract class Piece implements IPiece {
     try {
       const imageId = images[this.id] ? this.id : "du000"; // Fallback to default
       texture = await Assets.load(images[imageId].src);
+      console.log("piece id",imageId)
     } catch (error) {
       console.error("Failed to load texture for piece:", error);
       return null;
@@ -140,14 +161,15 @@ export default abstract class Piece implements IPiece {
     // Create the main sprite
     const piece = new PIXI.Sprite(texture);
     piece.anchor.set(0.5);
-    piece.width = 90;
-    piece.height = 90;
+    piece.width = 140;
+    piece.height = 140;
+    if (this.allied == false){piece.rotation = Math.PI;}
 
     const statsText = new PIXI.Text({
       text: `❤️${this.current_health}/${this.max_health}   ⚔️${this.ad}`,
       style: new PIXI.TextStyle({
         fontFamily: "Arial",
-        fontSize: 75, // Slightly larger for better readability
+        fontSize: 300, // Slightly larger for better readability
         fontWeight: "bold",
         fill: this.allied ? 0xffffff : 0xff0000, // Green for allied, red for enemy
         align: "center",
@@ -157,13 +179,14 @@ export default abstract class Piece implements IPiece {
         wordWrapWidth: 200,
       }),
     });
-
+  
     // Position the text at the bottom center of the sprite
     statsText.anchor.set(0.5);
     statsText.position.set(
       0, // Center horizontally
-      250, // position to bottom
+      650, // position to bottom
     );
+    if(this.allied == false){statsText.rotation = Math.PI;}
 
     // Add to sprite (make sure this is after other children)
     piece.addChild(statsText);
@@ -173,6 +196,8 @@ export default abstract class Piece implements IPiece {
       try {
         const itemSprite = await this.item.getSprite();
         if (itemSprite) {
+          itemSprite.width = 600;
+          itemSprite.height = 500;
           piece.addChild(itemSprite);
         }
       } catch (error) {
@@ -205,7 +230,7 @@ public async slideTo(
           
           // Bouncing scale effect (peaks at midpoint)
           const scaleProgress = Math.sin(progress * Math.PI); // 0→1→0
-          const scaleFactor = 0.2; // How much it grows (20%)
+          const scaleFactor = 0.075; // How much it grows (20%)
           sprite.scale.set(
               startScale + scaleFactor * scaleProgress,
               startScale + scaleFactor * scaleProgress
@@ -226,7 +251,7 @@ public async slideTo(
   
   public async shake(sprite: PIXI.Sprite, duration: number, anchorX: number, anchorY: number): Promise<void> {
     return new Promise((resolve) => {
-      const startX = anchorX;
+      const startY = anchorY;
       const startTime = Date.now();
 
       const animate = () => {
@@ -234,12 +259,12 @@ public async slideTo(
         const progress = (now - startTime) / duration;
         const shake = Math.sin(progress * Math.PI * 20) * 20;
 
-        sprite.x = startX + shake;
+        sprite.y = startY + shake;
 
         if (progress < 1) {
           requestAnimationFrame(animate);
         } else {
-          sprite.x = startX;
+          sprite.y = startY;
           resolve();
         }
       };
