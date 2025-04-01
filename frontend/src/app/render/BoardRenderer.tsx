@@ -60,8 +60,8 @@ const HexGrid = () => {
     }
     appRef.current = new PIXI.Application();
     appRef.current.init({
-      width: 800,
-      height: 650,
+      width: 1000,
+      height: 800,
       backgroundColor: 0x6d86ad,
       view: canvasRef.current,
     });

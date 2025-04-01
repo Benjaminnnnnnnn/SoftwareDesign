@@ -33,8 +33,8 @@ export default abstract class item implements Iitem {
 
         // Customize the sprite
         piece.anchor.set(0.5);
-        piece.width = 250;
-        piece.height = 250;
+        piece.width = 400;
+        piece.height = 400;
 
         return piece;
       } catch (error) {
