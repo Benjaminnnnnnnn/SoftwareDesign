@@ -22,19 +22,27 @@ type Attributes = {
       speed_amp: [0,1],
     },
   
-    // caterpillar
+    // smiley
     i002: {
-      max_health_amp: [2,1],
+      max_health_amp: [5,1],
       ad_amp: [0,1],
       range_amp: [0,1],
       speed_amp: [0,1],
     },
 
-    // gun
+    // sword
     i003: {
         max_health_amp: [0,1],
-        ad_amp: [1,1],
+        ad_amp: [0,1.5],
         range_amp: [0,1],
         speed_amp: [0,1],
       },
+    
+    //heart
+    i004: {
+      max_health_amp: [0,1.5],
+      ad_amp: [0,1],
+      range_amp: [0,1],
+      speed_amp: [0,1],
+    },
   };

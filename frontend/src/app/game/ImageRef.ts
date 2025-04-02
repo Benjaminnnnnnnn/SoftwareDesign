@@ -14,6 +14,8 @@ import dudeImage from "../../../public/gameObjectImages/dude.png";
 import superImage from "../../../public/gameObjectImages/super.png";
 import doctorImage from "../../../public/gameObjectImages/doctor.png";
 import kirbyImage from "../../../public/gameObjectImages/kirby.png";
+import swordImage from "../../../public/gameObjectImages/sword.png";
+import heartImage from "../../../public/gameObjectImages/heart.png";
 
 import { StaticImageData } from "next/image";
 
@@ -32,7 +34,8 @@ export const gameObjects: Record<string, string> = {
   DUMMY_ITEM: "di000",
   TARGET: "i001",
   SMILEY: "i002",
-  GUN: "i003",
+  SWORD: "i003",
+  HEART: "i004",
 };
 
 export const images: Record<string, StaticImageData> = {
@@ -50,6 +53,7 @@ export const images: Record<string, StaticImageData> = {
   i000: blankImage,
   i001: targetImage,
   i002: smileyImage,
-  i003: gunImage,
+  i003: swordImage,
+  i004: heartImage,
 };
 
