@@ -17,7 +17,7 @@ import icecubeImage from "../../../public/gameObjectImages/icecube.png";
 import dimflyImage from "../../../public/gameObjectImages/dimfly.png";
 import litflyImage from "../../../public/gameObjectImages/litfly.png";
 import { gameObjects, images } from "../game/ImageRef";
-
+import { infoFile } from "../game/pieces/infoFile";
 
 const Shop = () => {
   // Store loading :)
@@ -43,7 +43,7 @@ const Shop = () => {
     console.log(game.currency);
     if (game.currency >= 1) {
       updateRefresh(refresh + 1);
-      dispatch(setCurrency( - 1));
+      dispatch(setCurrency(-1));
     }
   };
 
@@ -104,9 +104,14 @@ const Shop = () => {
 
   // buys an object if the user can afford it, if it is purchased empty the shop space
   const buyObject = () => {
-    if (game.currency >= 3 && (game.imHolding == false) && objList[selectedSquare] != gameObjects["BLANK"] && objList[selectedSquare] != null) {
-      console.log("CURRENT:",objList[selectedSquare])
-      dispatch(setCurrency( - 3));
+    if (
+      game.currency >= 3 &&
+      game.imHolding == false &&
+      objList[selectedSquare] != gameObjects["BLANK"] &&
+      objList[selectedSquare] != null
+    ) {
+      console.log("CURRENT:", objList[selectedSquare]);
+      dispatch(setCurrency(-3));
       dispatch(
         setCurrentBoardString(game.current_boardstr + objList[selectedSquare]),
       );
@@ -118,12 +123,11 @@ const Shop = () => {
 
   const handleEndShopPhase = () => {
     if (game.currentPieces > 5) {
-      console.log("dont allow fight") // maybe display some message to the user here
-    }
-    else{
-    uploadBoard(game.current_boardstr, game.current_game_stage);
-    dispatch(setPreCombatString(game.current_boardstr))
-    dispatch(setGameState("BATTLE"));
+      console.log("dont allow fight"); // maybe display some message to the user here
+    } else {
+      uploadBoard(game.current_boardstr, game.current_game_stage);
+      dispatch(setPreCombatString(game.current_boardstr));
+      dispatch(setGameState("BATTLE"));
     }
   };
 
@@ -143,13 +147,17 @@ const Shop = () => {
     itemAmp?: number[];
   }
 
-  const StatDisplay: React.FC<StatDisplayProps> = ({ label, unitValue, itemAmp }) => {
-    const value = objList[selectedSquare]?.startsWith('u')
+  const StatDisplay: React.FC<StatDisplayProps> = ({
+    label,
+    unitValue,
+    itemAmp,
+  }) => {
+    const value = objList[selectedSquare]?.startsWith("u")
       ? unitValue?.toString()
-      : objList[selectedSquare]?.startsWith('i')
-      ? formatAmp(itemAmp)
-      : "";
-  
+      : objList[selectedSquare]?.startsWith("i")
+        ? formatAmp(itemAmp)
+        : "";
+
     return value ? (
       <div className="stat-display">
         <span className="stat-label">{label}</span>
@@ -162,34 +170,36 @@ const Shop = () => {
     <div>
       <div className="grid-container">
         <div className="grid-row">
-        <div className="simple-retro-shop">SHOP</div> 
+          <div className="simple-retro-shop">SHOP</div>
         </div>
         <div className="grid-row">
-        <div className="player-stats-container">
-          <div className="player-stat-item">
-            <img 
-              className="player-stat-icon"
-              src={game.currency > 0 ? litflyImage.src : dimflyImage.src}
-              alt="Currency"
-            />
-            <span className="player-stat-value">{game.currency}</span>
+          <div className="player-stats-container">
+            <div className="player-stat-item">
+              <img
+                className="player-stat-icon"
+                src={game.currency > 0 ? litflyImage.src : dimflyImage.src}
+                alt="Currency"
+              />
+              <span className="player-stat-value">{game.currency}</span>
+            </div>
+
+            <div className="player-stat-item">
+              <span className="player-stat-label">Stage:</span>
+              <span className="player-stat-value">
+                {game.current_game_stage}
+              </span>
+            </div>
+
+            <div className="player-stat-item">
+              <span className="player-stat-label win">W:</span>
+              <span className="player-stat-value">{game.wins}</span>
+            </div>
+
+            <div className="player-stat-item">
+              <span className="player-stat-label loss">L:</span>
+              <span className="player-stat-value">{game.losses}</span>
+            </div>
           </div>
-          
-          <div className="player-stat-item">
-            <span className="player-stat-label">Stage:</span>
-            <span className="player-stat-value">{game.current_game_stage}</span>
-          </div>
-          
-          <div className="player-stat-item">
-            <span className="player-stat-label win">W:</span>
-            <span className="player-stat-value">{game.wins}</span>
-          </div>
-          
-          <div className="player-stat-item">
-            <span className="player-stat-label loss">L:</span>
-            <span className="player-stat-value">{game.losses}</span>
-          </div>
-        </div>
         </div>
         <div className="grid-row">
           <Square index={0} />
@@ -204,76 +214,89 @@ const Shop = () => {
           <Square index={5} />
         </div>
         <div className="grid-row">
-          {selectedSquare > -1 ? (
-            <Square index={selectedSquare} />
+          {selectedSquare > -1 && infoFile[objList[selectedSquare]] ? (
+            <div className="square">
+              <h1 className="text-2xl text-center font-bold">
+                {" "}
+                {infoFile[objList[selectedSquare]].name}{" "}
+              </h1>
+              <h1 className="text-bold text-center font-semibold">
+                {" "}
+                {infoFile[objList[selectedSquare]].desc}{" "}
+              </h1>
+            </div>
           ) : (
             <div className="square"></div>
           )}
           <div className="flex-grid-container">
             <div className="grid-row">
-            {selectedSquare > -1 && (
-              <div className="stats-container">
-                {/* First row for HP and AD */}
-                <div className="stats-row">
-                  <StatDisplay
-                    label="HP:"
-                    unitValue={statMasterList[objList[selectedSquare]]?.max_health}
-                    itemAmp={attributeMasterList[objList[selectedSquare]]?.max_health_amp}
-                  />
-                  <StatDisplay
-                    label="AD:"
-                    unitValue={statMasterList[objList[selectedSquare]]?.ad}
-                    itemAmp={attributeMasterList[objList[selectedSquare]]?.ad_amp}
-                  />
+              {selectedSquare > -1 && (
+                <div className="stats-container">
+                  {/* First row for HP and AD */}
+                  <div className="stats-row">
+                    <StatDisplay
+                      label="HP:"
+                      unitValue={
+                        statMasterList[objList[selectedSquare]]?.max_health
+                      }
+                      itemAmp={
+                        attributeMasterList[objList[selectedSquare]]
+                          ?.max_health_amp
+                      }
+                    />
+                    <StatDisplay
+                      label="AD:"
+                      unitValue={statMasterList[objList[selectedSquare]]?.ad}
+                      itemAmp={
+                        attributeMasterList[objList[selectedSquare]]?.ad_amp
+                      }
+                    />
+                  </div>
+
+                  {/* Second row for Range and Speed */}
+                  <div className="stats-row">
+                    <StatDisplay
+                      label="Range:"
+                      unitValue={statMasterList[objList[selectedSquare]]?.range}
+                      itemAmp={
+                        attributeMasterList[objList[selectedSquare]]?.range_amp
+                      }
+                    />
+                    <StatDisplay
+                      label="Bonus:"
+                      unitValue={statMasterList[objList[selectedSquare]]?.level}
+                      itemAmp={
+                        attributeMasterList[objList[selectedSquare]]?.speed_amp
+                      }
+                    />
+                  </div>
                 </div>
-                
-                {/* Second row for Range and Speed */}
-                <div className="stats-row">
-                  <StatDisplay
-                    label="Range:"
-                    unitValue={statMasterList[objList[selectedSquare]]?.range}
-                    itemAmp={attributeMasterList[objList[selectedSquare]]?.range_amp}
-                  />
-                  <StatDisplay
-                    label="Bonus:"
-                    unitValue={statMasterList[objList[selectedSquare]]?.level}
-                    itemAmp={attributeMasterList[objList[selectedSquare]]?.speed_amp}
-                  />
-                </div>
-              </div>
-            )}
+              )}
             </div>
           </div>
         </div>
         <div className="grid-row">
           <div className="button-container">
-            <button 
-              className="button flex items-center gap-1" 
+            <button
+              className="button flex items-center gap-1"
               onClick={freezeObject}
             >
               Freeze
-              <img
-                className="h-4 w-"
-                src={icecubeImage.src}
-                alt="Freeze"
-              />
+              <img className="h-4 w-" src={icecubeImage.src} alt="Freeze" />
             </button>
-              <button 
-              className="button flex items-center gap-1" 
-              onClick={buyObject}>
-                {" "}
-                Buy
-                <img
-                className="h-4 w-"
-                src={litflyImage.src}
-                alt="Freeze"
-              />
-              </button>
-              <button className="button" onClick={clickRefresh}>
-            Refresh
-          </button>
-            </div>
-            </div>
+            <button
+              className="button flex items-center gap-1"
+              onClick={buyObject}
+            >
+              {" "}
+              Buy
+              <img className="h-4 w-" src={litflyImage.src} alt="Freeze" />
+            </button>
+            <button className="button" onClick={clickRefresh}>
+              Refresh
+            </button>
+          </div>
+        </div>
         <div className="grid-row">
           <button className="button" onClick={handleEndShopPhase}>
             Fight

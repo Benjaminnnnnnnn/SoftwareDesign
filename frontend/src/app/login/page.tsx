@@ -20,7 +20,7 @@ export default function Login() {
       <h1 className="font-mono text-8xl font-bold text-black m-0">
         FROGGY FISTICUFFS
       </h1>
-      <input
+      {/* <input
         className="font-serif text-black m-0 justify-center"
         id="name"
         type="text"
@@ -35,9 +35,9 @@ export default function Login() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder=""
-      />
+      /> */}
       <button className="button button--thin" onClick={infoInputHandler}>
-        Submit
+        Start
       </button>
     </div>
   );
