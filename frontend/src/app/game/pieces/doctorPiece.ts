@@ -23,4 +23,18 @@ export default class DoctorPiece extends Piece {
     this.speed = speed;
     this.item = item;
   }
+
+  public override attack() {
+    if (this.target && this.tile_id) {
+      if (this.ad + this.current_health > this.max_health) {
+        this.current_health = this.max_health;
+      } else {
+        this.current_health += this.ad;
+      }
+      this.attackHistory.add(this.tile_id);
+      this.target.takeDamage(this.ad);
+    }
+    console.log(this.target);
+    // returns damage that will be deault
+  }
 }

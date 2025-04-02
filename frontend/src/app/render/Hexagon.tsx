@@ -1,9 +1,23 @@
 import * as PIXI from "pixi.js";
-import lilypadImage from '../../../public/render_images/lilypad.png';
-import {Board} from "../game/board";
+import lilypadImage from "../../../public/render_images/lilypad.png";
+import { Board } from "../game/board";
 
-const allied_tiles = new Set<string>(["-2,2","-1,2","0,2","-2,1","-1,1","0,1","1,1"])
-export const createHexagon = (x: number, y: number, radius: number, tile: any, board : Board) => {
+const allied_tiles = new Set<string>([
+  "-2,2",
+  "-1,2",
+  "0,2",
+  "-2,1",
+  "-1,1",
+  "0,1",
+  "1,1",
+]);
+export const createHexagon = (
+  x: number,
+  y: number,
+  radius: number,
+  tile: any,
+  board: Board,
+) => {
   // Creates Hexagons for the board
   const hexagon = new PIXI.Graphics();
   hexagon.lineStyle(2, 0x6d86ad); // Blend in with background
@@ -29,35 +43,36 @@ export const createHexagon = (x: number, y: number, radius: number, tile: any, b
     sprite.anchor.set(0.5);
     sprite.x = x;
     sprite.y = y;
-    sprite.width = radius * 1.8; 
+    sprite.width = radius * 1.8;
     sprite.height = radius * 1.8;
     sprite.tint = 0xa1edb2;
-    if (allied_tiles.has(tile.id)){
-        // Make the sprite interactive
-    sprite.eventMode = 'static';
-    sprite.tint = 0xF0FFF0;
+    if (allied_tiles.has(tile.id)) {
+      // Make the sprite interactive
+      sprite.eventMode = "static";
+      sprite.tint = 0xf0fff0;
 
-    // Define the hit area
-    const hitBox = new PIXI.Circle(
+      // Define the hit area
+      const hitBox = new PIXI.Circle(
         0, // x offset
         0, // y offset
-        sprite.width / 0.4
+        sprite.width / 0.4,
       );
-    sprite.hitArea = hitBox;
+      sprite.hitArea = hitBox;
 
-    // Add hover interactivity to the sprite
-    sprite.on("pointerover", () => {
-      sprite.tint = 0xffcc00; // Tint on hover
-    });
+      // Add hover interactivity to the sprite
+      sprite.on("pointerover", () => {
+        sprite.tint = 0xffcc00; // Tint on hover
+      });
 
-    sprite.on("pointerout", () => {
-      sprite.tint = 0xffffff; // Reset tint to white
-    });
+      sprite.on("pointerout", () => {
+        sprite.tint = 0xffffff; // Reset tint to white
+      });
 
-    // Add click interactivity to the sprite
-    sprite.on("click", () => {
-      board.interactWithTile(tile.id);
-    });
+      // Add click interactivity to the sprite
+      sprite.on("click", () => {
+        console.log("interact with tile");
+        board.interactWithTile(tile.id);
+      });
     }
 
     hexagon.addChild(sprite);

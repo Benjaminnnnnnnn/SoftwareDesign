@@ -8,7 +8,12 @@ import { shuffleArray } from "./helperFunctions";
 import { Stats, TargetInfo } from "../types";
 import Command from "./Command";
 import { Dispatch } from "redux";
-import { setCurrentWins, setForceRerender, setCurrentLosses, setGameState } from "@/app/context/gameSlice";
+import {
+  setCurrentWins,
+  setForceRerender,
+  setCurrentLosses,
+  setGameState,
+} from "@/app/context/gameSlice";
 
 export default class BattleHandler {
   boardReference: Board;
@@ -85,7 +90,7 @@ export default class BattleHandler {
     if (!startingHex) {
       return Obj;
     }
-    
+
     const queue: Array<{ node: Hex; path: Array<string> }> = [
       { node: startingHex, path: [] },
     ];
@@ -153,17 +158,15 @@ export default class BattleHandler {
       if (e_alive == 0) {
         this.dispatch(setForceRerender(1));
         setTimeout(() => {
-        this.end(true);}, 
-        1500
-        )
+          this.end(true);
+        }, 1500);
         this.dispatch(setForceRerender(1));
         return;
       } else if (f_alive == 0) {
         this.dispatch(setForceRerender(1));
         setTimeout(() => {
-          this.end(false);}, 
-          1500
-          )
+          this.end(false);
+        }, 1500);
         this.dispatch(setForceRerender(1));
         return;
       }
@@ -214,15 +217,11 @@ export default class BattleHandler {
     let args: CommandArgs = {
       type: "base",
     };
-    if (
-      !piece.target ||
-      !piece.path ||
-      piece.path.length == 0
-    ) {
+    if (!piece.target || !piece.path || piece.path.length == 0) {
       const targeting = this.findNearestEnemy(piece);
       piece.target = targeting.target;
       piece.path = targeting.path;
-    } 
+    }
     if (piece.target && piece.path) {
       if (piece.range >= piece.path.length) {
         // returns a command contaiing an attack and a
@@ -246,9 +245,9 @@ export default class BattleHandler {
   // cleanup function
   public end(win: boolean) {
     if (win) {
-      this.dispatch(setCurrentWins(1))
+      this.dispatch(setCurrentWins(1));
     } else {
-      this.dispatch(setCurrentLosses(1))
+      this.dispatch(setCurrentLosses(1));
     }
     this.boardReference.wipe();
     this.dispatch(setGameState("CLEANUP"));

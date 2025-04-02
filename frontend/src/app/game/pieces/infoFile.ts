@@ -29,7 +29,7 @@ export const infoFile: Record<string, { name: string; desc: string }> = {
   // Mummy
   u004: {
     name: "Mummy",
-    desc: "Reanimates once per comabt",
+    desc: "Reanimates once per comabat",
   },
 
   // Glitter (bomber)

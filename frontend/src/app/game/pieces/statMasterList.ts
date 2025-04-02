@@ -1,3 +1,4 @@
+import { Exo_2 } from "next/font/google";
 import { Stats } from "../types";
 
 export const statMasterList: Record<string, Stats> = {
@@ -25,14 +26,14 @@ export const statMasterList: Record<string, Stats> = {
     ad: 2,
     range: 2,
     speed: 1,
-    level: [0, 1],
+    level: [0, 2],
   },
 
   // TODO: modify these stats!
   // Ninja
   u003: {
     max_health: 1,
-    ad: 4,
+    ad: 7,
     range: 1,
     speed: 1,
     level: [0, 1],
@@ -40,11 +41,11 @@ export const statMasterList: Record<string, Stats> = {
 
   // Mummy
   u004: {
-    max_health: 2,
+    max_health: 3,
     ad: 2,
     range: 1,
     speed: 1,
-    level: [3, 0],
+    level: [2, 0],
   },
 
   // Glitter (bomber)
@@ -60,35 +61,35 @@ export const statMasterList: Record<string, Stats> = {
   u006: {
     max_health: 10,
     ad: 0,
-    range: 0,
+    range: 1,
     speed: 1,
     level: [5, 0],
   },
 
   // Super Frog
   u007: {
-    max_health: 7,
+    max_health: 5,
     ad: 0,
-    range: 0,
+    range: 1,
     speed: 1,
-    level: [1, 2],
+    level: [2, 2],
   },
 
-  // Doctor 
+  // Doctor
   u008: {
-    max_health: 5,
+    max_health: 8,
     ad: 1,
-    range: 0,
+    range: 1,
     speed: 1,
-    level: [0, 1],
+    level: [1, 1],
   },
 
   // Kirby
   u009: {
-    max_health: 2,
+    max_health: 4,
     ad: 2,
-    range: 0,
+    range: 1,
     speed: 1,
-    level: [1, 0],
+    level: [1, 1],
   },
 };
