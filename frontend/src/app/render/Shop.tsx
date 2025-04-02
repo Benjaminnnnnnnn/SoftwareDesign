@@ -122,7 +122,7 @@ const Shop = () => {
   };
 
   const handleEndShopPhase = () => {
-    if (game.currentPieces > 5) {
+    if (game.currentPieces > 5 || game.currentPieces == 0) {
       console.log("dont allow fight"); // maybe display some message to the user here
     } else {
       uploadBoard(game.current_boardstr, game.current_game_stage);
