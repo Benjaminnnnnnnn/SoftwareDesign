@@ -216,11 +216,11 @@ const Shop = () => {
         <div className="grid-row">
           {selectedSquare > -1 && infoFile[objList[selectedSquare]] ? (
             <div className="square">
-              <h1 className="text-2xl text-center font-bold">
+              <h1 className="text-2xl text-center font-bold"style={{ color: 'brown', fontFamily: "Comic Sans MS" }}>
                 {" "}
                 {infoFile[objList[selectedSquare]].name}{" "}
               </h1>
-              <h1 className="text-bold text-center font-semibold">
+              <h1 className="text-bold text-center font-semibold"style={{ color: 'firebrick', fontFamily: "Comic Sans MS" }}>
                 {" "}
                 {infoFile[objList[selectedSquare]].desc}{" "}
               </h1>

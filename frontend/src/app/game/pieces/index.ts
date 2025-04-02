@@ -5,3 +5,6 @@ export { default as NinjaPiece } from "./ninjaPiece";
 export { default as MummyPiece } from "./mummyPiece";
 export { default as GlitterPiece } from "./glitterPiece";
 export { default as DudePiece } from "./dudePiece";
+export { default as SuperPiece } from "./superPiece";
+export { default as DoctorPiece } from "./doctorPiece";
+export { default as KirbyPiece } from "./kirbyPiece";

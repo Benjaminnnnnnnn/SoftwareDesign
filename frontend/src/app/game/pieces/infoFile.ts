@@ -44,6 +44,24 @@ export const infoFile: Record<string, { name: string; desc: string }> = {
     desc: "He abides with a beverage in hand, does not like nihilists",
   },
 
+  // Super Frog
+  u007: {
+    name: "SuperFrog",
+    desc: "Upgrade based unit",
+  },
+
+  // Doctor
+  u008: {
+    name: "The Doctor",
+    desc: "Heals itself upon attack",
+  },
+
+  // Kirby
+  u009: {
+    name: "Frog Kirby",
+    desc: "Can 'absorb' any unit",
+  },
+
   // Dummy
   i000: {
     name: "Dummy Item",
