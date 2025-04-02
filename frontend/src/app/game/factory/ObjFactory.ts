@@ -1,4 +1,4 @@
-import { DummyPiece, WarriorPiece, ArcherPiece, NinjaPiece, MummyPiece, GlitterPiece, DudePiece } from "../pieces";
+import { DummyPiece, WarriorPiece, ArcherPiece, NinjaPiece, MummyPiece, GlitterPiece, DudePiece, SuperPiece, DoctorPiece, KirbyPiece } from "../pieces";
 import { DummyItem, SmileyItem, TargetItem, GunItem } from "../items";
 import Piece from "../pieces/piece";
 import item from "../items/item";
@@ -34,6 +34,15 @@ export class ObjFactory {
         break;
       case "u006":
         prodPiece = new DudePiece(allied, statpackage, item);
+        break;
+      case "u007":
+        prodPiece = new SuperPiece(allied, statpackage, item);
+        break;
+      case "u008":
+        prodPiece = new DoctorPiece(allied, statpackage, item);
+        break;
+      case "u009":
+        prodPiece = new KirbyPiece(allied, statpackage, item);
         break;
       default:
         prodPiece = new DummyPiece(allied, statpackage, item);

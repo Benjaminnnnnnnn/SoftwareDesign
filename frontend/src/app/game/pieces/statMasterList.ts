@@ -64,4 +64,31 @@ export const statMasterList: Record<string, Stats> = {
     speed: 1,
     level: [5, 0],
   },
+
+  // Super Frog
+  u007: {
+    max_health: 7,
+    ad: 0,
+    range: 0,
+    speed: 1,
+    level: [1, 2],
+  },
+
+  // Doctor 
+  u008: {
+    max_health: 5,
+    ad: 1,
+    range: 0,
+    speed: 1,
+    level: [0, 1],
+  },
+
+  // Kirby
+  u009: {
+    max_health: 2,
+    ad: 2,
+    range: 0,
+    speed: 1,
+    level: [1, 0],
+  },
 };

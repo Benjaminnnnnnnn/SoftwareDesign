@@ -11,6 +11,9 @@ import ninjaImage from "../../../public/gameObjectImages/ninja.png";
 import mummyImage from "../../../public/gameObjectImages/mummy.png";
 import glitterImage from "../../../public/gameObjectImages/glitter.png";
 import dudeImage from "../../../public/gameObjectImages/dude.png";
+import superImage from "../../../public/gameObjectImages/super.png";
+import doctorImage from "../../../public/gameObjectImages/doctor.png";
+import kirbyImage from "../../../public/gameObjectImages/kirby.png";
 
 import { StaticImageData } from "next/image";
 
@@ -23,6 +26,9 @@ export const gameObjects: Record<string, string> = {
   MUMMY: "u004",
   GLITTER: "u005",
   DUDE: "u006",
+  SUPER: "u007",
+  DOCTOR: "u008",
+  KIRBY: "u009",
   DUMMY_ITEM: "di000",
   TARGET: "i001",
   SMILEY: "i002",
@@ -38,6 +44,9 @@ export const images: Record<string, StaticImageData> = {
   u004: mummyImage,
   u005: glitterImage,
   u006: dudeImage,
+  u007: superImage,
+  u008: doctorImage,
+  u009: kirbyImage,
   i000: blankImage,
   i001: targetImage,
   i002: smileyImage,
