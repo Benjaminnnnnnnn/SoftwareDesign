@@ -151,10 +151,20 @@ export default class BattleHandler {
       });
       this.dispatch(setForceRerender(1));
       if (e_alive == 0) {
-        this.end(true);
+        this.dispatch(setForceRerender(1));
+        setTimeout(() => {
+        this.end(true);}, 
+        1500
+        )
+        this.dispatch(setForceRerender(1));
         return;
       } else if (f_alive == 0) {
-        this.end(false);
+        this.dispatch(setForceRerender(1));
+        setTimeout(() => {
+          this.end(false);}, 
+          1500
+          )
+        this.dispatch(setForceRerender(1));
         return;
       }
       this.fillCommandStack();

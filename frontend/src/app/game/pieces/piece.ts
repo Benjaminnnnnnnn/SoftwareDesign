@@ -17,6 +17,7 @@ export default abstract class Piece implements IPiece {
   public allied: boolean;
   public alive: boolean;
   public target?: Piece;
+  public last_target_id? : string; // to store the hex of the last target
   public path?: Array<string>;
   public tile_id: string | null;
   public attackHistory: Set<string>;
@@ -124,22 +125,47 @@ export default abstract class Piece implements IPiece {
     }
     this.current_health = this.max_health;
   }
+  private hexDiffToRotation(dq: number, dr: number): number {
+    const absDq = Math.abs(dq);
+    const absDr = Math.abs(dr);
+    const step = Math.PI/6;
+    
+    if (dq > 1 && dr < 1 && absDq < absDr){ return step}
+    else if (dq > 1 && dr < 1 && absDq == absDr){ return 2*step}
+    else if (dq > 0 && dr < 0 && absDq > absDr) return 2 * step;
+    else if (dq > 0 && dr === 0) return 3 * step;
+    else if (dq > 0 && dr > 0) return 4 * step;
+    else if (dq === 0 && dr > 0) return 5 * step;
+    else if (dq < 0 && dr > 0 && absDq < absDr) return 6 * step;
+    else if (dq < 0 && dr > 0 && absDq === absDr) return 7 * step;
+    else if (dq < 0 && dr > 0 && absDq > absDr) return 8 * step;
+    else if (dq < 0 && dr === 0) return 9 * step;
+    else if (dq < 0 && dr < 0) return 10 * step;
+    else if (dq === 0 && dr < 0) return 11 * step;
+    else return 0; // default case (shouldn't occur with valid inputs)
+}
 
-  private getDirectionAngle (): number { // for potential implementation
-    const target_tile = this.target?.tile_id;
-    const current_tile = this.tile_id;
+  private getDirectionAngle (
+    target_tile : string | null | undefined  = this.target?.tile_id,
+    current_tile : string | null | undefined = this.tile_id
 
-    const target_qr = target_tile?.split(",");
+  ): number { // for potential implementation
+    if (target_tile) {this.last_target_id = target_tile}
+
+    const target_qr = this.last_target_id?.split(",");
     const current_qr = current_tile?.split(",");
     if (target_qr && current_qr) {
-      const difference = [(Number(target_qr[0]) - Number(current_qr[0])), ((-Number(target_qr[1]))-(-Number(current_qr[1])))]
+  
+      const tq = Number(target_qr[0])
+      const tr = Number(target_qr[1])
 
-      const x = (3/2) * difference[0];
-      const y = (Math.sqrt(3)/2) * difference[0] + Math.sqrt(3) * difference[1];
-    
-      // Calculate angle in radians (0 points to the right, increasing counter-clockwise)
-      const angleRad = Math.atan2(y, x);
-      return angleRad;
+      const cq = Number(current_qr[0])
+      const cr = Number(current_qr[1])
+
+      const angle = this.hexDiffToRotation(tq-cq,tr-cr)
+      console.log("ANGLES",tq-cq,tr-cr)
+
+      return angle;
     }
     return 0;
   }
@@ -164,6 +190,7 @@ export default abstract class Piece implements IPiece {
     piece.width = 140;
     piece.height = 140;
     if (this.allied == false){piece.rotation = Math.PI;}
+    //if(this.target != undefined){piece.rotation = this.getDirectionAngle();}
 
     const statsText = new PIXI.Text({
       text: `❤️${this.current_health}/${this.max_health}   ⚔️${this.ad}`,
@@ -217,6 +244,7 @@ public async slideTo(
   return new Promise((resolve) => {
       const startX = sprite.x;
       const startY = sprite.y;
+      sprite.rotation = this.getDirectionAngle();
       const startScale = sprite.scale.x; // Assuming uniform scaling
       const startTime = Date.now();
 
@@ -244,15 +272,16 @@ public async slideTo(
               resolve();
           }
       };
-
       animate();
   });
 }
   
   public async shake(sprite: PIXI.Sprite, duration: number, anchorX: number, anchorY: number): Promise<void> {
     return new Promise((resolve) => {
+      const startX = anchorX
       const startY = anchorY;
       const startTime = Date.now();
+      sprite.rotation = this.getDirectionAngle();
 
       const animate = () => {
         const now = Date.now();
@@ -280,6 +309,7 @@ public async slideTo(
 
       // Set to red
       sprite.tint = 0xff0000; // Red color
+      sprite.rotation = this.getDirectionAngle();
 
       // Revert after duration
       setTimeout(() => {
