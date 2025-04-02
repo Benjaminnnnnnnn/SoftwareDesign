@@ -1,21 +1,14 @@
 "use client";
 
 import React, { useEffect } from "react";
-import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./context/context";
-import { store } from "./context/context";
 import HexGrid from "./render/BoardRenderer";
 import Shop from "./render/Shop";
-import { useState } from "react";
 import {
-  setCurrency,
   resetCurrency,
-  setGameState,
   setCurrentGameStage,
 } from "./context/gameSlice";
-import { useRouter } from "next/router";
 
 export default function App() {
   const game = useSelector((state: RootState) => state.game);
