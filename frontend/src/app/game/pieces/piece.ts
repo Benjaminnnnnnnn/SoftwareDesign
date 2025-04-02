@@ -23,7 +23,6 @@ export default abstract class Piece implements IPiece {
   public attackHistory: Set<string>;
   public damageHistory: Set<string>;
   public deathHistory: Set<string>;
-  private animationQueue: Array<() => Promise<void>> = []; // for animations
   public currentSprite: PIXI.Sprite | null = null; // Track the active sprite
 
   constructor(_allied: boolean) {
@@ -99,13 +98,13 @@ export default abstract class Piece implements IPiece {
     if (!this.item) {
     } else {
       this.max_health += this.item.max_health_amp[0];
-      this.max_health *= this.item.max_health_amp[1];
+      this.max_health = Math.floor(this.max_health * this.item.max_health_amp[1]);
       this.ad += this.item.ad_amp[0];
-      this.ad *= this.item.ad_amp[1];
+      this.ad = Math.floor(this.ad * this.item.ad_amp[1]);
       this.range += this.item.range_amp[0];
-      this.range *= this.item.range_amp[1];
+      this.range = Math.floor(this.range * this.item.range_amp[1]);
       this.speed += this.item.speed_amp[0];
-      this.speed *= this.item.speed_amp[1];
+      this.speed = Math.floor(this.speed * this.item.speed_amp[1]);
     }
     this.current_health = this.max_health;
   }
@@ -114,13 +113,13 @@ export default abstract class Piece implements IPiece {
     // undo item amplifications
     if (!this.item) {
     } else {
-      this.max_health /= this.item.max_health_amp[1];
+      this.max_health = Math.ceil(this.max_health / (this.item.max_health_amp[1]));
       this.max_health -= this.item.max_health_amp[0];
-      this.ad /= this.item.ad_amp[1];
+      this.ad = Math.ceil(this.ad / this.item.ad_amp[1]);
       this.ad -= this.item.ad_amp[0];
-      this.range /= this.item.range_amp[1];
+      this.range = Math.ceil(this.range / this.item.range_amp[1]);
       this.range -= this.item.range_amp[0];
-      this.speed /= this.item.speed_amp[1];
+      this.speed = Math.ceil( this.speed / this.item.speed_amp[1]);
       this.speed -= this.item.speed_amp[0];
     }
     this.current_health = this.max_health;

@@ -74,15 +74,21 @@ export const infoFile: Record<string, { name: string; desc: string }> = {
     desc: "Increases a unit's range",
   },
 
-  // caterpillar
+  // Smiley
   i002: {
-    name: "Caterpillar Sticker",
+    name: "Smiley Sticker",
     desc: "Increases a unit's health",
   },
 
   // gun
   i003: {
-    name: "Gun Sticker",
-    desc: "Increases a unit's attack",
+    name: "Sword Sticker",
+    desc: "Multipies a unit's attack",
+  },
+
+  // heart
+  i004: {
+    name: "Heart Sticker",
+    desc: "Multiplies a unit's health",
   },
 };

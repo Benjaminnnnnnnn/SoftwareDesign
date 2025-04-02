@@ -2,10 +2,10 @@ import Item from "./item";
 import { attributeMasterList } from "./attributeMasterList"
 
 // Ensure "export default" is used
-export default class GunItem extends Item {
+export default class HeartItem extends Item {
   constructor(allied: boolean) {
       super(allied);
-      this.id = "i003";
+      this.id = "i004";
       const { max_health_amp, ad_amp, range_amp, speed_amp } = attributeMasterList[this.id];
       this.max_health_amp = max_health_amp;
       this.ad_amp = ad_amp;
