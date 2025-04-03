@@ -83,11 +83,39 @@ This section will serve as a guide to the most essential parts of the project, a
 
        Inversely, when we load a board the string is fetched and decoded into a set of objects to be placed
 
-       This decoedd info is passed to the aformentioned factory to be created cleanly
+       This decoded info is passed to the aformentioned factory to be created cleanly
    
-2. frontend/src/app/game
+2. frontend/src/app/render
 
-  Bella
+    2.a Shop Display
+
+        Shop Components and DOM frontend/src/app/render/Shop.tsx
+   
+        Shop is responsible for displaying and handling the shop's logic
+  
+        Added to the app in (./frontend/src/app/requests/App.tsx)
+
+        Updates information in the context after a purchase (unit purchased, currency)
+
+   2.b Board Tiles / "Extras" Rendering
+
+        The main rendering files can be found at frontend/src/app/render/BattleHexagon.tsx, Hexagon.tsx, renderTrash.tsx, cursorIndicator.ts
+   
+        These files are responsible for rendering only (upon being called)
+  
+        Called in (./frontend/src/app/render/handlerender.tsx)
+
+        Render interactable/non-interactable boards, trash bin (for selling), cursor indicator (to indicate user is holding a piece)
+
+   2.c Game Logic / Piece Rendering
+
+        The top level rendering file is frontend/src/app/render/BoardRender.tsx
+   
+        Handles conditional rendering based on game state, defined the HexGrid component
+  
+        Called in (./frontend/src/app/requests/App.tsx)
+
+        Call other rendering modules as needed and share state information with them
 
 3. Misc.
 
